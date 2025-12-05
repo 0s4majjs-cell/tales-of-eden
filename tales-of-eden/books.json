@@ -1,0 +1,11 @@
+[
+  {
+    "id": "Alexander",
+    "title": "The Tale of Alexander Colt",
+    "author": "Author Name",
+    "genre": "Action",
+    "type": "Novel",
+    "path": "Books/Alexander/index.html",
+    "totalPages": 50
+  }
+]

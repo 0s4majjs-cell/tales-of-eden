@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>The Tale of Alexander Colt – Tales of Eden</title>
+  <link rel="stylesheet" href="../../styles.css">
+</head>
+<body>
+  <div class="page">
+    <nav>
+      <a href="../../index.html">← Back to Library</a>
+    </nav>
+
+    <div class="book-meta">
+      <div class="book-cover">
+        <span>Cover</span>
+      </div>
+
+      <div class="book-info">
+        <h1>The Tale of Alexander Colt</h1>
+        <p><strong>Author:</strong> Author Name</p>
+        <p><strong>Genre:</strong> Action</p>
+        <p><strong>Type:</strong> Novel</p>
+
+        <!-- READ BUTTON -->
+        <button class="read-btn" type="button" onclick="location.href='reader.html?page=1'">
+          Read
+        </button>
+      </div>
+    </div>
+
+    <section class="bookmark-section">
+      <h2>Bookmarks</h2>
+      <ul id="bookmarkList" class="bookmark-list"></ul>
+      <p id="bookmarkHint" class="bookmark-hint">
+        You can add bookmarks while reading.
+      </p>
+    </section>
+  </div>
+
+  <script>
+    const BOOK_ID = "Alexander";
+    const STORAGE_KEY = `bookmarks_${BOOK_ID}`;
+
+    const listEl = document.getElementById("bookmarkList");
+    const hintEl = document.getElementById("bookmarkHint");
+
+    function loadBookmarks() {
+      try {
+        const raw = localStorage.getItem(STORAGE_KEY);
+        if (!raw) return [];
+        const parsed = JSON.parse(raw);
+        return Array.isArray(parsed) ? parsed : [];
+      } catch {
+        return [];
+      }
+    }
+
+    function renderBookmarks() {
+      const bookmarks = loadBookmarks().sort((a, b) => a.page - b.page);
+      listEl.innerHTML = "";
+
+      if (!bookmarks.length) {
+        listEl.innerHTML = "<li class='bookmark-empty'>No bookmarks yet.</li>";
+        return;
+      }
+
+      bookmarks.forEach((bm, index) => {
+        const li = document.createElement("li");
+        li.className = "bookmark-item";
+
+        const jump = document.createElement("button");
+        jump.type = "button";
+        jump.className = "bookmark-link";
+        const labelText = bm.label && bm.label.trim() ? bm.label.trim() : `Page ${bm.page}`;
+        jump.textContent = `${labelText} (Page ${bm.page})`;
+        jump.onclick = () => {
+          location.href = `reader.html?page=${bm.page}`;
+        };
+
+        const del = document.createElement("button");
+        del.type = "button";
+        del.className = "bookmark-delete";
+        del.textContent = "✕";
+        del.title = "Delete bookmark";
+        del.onclick = () => {
+          const updated = loadBookmarks();
+          updated.splice(index, 1);
+          localStorage.setItem(STORAGE_KEY, JSON.stringify(updated));
+          renderBookmarks();
+        };
+
+        li.appendChild(jump);
+        li.appendChild(del);
+        listEl.appendChild(li);
+      });
+    }
+
+    fetch("../../books.json")
+      .then(res => res.ok ? res.json() : [])
+      .then(data => {
+        const meta = data.find(b => b.id === BOOK_ID);
+        if (meta && typeof meta.totalPages === "number" && meta.totalPages > 0) {
+          hintEl.textContent = `This book has ${meta.totalPages} pages. Add bookmarks while reading.`;
+        }
+      })
+      .catch(() => {});
+
+    document.addEventListener("DOMContentLoaded", renderBookmarks);
+  </script>
+</body>
+</html>
