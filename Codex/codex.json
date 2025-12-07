@@ -1,0 +1,50 @@
+[
+  {
+    "id": "loc-berlinsfz",
+    "category": "Locations",
+    "title": "Berlin Safe Zone",
+    "tags": ["safe zone", "berlin", "walls"],
+    "summary": "Primary walled settlement in the Eden setting.",
+    "body": [
+      "The Berlin Safe Zone is one of the largest surviving urban enclaves in Europe. From a distance it appears as a ring of concrete and alloy, thirty meters high, encircling the ruins of old Berlin.",
+      "Inside the walls, life is tightly controlled: ration cards, curfews and loudspeaker announcements that split the day into neat, manageable segments. Most residents never see the sky without concrete framing it.",
+      "For people like Alexander Colt, the Safe Zone is both shelter and prison. It keeps the worst of the outside world at bay, but it also cages anyone who wonders what lies beyond the perimeter."
+    ]
+  },
+  {
+    "id": "aly-burner",
+    "category": "Anomalies",
+    "title": "Burner",
+    "tags": ["thermal anomaly", "hazard"],
+    "summary": "Localized thermal anomaly capable of flash-erasing anything inside its radius.",
+    "body": [
+      "Burners appear at first as a shimmer in the air, a distortion like heat rising from asphalt. Instruments struggle to pick them up until something steps inside their radius.",
+      "Once triggered, the air within the anomaly instantaneously spikes in temperature, reducing exposed matter to ash and vitrified residue. Protective gear buys seconds at best.",
+      "Scavengers who work near Burner fields treat them with a mix of superstition and respect, marking their suspected locations with melted signposts and fused glass rubble."
+    ]
+  },
+  {
+    "id": "fac-sed4",
+    "category": "Factions",
+    "title": "SED-4 Extermination Division",
+    "tags": ["faction", "military", "safe zones"],
+    "summary": "Specialized response units tasked with dealing with external threats to the Safe Zones.",
+    "body": [
+      "SED-4 is a paramilitary branch responsible for \"external threats and denial,\" which in practice means anything that moves beyond the walls and isn’t wearing an authorized transponder.",
+      "Their operators are trained to treat the world outside as a kill-zone. Anomalies, mutants, unregistered scavengers—if it lives beyond the perimeter it is considered hostile by default.",
+      "Karl Ottermand is a former SED-4 specialist who walked away from his posting, choosing exile in the ruins over another year of sanctioned executions."
+    ]
+  },
+  {
+    "id": "char-alexcolt",
+    "category": "Characters",
+    "title": "Alexander Colt",
+    "tags": ["character", "protagonist"],
+    "summary": "Runaway from the Berlin Safe Zone and central protagonist of the Alexander novel.",
+    "body": [
+      "Alexander Colt grew up within the Berlin Safe Zone, surviving on ration lines, static-filled announcements and second-hand stories about the world beyond the walls.",
+      "His decision to escape is less a single moment of rebellion and more the slow grind of a life that never changes. When the opportunity finally comes, he takes it without fully understanding the cost.",
+      "The Codex entry focuses on his background and place in the wider setting; his personal story is told in the novel itself."
+    ]
+  }
+]

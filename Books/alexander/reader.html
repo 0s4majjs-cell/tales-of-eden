@@ -1,0 +1,864 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Tales of Eden – Reader</title>
+
+  <!-- global styles + theme -->
+  <link rel="stylesheet" href="../../styles.css" />
+  <script src="../../theme-loader.js"></script>
+
+  <style>
+    :root {
+      --reader-font-size: 1rem;
+    }
+
+    body {
+      margin: 0;
+      font-family: var(--font-ui, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif);
+      background: radial-gradient(circle at top, var(--color-bg-main-top, #182538) 0, var(--color-bg-main-bottom, #05060a) 55%);
+      color: var(--color-text-main, #e9f1ff);
+      transition: background 0.25s ease;
+    }
+
+    /* ===== OVERLAY LAYERS (ANIMATED BACKGROUNDS via WebP) ===== */
+
+    .overlay-layer {
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      opacity: 0;
+      transition: opacity 0.6s ease;
+    }
+
+    #overlay-bg {
+      z-index: 0;
+    }
+
+    #overlay-top {
+      z-index: 9999;
+    }
+
+    /* background types */
+
+    .overlay-bg-none { }
+
+    .overlay-bg-fire {
+      background-image: url("../../overlays/fire-loop.webp");
+      background-repeat: no-repeat;
+      background-size: cover;
+      background-position: center;
+      mix-blend-mode: screen;
+    }
+
+    /* You can add more background types later, e.g.: */
+    /* .overlay-bg-snow { ... } */
+
+    /* top overlays */
+
+    .overlay-top-none { }
+
+    .overlay-top-grain {
+      background-image: url("../../overlays/grain-loop.webp");
+      background-repeat: repeat;
+      background-size: cover;
+      mix-blend-mode: soft-light;
+    }
+
+    .overlay-top-scanlines {
+      background-image: url("../../overlays/scanlines-loop.webp");
+      background-repeat: repeat;
+      background-size: cover;
+      mix-blend-mode: soft-light;
+    }
+
+    /* ===== READER LAYOUT ===== */
+
+    .reader-shell {
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      position: relative;
+      z-index: 10; /* sit above background overlay */
+    }
+
+    .reader-top {
+      height: 52px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 32px;
+      border-bottom: 1px solid rgba(255,255,255,0.08);
+      background: linear-gradient(to bottom, rgba(0,0,0,0.85), rgba(0,0,0,0.35));
+      backdrop-filter: blur(16px);
+      box-shadow: 0 10px 30px rgba(0,0,0,0.7);
+      z-index: 20;
+    }
+
+    .reader-top-left,
+    .reader-top-right {
+      display: flex;
+      gap: 8px;
+      align-items: center;
+      min-width: 0;
+    }
+
+    .reader-top-title {
+      font-size: 14px;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: rgba(223,235,255,0.9);
+      text-align: center;
+      flex: 1;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .reader-btn {
+      padding: 6px 14px;
+      border-radius: 999px;
+      border: 1px solid rgba(255,255,255,0.16);
+      background: rgba(6,12,20,0.9);
+      color: var(--color-text-main);
+      font-size: 12px;
+      cursor: pointer;
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      white-space: nowrap;
+      transition:
+        background 0.15s ease,
+        border-color 0.15s ease,
+        transform 0.10s ease,
+        box-shadow 0.15s ease,
+        opacity 0.15s ease;
+    }
+
+    .reader-btn:hover {
+      background: rgba(22,40,72,0.98);
+      border-color: var(--color-accent, #4ea1ff);
+      box-shadow: 0 0 0 1px rgba(255,255,255,0.16);
+      transform: translateY(-1px);
+    }
+
+    .reader-main {
+      flex: 1;
+      display: flex;
+      justify-content: center;
+      align-items: flex-start;
+      padding: 32px 0 72px;
+      transition: padding-top 0.2s ease, padding-bottom 0.2s ease;
+    }
+
+    .spread {
+      display: flex;
+      gap: 40px;
+      width: 100%;
+      max-width: 1200px;
+      justify-content: center;
+      padding: 0 40px;
+    }
+
+    .spread.single-page {
+      justify-content: center;
+    }
+
+    .page-column {
+      flex: 1;
+      max-width: 560px;
+      font-family: var(--font-reader, "Merriweather", "Georgia", serif);
+      font-size: var(--reader-font-size);
+      line-height: 1.65;
+      color: var(--color-text-main);
+    }
+
+    .page-column h1,
+    .page-column h2 {
+      margin-top: 0;
+      margin-bottom: 12px;
+    }
+
+    .page-column p {
+      margin: 0 0 10px;
+    }
+
+    .reader-bottom {
+      height: 56px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 32px 16px;
+      gap: 16px;
+      z-index: 20;
+    }
+
+    .reader-pager {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 13px;
+      color: var(--color-text-muted, #9ba6c3);
+    }
+
+    .pager-btn {
+      padding: 6px 14px;
+      border-radius: 999px;
+      border: 1px solid rgba(255,255,255,0.16);
+      background: rgba(6,12,20,0.9);
+      color: var(--color-text-main);
+      font-size: 12px;
+      cursor: pointer;
+      transition:
+        background 0.15s ease,
+        border-color 0.15s ease,
+        transform 0.10s ease,
+        box-shadow 0.15s ease;
+    }
+
+    .pager-btn:hover:not(:disabled) {
+      background: rgba(22,40,72,0.98);
+      border-color: var(--color-accent, #4ea1ff);
+      box-shadow: 0 0 0 1px rgba(255,255,255,0.16);
+      transform: translateY(-1px);
+    }
+
+    .pager-btn:disabled {
+      opacity: 0.35;
+      cursor: default;
+      box-shadow: none;
+      transform: none;
+    }
+
+    .reader-bottom-right {
+      display: flex;
+      gap: 8px;
+      align-items: center;
+    }
+
+    @media (max-width: 900px) {
+      .reader-top {
+        padding: 0 16px;
+      }
+      .reader-main {
+        padding: 20px 0 56px;
+      }
+      .spread {
+        flex-direction: column;
+        max-width: 100%;
+        padding: 0 16px;
+        gap: 16px;
+      }
+      .page-column {
+        max-width: 100%;
+        font-size: 0.96rem;
+      }
+      .reader-bottom {
+        padding: 0 16px 12px;
+      }
+    }
+
+    /* ---- CODEX INLINE LINKS ---- */
+
+    .codex-link {
+      position: relative;
+      cursor: pointer;
+      color: var(--color-accent, #f48fb1);
+      font-weight: 500;
+      text-decoration: none;
+      border-bottom: 1px dashed rgba(244, 143, 177, 0.5);
+    }
+
+    .codex-link::after {
+      content: "▾";
+      position: absolute;
+      left: 50%;
+      transform: translateX(-50%);
+      top: 100%;
+      margin-top: 0.08em;
+      font-size: 0.55em;
+      opacity: 0.65;
+      pointer-events: none;
+    }
+
+    .codex-link:hover {
+      color: var(--color-accent, #ffcdd2);
+      border-bottom-color: rgba(255, 205, 210, 0.8);
+    }
+
+    .codex-link:hover::after {
+      opacity: 1;
+    }
+
+    .codex-tooltip {
+      position: fixed;
+      max-width: 280px;
+      background: rgba(3, 6, 12, 0.96);
+      color: var(--color-text-main);
+      font-size: 12px;
+      border-radius: 10px;
+      border: 1px solid rgba(255,255,255,0.16);
+      padding: 8px 10px;
+      box-shadow: 0 14px 40px rgba(0,0,0,0.9);
+      z-index: 2000;
+      pointer-events: none;
+      opacity: 0;
+      transition: opacity 0.12s ease-out;
+    }
+
+    .codex-tooltip-title {
+      font-weight: 600;
+      margin-bottom: 2px;
+      font-size: 12px;
+    }
+
+    .codex-tooltip-meta {
+      font-size: 11px;
+      color: var(--color-text-muted, #9ba6c3);
+      margin-bottom: 4px;
+    }
+
+    .codex-tooltip-body {
+      font-size: 12px;
+      color: var(--color-text-main);
+    }
+  </style>
+</head>
+<body>
+  <!-- overlay layers -->
+  <div id="overlay-bg" class="overlay-layer overlay-bg-none"></div>
+  <div id="overlay-top" class="overlay-layer overlay-top-none"></div>
+
+  <div class="reader-shell">
+    <header class="reader-top">
+      <div class="reader-top-left">
+        <a href="../../index.html" class="reader-btn">← Library</a>
+      </div>
+
+      <div id="readerTitle" class="reader-top-title">Loading…</div>
+
+      <div class="reader-top-right">
+        <a href="index.html" class="reader-btn">Book Info →</a>
+      </div>
+    </header>
+
+    <main class="reader-main">
+      <div id="spread" class="spread">
+        <div id="leftPage" class="page-column"></div>
+        <div id="rightPage" class="page-column"></div>
+      </div>
+    </main>
+
+    <footer class="reader-bottom">
+      <button id="coverBtn" class="reader-btn" type="button">Cover</button>
+
+      <div class="reader-pager">
+        <button id="prevBtn" class="pager-btn" type="button">&lt;</button>
+        <span id="pageIndicator">Page 1 | ?</span>
+        <button id="nextBtn" class="pager-btn" type="button">&gt;</button>
+      </div>
+
+      <div class="reader-bottom-right">
+        <button id="codexBtn" class="reader-btn" type="button">Open in Codex</button>
+        <button id="bookmarkBtn" class="reader-btn" type="button">Bookmark</button>
+      </div>
+    </footer>
+  </div>
+
+  <script>
+    (function () {
+      const META_PATH      = "meta.json";
+      const BOOKS_JSON     = "../../books.json";
+      const CODEX_JSON     = "../../Codex/codex.json";
+      const OVERLAYS_JSON  = "overlays.json";
+
+      const titleEl     = document.getElementById("readerTitle");
+      const leftEl      = document.getElementById("leftPage");
+      const rightEl     = document.getElementById("rightPage");
+      const spreadEl    = document.getElementById("spread");
+      const indicatorEl = document.getElementById("pageIndicator");
+      const prevBtn     = document.getElementById("prevBtn");
+      const nextBtn     = document.getElementById("nextBtn");
+      const coverBtn    = document.getElementById("coverBtn");
+      const bookmarkBtn = document.getElementById("bookmarkBtn");
+      const codexBtn    = document.getElementById("codexBtn");
+
+      const overlayBgEl  = document.getElementById("overlay-bg");
+      const overlayTopEl = document.getElementById("overlay-top");
+
+      let bookMeta       = null;
+      let bookId         = null;
+      let TOTAL_PAGES    = 1;
+      let currentPage    = 1;
+      let overlaysConfig = null;
+
+      /* ---------- storage helpers ---------- */
+
+      function storageKeyProgress() {
+        return bookId ? "toe_progress_" + bookId : null;
+      }
+      function storageKeyBookmarks() {
+        return bookId ? "toe_bookmarks_" + bookId : null;
+      }
+
+      function loadProgress() {
+        const key = storageKeyProgress();
+        if (!key) return null;
+        try {
+          const raw = localStorage.getItem(key);
+          if (!raw) return null;
+          return JSON.parse(raw);
+        } catch {
+          return null;
+        }
+      }
+
+      function saveProgress(leftPageNumber) {
+        const key = storageKeyProgress();
+        if (!key) return;
+        const data = {
+          lastPage: leftPageNumber,
+          totalPages: TOTAL_PAGES,
+          updatedAt: Date.now()
+        };
+        localStorage.setItem(key, JSON.stringify(data));
+      }
+
+      /* ---------- overlays per page (WebP backgrounds + fade) ---------- */
+
+      function setBgOverlayType(bgType) {
+        const bg = bgType || "none";
+        if (!overlayBgEl) return;
+
+        overlayBgEl.className = "overlay-layer overlay-bg-" + bg;
+
+        if (bg === "none") {
+          overlayBgEl.style.opacity = 0;
+        } else {
+          requestAnimationFrame(() => {
+            overlayBgEl.style.opacity = 1;
+          });
+        }
+      }
+
+      function setTopOverlayType(topType) {
+        const top = topType || "none";
+        if (!overlayTopEl) return;
+
+        overlayTopEl.className = "overlay-layer overlay-top-" + top;
+
+        if (top === "none") {
+          overlayTopEl.style.opacity = 0;
+        } else {
+          requestAnimationFrame(() => {
+            overlayTopEl.style.opacity = 1;
+          });
+        }
+      }
+
+      function setOverlayTypes(bgType, topType) {
+        setBgOverlayType(bgType);
+        setTopOverlayType(topType);
+      }
+
+      function resolveOverlayType(list, page) {
+        if (!Array.isArray(list)) return "none";
+        let result = "none";
+        list.forEach(entry => {
+          if (!entry || !entry.type) return;
+          const t = entry.type;
+          if (typeof entry.page === "number") {
+            if (entry.page === page) result = t;
+          } else {
+            const from = typeof entry.from === "number" ? entry.from : -Infinity;
+            const to   = typeof entry.to   === "number" ? entry.to   :  Infinity;
+            if (page >= from && page <= to) {
+              result = t;
+            }
+          }
+        });
+        return result;
+      }
+
+      function applyPageOverlays(leftPage) {
+        let bgType  = "none";
+        let topType = "none";
+
+        if (overlaysConfig) {
+          bgType  = resolveOverlayType(overlaysConfig.background, leftPage) || "none";
+          topType = resolveOverlayType(overlaysConfig.top, leftPage)        || "none";
+        }
+
+        setOverlayTypes(bgType, topType);
+      }
+
+      /* ---------- page loading ---------- */
+
+      function candidatePaths(n) {
+        return [
+          "pages/page-" + n + ".html",
+          "pages/page"  + n + ".html",
+          "pages/"      + n + ".html",
+          "Pages/page-" + n + ".html",
+          "Pages/page"  + n + ".html",
+          "Pages/"      + n + ".html"
+        ];
+      }
+
+      function transformCodexShortcodes(container) {
+        if (!container) return;
+        const raw = container.innerHTML;
+
+        const replaced = raw.replace(/\[\[codex:([^\|\]]+)\|([^\]]+)\]\]/g, (match, id, label) => {
+          id = id.trim();
+          label = label.trim();
+          return `<span class="codex-link" data-codex-id="${id}">${label}</span>`;
+        });
+
+        container.innerHTML = replaced;
+      }
+
+      function loadPageInto(el, n) {
+        if (!el) return;
+
+        if (n < 1 || n > TOTAL_PAGES) {
+          el.innerHTML = "<p style='color:#f58a8a;'>Page " + n + " not found.</p>";
+          return;
+        }
+
+        const candidates = candidatePaths(n);
+        let idx = 0;
+
+        function tryNext() {
+          if (idx >= candidates.length) {
+            console.warn("[reader] No file for page", n, "tried:", candidates);
+            el.innerHTML = "<p style='color:#f58a8a;'>Page " + n + " not found.</p>";
+            return;
+          }
+          const url = candidates[idx++];
+          fetch(url)
+            .then(r => {
+              if (!r.ok) throw new Error("not ok");
+              return r.text();
+            })
+            .then(html => {
+              el.innerHTML = html;
+              transformCodexShortcodes(el);
+              enhanceCodexLinks();
+            })
+            .catch(tryNext);
+        }
+
+        tryNext();
+      }
+
+      function renderSpread() {
+        if (!leftEl || !rightEl || !indicatorEl || !spreadEl) return;
+
+        if (currentPage < 1) currentPage = 1;
+        if (currentPage > TOTAL_PAGES) currentPage = TOTAL_PAGES;
+
+        if (currentPage % 2 === 0 && currentPage !== TOTAL_PAGES) {
+          currentPage--;
+        }
+
+        const leftNum  = currentPage;
+        const rightNum = leftNum + 1;
+
+        const single = TOTAL_PAGES === 1 || rightNum > TOTAL_PAGES;
+
+        if (single) {
+          spreadEl.classList.add("single-page");
+          rightEl.style.display = "none";
+          loadPageInto(leftEl, leftNum);
+          indicatorEl.textContent = "Page " + leftNum + " | " + TOTAL_PAGES;
+        } else {
+          spreadEl.classList.remove("single-page");
+          rightEl.style.display = "";
+          loadPageInto(leftEl, leftNum);
+          loadPageInto(rightEl, rightNum);
+          indicatorEl.textContent = "Page " + leftNum + "–" + rightNum + " | " + TOTAL_PAGES;
+        }
+
+        prevBtn.disabled = leftNum <= 1;
+        nextBtn.disabled = rightNum >= TOTAL_PAGES;
+
+        saveProgress(leftNum);
+        applyPageOverlays(leftNum);
+      }
+
+      function goNext() {
+        const nextLeft = currentPage + 2;
+        if (nextLeft <= TOTAL_PAGES) {
+          currentPage = nextLeft;
+          renderSpread();
+        }
+      }
+
+      function goPrev() {
+        const prevLeft = currentPage - 2;
+        if (prevLeft >= 1) {
+          currentPage = prevLeft;
+          renderSpread();
+        }
+      }
+
+      function goCover() {
+        currentPage = 1;
+        renderSpread();
+      }
+
+      function getCurrentLeftPage() {
+        const text = indicatorEl.textContent || "";
+        const m = text.match(/Page\s+(\d+)/i);
+        return m ? parseInt(m[1], 10) : 1;
+      }
+
+      function addBookmark() {
+        const key = storageKeyBookmarks();
+        if (!key) return;
+
+        const page = getCurrentLeftPage();
+        if (!page || page < 1 || page > TOTAL_PAGES) return;
+
+        let arr = [];
+        try {
+          const raw = localStorage.getItem(key);
+          if (raw) arr = JSON.parse(raw) || [];
+        } catch (e) {
+          console.warn("[reader] bookmark parse error", e);
+        }
+
+        if (!arr.includes(page)) {
+          arr.push(page);
+          arr.sort((a, b) => a - b);
+          localStorage.setItem(key, JSON.stringify(arr));
+        }
+      }
+
+      /* ---------- Codex generic open ---------- */
+
+      function openInCodexGeneric() {
+        let term = "";
+        const sel = window.getSelection();
+        if (sel) term = sel.toString().trim();
+
+        if (!term) {
+          const fallback = (bookMeta && bookMeta.title) ? bookMeta.title : "";
+          term = prompt("Search term for Codex:", fallback) || "";
+          term = term.trim();
+          if (!term) return;
+        }
+
+        const url = "../../codex.html?q=" + encodeURIComponent(term);
+        window.open(url, "_blank");
+      }
+
+      /* ---------- Inline codex link support ---------- */
+
+      let codexIndex = null;
+      let codexLoaded = false;
+      let codexLoadingPromise = null;
+      let tooltipEl = null;
+
+      function loadCodexIndex() {
+        if (codexLoaded) return Promise.resolve(codexIndex || {});
+        if (codexLoadingPromise) return codexLoadingPromise;
+
+        codexLoadingPromise = fetch(CODEX_JSON)
+          .then(r => r.json())
+          .then(data => {
+            codexIndex = {};
+            (data || []).forEach(e => {
+              if (e && e.id) codexIndex[e.id] = e;
+            });
+            codexLoaded = true;
+            return codexIndex;
+          })
+          .catch(err => {
+            console.error("[reader] Failed to load Codex index:", err);
+            codexIndex = {};
+            codexLoaded = true;
+            return codexIndex;
+          });
+
+        return codexLoadingPromise;
+      }
+
+      function ensureTooltip() {
+        if (!tooltipEl) {
+          tooltipEl = document.createElement("div");
+          tooltipEl.className = "codex-tooltip";
+          document.body.appendChild(tooltipEl);
+        }
+        return tooltipEl;
+      }
+
+      function positionTooltip(node, tooltip) {
+        const rect = node.getBoundingClientRect();
+        const margin = 8;
+        let top = rect.bottom + margin;
+        let left = rect.left;
+
+        const width = tooltip.offsetWidth || 260;
+
+        if (left + width > window.innerWidth - 12) {
+          left = window.innerWidth - width - 12;
+        }
+
+        if (top + tooltip.offsetHeight > window.innerHeight - 12) {
+          top = rect.top - margin - tooltip.offsetHeight;
+        }
+
+        tooltip.style.position = "fixed";
+        tooltip.style.top = top + "px";
+        tooltip.style.left = left + "px";
+      }
+
+      function showCodexTooltip(node, id) {
+        const tooltip = ensureTooltip();
+        const entry = (codexIndex && codexIndex[id]) || null;
+
+        if (!entry) {
+          tooltip.innerHTML =
+            "<div class='codex-tooltip-title'>No Codex entry</div>" +
+            "<div class='codex-tooltip-body'>No entry found for \"" + id + "\".</div>";
+        } else {
+          const cat = entry.category || "Codex";
+          const firstPara = (entry.body && entry.body.length)
+            ? entry.body[0]
+            : (entry.summary || "");
+
+          tooltip.innerHTML =
+            "<div class='codex-tooltip-title'>" + (entry.title || "Untitled") + "</div>" +
+            "<div class='codex-tooltip-meta'>" + cat + "</div>" +
+            "<div class='codex-tooltip-body'>" + (firstPara || "") + "</div>";
+        }
+
+        positionTooltip(node, tooltip);
+        tooltip.style.opacity = "1";
+      }
+
+      function hideCodexTooltip() {
+        if (tooltipEl) {
+          tooltipEl.style.opacity = "0";
+        }
+      }
+
+      function enhanceCodexLinks() {
+        if (!spreadEl) return;
+
+        const nodes = spreadEl.querySelectorAll(".codex-link[data-codex-id]");
+        if (!nodes.length) return;
+
+        loadCodexIndex().then(() => {
+          nodes.forEach(node => {
+            if (node.__codexEnhanced) return;
+            node.__codexEnhanced = true;
+
+            const id = node.getAttribute("data-codex-id");
+            if (!id) return;
+
+            node.addEventListener("mouseenter", () => {
+              showCodexTooltip(node, id);
+            });
+            node.addEventListener("mouseleave", hideCodexTooltip);
+
+            node.addEventListener("click", (e) => {
+              e.preventDefault();
+              e.stopPropagation();
+              const url = "../../codex.html?id=" + encodeURIComponent(id);
+              window.open(url, "_blank");
+            });
+          });
+        });
+      }
+
+      /* ---------- init & events ---------- */
+
+      function attachHandlers() {
+        nextBtn.addEventListener("click", goNext);
+        prevBtn.addEventListener("click", goPrev);
+        coverBtn.addEventListener("click", goCover);
+        bookmarkBtn.addEventListener("click", addBookmark);
+        codexBtn.addEventListener("click", openInCodexGeneric);
+
+        document.addEventListener("keydown", (e) => {
+          if (e.key === "ArrowRight") goNext();
+          else if (e.key === "ArrowLeft") goPrev();
+        });
+      }
+
+      function loadOverlaysConfig() {
+        return fetch(OVERLAYS_JSON)
+          .then(r => {
+            if (!r.ok) throw new Error("no overlays");
+            return r.json();
+          })
+          .then(data => {
+            overlaysConfig = data || null;
+          })
+          .catch(() => {
+            overlaysConfig = null;
+          });
+      }
+
+      fetch(META_PATH)
+        .then(r => r.json())
+        .then(meta => {
+          bookMeta = meta || {};
+          bookId   = bookMeta.id || null;
+
+          const title = bookMeta.title || "Book";
+          titleEl.textContent = title;
+          document.title = title + " – Tales of Eden";
+
+          return fetch(BOOKS_JSON);
+        })
+        .then(r => r.json())
+        .then(allBooks => {
+          if (bookId) {
+            const entry = (allBooks || []).find(b => b.id === bookId);
+            if (entry && typeof entry.totalPages === "number") {
+              TOTAL_PAGES = entry.totalPages;
+            } else {
+              TOTAL_PAGES = 1;
+            }
+          } else {
+            TOTAL_PAGES = 1;
+          }
+
+          return loadOverlaysConfig();
+        })
+        .then(() => {
+          const params = new URLSearchParams(window.location.search);
+          const pParam = parseInt(params.get("p") || "NaN", 10);
+
+          if (!Number.isNaN(pParam) && pParam >= 1 && pParam <= TOTAL_PAGES) {
+            currentPage = pParam;
+          } else {
+            const progress = loadProgress();
+            if (progress && typeof progress.lastPage === "number") {
+              const lp = Math.min(Math.max(progress.lastPage, 1), TOTAL_PAGES);
+              currentPage = lp;
+            } else {
+              currentPage = 1;
+            }
+          }
+
+          attachHandlers();
+          renderSpread();
+        })
+        .catch(err => {
+          console.error("[reader] init failed:", err);
+          titleEl.textContent = "Book";
+          TOTAL_PAGES = 1;
+          attachHandlers();
+          renderSpread();
+        });
+    })();
+  </script>
+</body>
+</html>

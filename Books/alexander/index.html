@@ -1,0 +1,429 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Book – Tales of Eden</title>
+
+  <link rel="stylesheet" href="../../styles.css" />
+  <script src="../../theme-loader.js"></script>
+
+  <style>
+    body {
+      margin: 0;
+      font-family: var(--font-ui, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif);
+      background: radial-gradient(circle at top, var(--color-bg-main-top, #182538) 0, var(--color-bg-main-bottom, #05060a) 55%);
+      color: var(--color-text-main, #e9f1ff);
+    }
+
+    .book-shell {
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      padding: 32px 40px 40px;
+    }
+
+    .book-header-row {
+      display: flex;
+      align-items: center;
+      margin-bottom: 24px;
+    }
+
+    .book-back-btn {
+      margin-right: 16px;
+    }
+
+    .book-breadcrumb {
+      font-size: 12px;
+      color: var(--color-text-muted, #9ba6c3);
+    }
+
+    .book-main-card {
+      max-width: 1080px;
+      background: radial-gradient(circle at top left, rgba(255,255,255,0.03), rgba(0,0,0,0.82));
+      border-radius: 20px;
+      border: 1px solid rgba(255,255,255,0.08);
+      box-shadow: 0 22px 60px rgba(0,0,0,0.8);
+      padding: 24px 28px 26px;
+      display: flex;
+      gap: 24px;
+    }
+
+    .book-cover {
+      width: 150px;
+      height: 220px;
+      border-radius: 14px;
+      border: 1px solid rgba(255,255,255,0.14);
+      background: radial-gradient(circle at top, #283141, #05060a);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 13px;
+      color: var(--color-text-muted, #9ba6c3);
+      flex-shrink: 0;
+    }
+
+    .book-info {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .book-title {
+      font-size: 22px;
+      font-weight: 600;
+    }
+
+    .book-meta-line {
+      font-size: 13px;
+      color: var(--color-text-muted, #9ba6c3);
+    }
+
+    .book-meta-line span {
+      margin-right: 10px;
+    }
+
+    .book-description {
+      margin-top: 10px;
+      font-size: 13px;
+      line-height: 1.7;
+      max-width: 680px;
+      white-space: pre-wrap;
+    }
+
+    .book-actions {
+      margin-top: 14px;
+      display: flex;
+      gap: 10px;
+      align-items: center;
+      flex-wrap: wrap;
+    }
+
+    .book-sub {
+      margin-top: 6px;
+      font-size: 12px;
+      color: var(--color-text-muted, #9ba6c3);
+    }
+
+    .book-progress {
+      margin-top: 6px;
+      font-size: 12px;
+      color: var(--color-text-muted, #9ba6c3);
+    }
+
+    .book-progress-bar {
+      margin-top: 4px;
+      width: 220px;
+      max-width: 100%;
+      height: 6px;
+      border-radius: 999px;
+      background: rgba(255,255,255,0.08);
+      overflow: hidden;
+    }
+
+    .book-progress-fill {
+      height: 100%;
+      width: 0%;
+      border-radius: inherit;
+      background: linear-gradient(90deg, var(--color-accent, #4ea1ff), #ff9fcf);
+      transition: width 0.2s ease-out;
+    }
+
+    .book-section-title {
+      margin: 22px 0 8px;
+      font-size: 13px;
+      font-weight: 600;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: rgba(223, 235, 255, 0.9);
+    }
+
+    .book-bookmarks {
+      max-width: 1080px;
+      border-radius: 16px;
+      border: 1px solid rgba(255,255,255,0.1);
+      padding: 10px 16px 14px;
+      background: rgba(5,10,18,0.9);
+      box-shadow: 0 12px 40px rgba(0,0,0,0.75);
+      font-size: 13px;
+    }
+
+    .bookmark-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 5px 11px;
+      border-radius: 999px;
+      border: 1px solid rgba(255,255,255,0.18);
+      background: rgba(10,20,32,0.96);
+      color: var(--color-text-main);
+      font-size: 12px;
+      cursor: pointer;
+      margin: 4px 4px 0 0;
+      text-decoration: none;
+    }
+
+    .bookmark-pill:hover {
+      border-color: var(--color-accent);
+      background: rgba(24,42,70,0.98);
+    }
+
+    .bookmark-empty {
+      font-size: 12px;
+      color: var(--color-text-muted);
+    }
+
+    @media (max-width: 900px) {
+      .book-shell {
+        padding: 20px 16px 28px;
+      }
+      .book-main-card {
+        flex-direction: column;
+        align-items: flex-start;
+      }
+      .book-cover {
+        width: 120px;
+        height: 180px;
+      }
+    }
+
+    .reader-btn {
+      padding: 6px 14px;
+      border-radius: 999px;
+      border: 1px solid rgba(255,255,255,0.16);
+      background: rgba(6,12,20,0.9);
+      color: var(--color-text-main);
+      font-size: 12px;
+      cursor: pointer;
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      white-space: nowrap;
+      transition:
+        background 0.15s ease,
+        border-color 0.15s ease,
+        transform 0.10s ease,
+        box-shadow 0.15s ease;
+    }
+
+    .reader-btn:hover {
+      background: rgba(22,40,72,0.98);
+      border-color: var(--color-accent, #4ea1ff);
+      box-shadow: 0 0 0 1px rgba(255,255,255,0.16);
+      transform: translateY(-1px);
+    }
+  </style>
+</head>
+<body>
+  <div class="book-shell">
+    <div class="book-header-row">
+      <a href="../../index.html" class="reader-btn book-back-btn">← Back to Library</a>
+      <div id="bookBreadcrumb" class="book-breadcrumb">Book</div>
+    </div>
+
+    <section class="book-main-card">
+      <div class="book-cover">Cover</div>
+
+      <div class="book-info">
+        <div id="bookTitle" class="book-title">Title</div>
+        <div id="bookMetaLine" class="book-meta-line"></div>
+        <div id="bookPages" class="book-sub"></div>
+
+        <div id="bookProgressBlock" class="book-progress" style="display:none;">
+          <span id="bookProgressText"></span>
+          <div class="book-progress-bar">
+            <div id="bookProgressFill" class="book-progress-fill"></div>
+          </div>
+        </div>
+
+        <div id="bookDescription" class="book-description"></div>
+
+        <div class="book-actions">
+          <a id="readButton" href="reader.html" class="reader-btn">Read from start</a>
+          <a id="continueButton" href="reader.html" class="reader-btn" style="display:none;">Continue reading</a>
+          <button id="openCodexBtn" class="reader-btn" type="button">Open in Codex</button>
+        </div>
+      </div>
+    </section>
+
+    <h2 class="book-section-title">Bookmarks</h2>
+    <section class="book-bookmarks">
+      <div id="bookmarksContainer"></div>
+    </section>
+  </div>
+
+  <script>
+    (function () {
+      const META_PATH  = "meta.json";
+      const BOOKS_JSON = "../../books.json";
+
+      const titleEl        = document.getElementById("bookTitle");
+      const metaLineEl     = document.getElementById("bookMetaLine");
+      const descriptionEl  = document.getElementById("bookDescription");
+      const pagesEl        = document.getElementById("bookPages");
+      const readBtn        = document.getElementById("readButton");
+      const continueBtn    = document.getElementById("continueButton");
+      const bookmarksEl    = document.getElementById("bookmarksContainer");
+      const breadcrumbEl   = document.getElementById("bookBreadcrumb");
+
+      const progressBlock  = document.getElementById("bookProgressBlock");
+      const progressTextEl = document.getElementById("bookProgressText");
+      const progressFillEl = document.getElementById("bookProgressFill");
+      const openCodexBtn   = document.getElementById("openCodexBtn");
+
+      let meta       = null;
+      let bookId     = null;
+      let totalPages = null;
+
+      function keyBookmarks() {
+        return bookId ? "toe_bookmarks_" + bookId : null;
+      }
+
+      function keyProgress() {
+        return bookId ? "toe_progress_" + bookId : null;
+      }
+
+      function loadBookmarks() {
+        const key = keyBookmarks();
+        if (!key) return [];
+        try {
+          const raw = localStorage.getItem(key);
+          return raw ? JSON.parse(raw) || [] : [];
+        } catch {
+          return [];
+        }
+      }
+
+      function renderBookmarks() {
+        const pages = loadBookmarks();
+        bookmarksEl.innerHTML = "";
+
+        if (!pages.length) {
+          const no = document.createElement("div");
+          no.className = "bookmark-empty";
+          no.textContent = "No bookmarks yet. Add bookmarks while reading.";
+          bookmarksEl.appendChild(no);
+          return;
+        }
+
+        pages.forEach(p => {
+          const link = document.createElement("a");
+          link.className = "bookmark-pill";
+          link.href = "reader.html?p=" + encodeURIComponent(p);
+          link.textContent = "Page " + p;
+          bookmarksEl.appendChild(link);
+        });
+      }
+
+      function loadProgress() {
+        const key = keyProgress();
+        if (!key) return null;
+        try {
+          const raw = localStorage.getItem(key);
+          if (!raw) return null;
+          return JSON.parse(raw);
+        } catch {
+          return null;
+        }
+      }
+
+      function renderProgress() {
+        if (!totalPages || !bookId) {
+          progressBlock.style.display = "none";
+          continueBtn.style.display = "none";
+          return;
+        }
+
+        const prog = loadProgress();
+        if (!prog || typeof prog.lastPage !== "number") {
+          progressBlock.style.display = "none";
+          continueBtn.style.display = "none";
+          return;
+        }
+
+        const last = Math.min(Math.max(prog.lastPage, 1), totalPages);
+        const ratio = Math.min(1, Math.max(0, last / totalPages));
+        const pct = Math.round(ratio * 100);
+
+        progressBlock.style.display = "block";
+        progressTextEl.textContent = "Last read: page " + last + " of " + totalPages + " (" + pct + "%)";
+        progressFillEl.style.width = pct + "%";
+
+        continueBtn.style.display = "inline-flex";
+        continueBtn.href = "reader.html?p=" + encodeURIComponent(last);
+      }
+
+      function openInCodex() {
+        const title  = meta && meta.title ? meta.title : "";
+        const id     = meta && meta.id ? meta.id : "";
+        const query  = title || id || "";
+        if (!query) {
+          window.location.href = "../../codex.html";
+          return;
+        }
+        const url = "../../codex.html?q=" + encodeURIComponent(query);
+        window.open(url, "_blank");
+      }
+
+      // Load meta + books.json
+      fetch(META_PATH)
+        .then(r => r.json())
+        .then(m => {
+          meta   = m || {};
+          bookId = meta.id || null;
+
+          const title  = meta.title  || "Untitled book";
+          const author = meta.author || "Unknown";
+          const genre  = meta.genre  || "Unknown";
+          const type   = meta.type   || "Unknown";
+
+          titleEl.textContent = title;
+          metaLineEl.innerHTML =
+            "<span><strong>Author:</strong> " + author + "</span>" +
+            "<span><strong>Genre:</strong> " + genre + "</span>" +
+            "<span><strong>Type:</strong> " + type + "</span>";
+
+          if (meta.description) {
+            descriptionEl.textContent = meta.description;
+          } else {
+            descriptionEl.textContent = "";
+          }
+
+          document.title = title + " – Tales of Eden";
+          breadcrumbEl.textContent = title;
+
+          return fetch(BOOKS_JSON);
+        })
+        .then(r => r.json())
+        .then(allBooks => {
+          if (bookId) {
+            const entry = (allBooks || []).find(b => b.id === bookId);
+            if (entry && typeof entry.totalPages === "number") {
+              totalPages = entry.totalPages;
+            }
+          }
+
+          if (totalPages) {
+            pagesEl.textContent = "This book has " + totalPages + " pages.";
+          } else {
+            pagesEl.textContent = "";
+          }
+
+          renderProgress();
+          renderBookmarks();
+
+          openCodexBtn.addEventListener("click", openInCodex);
+        })
+        .catch(err => {
+          console.error("[Book index] failed:", err);
+          pagesEl.textContent = "";
+          renderBookmarks();
+          progressBlock.style.display = "none";
+          continueBtn.style.display = "none";
+        });
+    })();
+  </script>
+</body>
+</html>
