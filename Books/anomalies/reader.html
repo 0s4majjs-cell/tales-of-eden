@@ -507,18 +507,25 @@
         ];
       }
 
-      function transformCodexShortcodes(container) {
-        if (!container) return;
-        const raw = container.innerHTML;
+function transformCodexShortcodes(container) {
+  if (!container) return;
+  const raw = container.innerHTML;
 
-        const replaced = raw.replace(/\[\[codex:([^\|\]]+)\|([^\]]+)\]\]/g, (match, id, label) => {
-          id = id.trim();
-          label = label.trim();
-          return `<span class="codex-link" data-codex-id="${id}">${label}</span>`;
-        });
+  // More forgiving:
+  // - allows spaces around id/label
+  // - allows spaces before the final ]]
+  const replaced = raw.replace(
+    /\[\[codex:([^\|\]]+)\|([^\]]+?)\s*\]\]/gi,
+    (match, id, label) => {
+      id = id.trim();
+      label = label.trim();
+      return `<span class="codex-link" data-codex-id="${id}">${label}</span>`;
+    }
+  );
 
-        container.innerHTML = replaced;
-      }
+  container.innerHTML = replaced;
+}
+
 
       function loadPageInto(el, n) {
         if (!el) return;

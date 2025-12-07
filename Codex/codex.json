@@ -30,7 +30,7 @@
     "tags": ["faction", "military", "safe zones"],
     "summary": "Specialized response units tasked with dealing with external threats to the Safe Zones.",
     "body": [
-      "SED-4 is a paramilitary branch responsible for \"external threats and denial,\" which in practice means anything that moves beyond the walls and isn’t wearing an authorized transponder.",
+      "SED-4 is a paramilitary branch responsible for \"external threats and denial,\" which in practice means anything that moves beyond the walls and isn't wearing an authorized transponder.",
       "Their operators are trained to treat the world outside as a kill-zone. Anomalies, mutants, unregistered scavengers—if it lives beyond the perimeter it is considered hostile by default.",
       "Karl Ottermand is a former SED-4 specialist who walked away from his posting, choosing exile in the ruins over another year of sanctioned executions."
     ]
@@ -48,15 +48,15 @@
     ]
   },
   {
-  "id": "fac-pd74",
-  "category": "Factions",
-  "title": "PD74 Perimeter Defense Division",
-  "tags": ["faction", "security", "berlin", "safe zone", "walls", "military", "patrol"],
-  "summary": "Primary security and perimeter defense force assigned to the Berlin Safe Zone.",
-  "body": [
-    "Officially designated Perimeter Defense Division 74, most residents simply call them PD74. They are the primary armed force responsible for maintaining order within the Berlin Safe Zone and securing the vast ring of concrete and alloy that seals the city from the outside world.",
+    "id": "fac-pd74",
+    "category": "Factions",
+    "title": "PD74 Perimeter Defense Division",
+    "tags": ["faction", "security", "berlin", "safe zone", "walls", "military", "patrol"],
+    "summary": "Primary security and perimeter defense force assigned to the Berlin Safe Zone.",
+    "body": [
+       "Officially designated Perimeter Defense Division 74, most residents simply call them PD74. They are the primary armed force responsible for maintaining order within the Berlin Safe Zone and securing the vast ring of concrete and alloy that seals the city from the outside world.",
     "PD74 units patrol the inner districts, the wall-top catwalks and the fractured outskirts where the Safe Zone bleeds into the ruins. Their duties range from curfew enforcement and ration line security to rapid-response deployment whenever something—or someone—tests the integrity of the perimeter.",
     "To the people of Berlin, PD74 is both shield and shadow. They are the ones who step between the Safe Zone and whatever waits beyond the walls, but they are also the boots in the stairwells, the checkpoints at every sector gate and the rifles that make sure no one leaves without permission."
-  ]
-}
+    ]
+  }
 ]
