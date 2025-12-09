@@ -22,12 +22,12 @@ def inline_format(text: str) -> str:
     Apply simple inline formatting to a line of plain text.
 
     Supported:
-      *text*       -> <em>text</em>
-      **text**     -> <strong>text</strong>
-      ***text***   -> <strong><em>text</em></strong>
+      *text*        -> <em>text</em>
+      **text**      -> <strong>text</strong>
+      ***text***    -> <strong><em>text</em></strong>
 
-    Order matters: handle *** first, then **, then *.
-    All text is HTML-escaped first so this is safe.
+      {{style|text}} -> <span class="tone tone-style">text</span>
+                        (for special colour / font styles)
     """
     safe = html.escape(text)
 
@@ -40,7 +40,21 @@ def inline_format(text: str) -> str:
     # italic *text*
     safe = re.sub(r"\*([^*]+)\*", r"<em>\1</em>", safe)
 
+    # coloured / font span: {{styleName|text here}}
+    def _style_repl(match: re.Match) -> str:
+        style_raw = match.group(1)
+        content   = match.group(2)
+        # keep style name safe: only letters / digits / _ / -
+        style = re.sub(r"[^a-zA-Z0-9_-]", "", style_raw).lower()
+        if not style:
+            return content  # fallback: just plain content
+        return f'<span class="tone tone-{style}">{content}</span>'
+
+    safe = re.sub(r"\{\{([a-zA-Z0-9_-]+)\|(.+?)\}\}", _style_repl, safe)
+
     return safe
+
+
 
 # ===========================
 # Block -> HTML

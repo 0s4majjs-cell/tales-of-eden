@@ -3,25 +3,26 @@
 <head>
   <meta charset="UTF-8" />
   <title>Tales of Eden – Library</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
 
-  <!-- global styles + theme -->
   <link rel="stylesheet" href="styles.css" />
   <script src="theme-loader.js"></script>
 
   <style>
     :root {
-      --lib-radius-lg: 22px;
-      --lib-radius-md: 14px;
+      --lib-radius-lg: 24px;
+      --lib-radius-md: 16px;
       --lib-radius-pill: 999px;
-      --lib-border-subtle: 1px solid rgba(148, 163, 184, 0.45);
-      --lib-glass: linear-gradient(
-        145deg,
-        rgba(3, 7, 18, 0.96),
-        rgba(15, 23, 42, 0.96)
-      );
+
+      --lib-border-subtle: 1px solid rgba(148, 163, 184, 0.35);
+      --lib-border-strong: 1px solid rgba(30, 64, 175, 0.85);
+
+      --lib-accent: var(--color-accent, #38bdf8);
+      --lib-text-main: var(--color-text-main, #e5e7eb);
+      --lib-text-muted: var(--color-text-muted, #9ca3af);
     }
 
-    * {
+    *, *::before, *::after {
       box-sizing: border-box;
     }
 
@@ -29,30 +30,32 @@
       margin: 0;
       min-height: 100vh;
       font-family: var(--font-ui, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif);
-      color: var(--color-text-main, #e9f1ff);
+      color: var(--lib-text-main);
       background:
-        radial-gradient(circle at top, var(--color-bg-main-top, #1b2640) 0, var(--color-bg-main-bottom, #050814) 60%),
-        #050814;
+        radial-gradient(circle at 15% 0%, rgba(56, 189, 248, 0.16), transparent 55%),
+        radial-gradient(circle at 85% 100%, rgba(37, 99, 235, 0.18), transparent 65%),
+        linear-gradient(to bottom, var(--color-bg-main-top, #020617), var(--color-bg-main-bottom, #020617));
       background-attachment: fixed;
-      display: flex;
-      flex-direction: column;
     }
 
     .lib-shell {
+      max-width: 1120px;
+      margin: 0 auto;
+      width: 100%;
+      padding: 24px clamp(16px, 4vw, 40px);
       min-height: 100vh;
       display: flex;
       flex-direction: column;
-      padding: 20px clamp(14px, 4vw, 40px);
-      gap: 16px;
+      gap: 18px;
     }
 
-    /* Top bar */
+    /* ===== TOP BAR (matches codex/hub style) ===== */
 
     .lib-topbar {
       display: flex;
       align-items: center;
       justify-content: space-between;
-      gap: 12px;
+      gap: 16px;
     }
 
     .lib-logo-group {
@@ -62,11 +65,12 @@
     }
 
     .lib-logo-mark {
-      width: 30px;
-      height: 30px;
-      border-radius: 10px;
-      background: radial-gradient(circle at 30% 20%, #fbbf24 0, #f97316 18%, #4b5563 55%, #020617 100%);
-      box-shadow: 0 0 24px rgba(248, 250, 252, 0.35);
+      width: 32px;
+      height: 32px;
+      border-radius: 12px;
+      background:
+        radial-gradient(circle at 30% 20%, #38bdf8 0, #6366f1 22%, #020617 70%);
+      box-shadow: 0 0 30px rgba(129, 140, 248, 0.5);
       position: relative;
       overflow: hidden;
     }
@@ -74,670 +78,322 @@
     .lib-logo-mark::after {
       content: "";
       position: absolute;
-      inset: 16%;
-      border-radius: inherit;
+      inset: 12%;
+      border-radius: 10px;
       border: 1px solid rgba(15, 23, 42, 0.8);
     }
 
     .lib-logo-text {
       display: flex;
       flex-direction: column;
-      gap: 1px;
+      gap: 2px;
     }
 
     .lib-logo-title {
       font-size: 15px;
       letter-spacing: 0.16em;
       text-transform: uppercase;
-      color: rgba(226, 232, 255, 0.98);
+      color: rgba(226, 232, 255, 0.96);
     }
 
     .lib-logo-sub {
       font-size: 11px;
-      text-transform: uppercase;
       letter-spacing: 0.12em;
+      text-transform: uppercase;
       color: rgba(148, 163, 184, 0.9);
     }
 
-    .lib-top-actions {
+    .lib-top-nav {
       display: flex;
       align-items: center;
-      gap: 8px;
-      flex-wrap: wrap;
-      justify-content: flex-end;
-    }
-
-    .lib-link-btn {
-      padding: 7px 13px;
+      gap: 2px;
+      padding: 2px;
       border-radius: var(--lib-radius-pill);
       border: 1px solid rgba(148, 163, 184, 0.6);
-      background: rgba(15, 23, 42, 0.96);
-      color: rgba(226, 232, 255, 0.95);
-      font-size: 11px;
-      text-decoration: none;
-      display: inline-flex;
-      align-items: center;
-      gap: 7px;
-      cursor: pointer;
-      text-transform: uppercase;
-      letter-spacing: 0.09em;
-      transition:
-        background 0.15s ease,
-        border-color 0.15s ease,
-        transform 0.1s ease,
-        box-shadow 0.15s ease;
-      white-space: nowrap;
-    }
-
-    .lib-link-btn:hover {
-      background: rgba(30, 64, 175, 0.95);
-      border-color: rgba(191, 219, 254, 0.95);
-      box-shadow: 0 0 0 1px rgba(191, 219, 254, 0.4);
-      transform: translateY(-1px);
-    }
-
-    .lib-link-btn .icon {
-      font-size: 14px;
-      opacity: 0.9;
-    }
-
-    /* Main layout */
-
-    .lib-main {
-      flex: 1;
-      display: grid;
-      grid-template-columns: minmax(0, 1.1fr) minmax(0, 2.1fr);
-      gap: 16px;
-      margin-top: 4px;
-      min-height: 0;
-    }
-
-    @media (max-width: 900px) {
-      .lib-main {
-        grid-template-columns: minmax(0, 1fr);
-      }
-    }
-
-    /* Filters / controls */
-
-    .lib-controls {
-      border-radius: var(--lib-radius-lg);
-      border: var(--lib-border-subtle);
-      background: var(--lib-glass);
-      padding: 12px 14px 12px 14px;
+      background: linear-gradient(
+        135deg,
+        rgba(15, 23, 42, 0.98),
+        rgba(15, 23, 42, 0.9)
+      );
       box-shadow:
-        0 20px 60px rgba(15, 23, 42, 0.95),
+        0 18px 40px rgba(15, 23, 42, 0.95),
         0 0 0 1px rgba(15, 23, 42, 0.9);
-      display: flex;
-      flex-direction: column;
-      gap: 10px;
-      min-height: 0;
     }
 
-    .lib-controls-header {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 8px;
-    }
-
-    .lib-controls-title {
-      font-size: 11px;
-      text-transform: uppercase;
-      letter-spacing: 0.16em;
-      color: rgba(148, 163, 184, 0.96);
-    }
-
-    .lib-controls-meta {
-      font-size: 11px;
-      color: rgba(148, 163, 184, 0.82);
-    }
-
-    .lib-search-row {
-      margin-top: 2px;
-    }
-
-    .lib-search-field {
-      position: relative;
-    }
-
-    .lib-search-input {
-      width: 100%;
+    .lib-nav-link {
       border-radius: var(--lib-radius-pill);
-      border: 1px solid rgba(51, 65, 85, 0.9);
-      background: radial-gradient(circle at top, rgba(15, 23, 42, 0.96), rgba(15, 23, 42, 0.96));
-      color: rgba(226, 232, 255, 0.98);
-      font-size: 12px;
-      padding: 6px 10px 6px 26px;
-      outline: none;
-      transition:
-        border-color 0.15s ease,
-        box-shadow 0.15s ease,
-        background 0.15s ease;
-    }
-
-    .lib-search-input::placeholder {
-      color: rgba(148, 163, 184, 0.9);
-    }
-
-    .lib-search-field::before {
-      content: "🔎";
-      position: absolute;
-      left: 7px;
-      top: 50%;
-      transform: translateY(-50%);
-      font-size: 11px;
-      opacity: 0.9;
-    }
-
-    .lib-search-input:focus {
-      border-color: var(--color-accent, #60a5fa);
-      box-shadow: 0 0 0 1px rgba(96, 165, 250, 0.7);
-      background: radial-gradient(circle at top, rgba(15, 23, 42, 0.98), rgba(15, 23, 42, 0.96));
-    }
-
-    .lib-filter-row {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 8px;
-      margin-top: 4px;
-    }
-
-    .lib-select {
-      border-radius: var(--lib-radius-pill);
-      border: 1px solid rgba(51, 65, 85, 0.9);
-      background: rgba(15, 23, 42, 0.96);
-      color: rgba(226, 232, 255, 0.98);
-      font-size: 11px;
-      padding: 5px 10px 5px 10px;
-      outline: none;
-      cursor: pointer;
-    }
-
-    .lib-toggle-pill {
-      padding: 5px 10px;
-      border-radius: var(--lib-radius-pill);
-      border: 1px solid rgba(51, 65, 85, 0.9);
-      background: rgba(15, 23, 42, 0.96);
-      color: rgba(148, 163, 184, 0.96);
-      font-size: 11px;
-      display: inline-flex;
-      align-items: center;
-      gap: 6px;
-      cursor: pointer;
-      transition:
-        background 0.15s ease,
-        border-color 0.15s ease,
-        color 0.15s ease,
-        box-shadow 0.15s ease,
-        transform 0.1s ease;
-    }
-
-    .lib-toggle-pill.active {
-      background: radial-gradient(circle at top, rgba(37, 99, 235, 0.4), rgba(15, 23, 42, 0.98));
-      border-color: rgba(96, 165, 250, 0.95);
-      color: rgba(226, 232, 255, 0.98);
-      box-shadow: 0 0 0 1px rgba(96, 165, 250, 0.7);
-      transform: translateY(-1px);
-    }
-
-    .lib-toggle-pill .icon {
-      font-size: 12px;
-    }
-
-    .lib-genres {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 6px;
-      margin-top: 6px;
-      padding-top: 6px;
-      border-top: 1px solid rgba(30, 41, 59, 0.9);
-    }
-
-    .lib-genre-pill {
-      padding: 3px 9px;
-      border-radius: var(--lib-radius-pill);
-      border: 1px solid rgba(51, 65, 85, 0.9);
-      background: rgba(15, 23, 42, 0.96);
-      color: rgba(148, 163, 184, 0.96);
-      font-size: 11px;
-      cursor: pointer;
-      white-space: nowrap;
-      display: inline-flex;
-      align-items: center;
-      gap: 6px;
-      transition:
-        background 0.15s ease,
-        border-color 0.15s ease,
-        color 0.15s ease,
-        box-shadow 0.15s ease,
-        transform 0.1s ease;
-    }
-
-    .lib-genre-pill span.dot {
-      width: 6px;
-      height: 6px;
-      border-radius: 999px;
-      background: rgba(148, 163, 184, 0.9);
-    }
-
-    .lib-genre-pill.active {
-      background: radial-gradient(circle at top, rgba(37, 99, 235, 0.35), rgba(15, 23, 42, 0.98));
-      border-color: rgba(96, 165, 250, 0.95);
-      color: rgba(226, 232, 255, 0.98);
-      box-shadow: 0 0 0 1px rgba(96, 165, 250, 0.7);
-      transform: translateY(-1px);
-    }
-
-    .lib-genre-pill.active span.dot {
-      background: #60a5fa;
-    }
-
-    .lib-controls-footer {
-      font-size: 11px;
-      color: rgba(148, 163, 184, 0.85);
-      margin-top: 4px;
-    }
-
-    /* Shelves */
-
-    .lib-shelves {
-      border-radius: var(--lib-radius-lg);
-      border: var(--lib-border-subtle);
-      background: var(--lib-glass);
-      padding: 10px 14px 12px 14px;
-      box-shadow:
-        0 22px 70px rgba(15, 23, 42, 0.95),
-        0 0 0 1px rgba(15, 23, 42, 0.9);
-      min-height: 0;
-      display: flex;
-      flex-direction: column;
-      gap: 12px;
-    }
-
-    .lib-shelf {
-      display: flex;
-      flex-direction: column;
-      gap: 6px;
-    }
-
-    .lib-shelf-header {
-      display: flex;
-      align-items: baseline;
-      justify-content: space-between;
-      gap: 8px;
-    }
-
-    .lib-shelf-title {
-      font-size: 12px;
-      text-transform: uppercase;
-      letter-spacing: 0.16em;
-      color: rgba(191, 219, 254, 0.96);
-    }
-
-    .lib-shelf-meta {
-      font-size: 11px;
-      color: rgba(148, 163, 184, 0.85);
-    }
-
-    .lib-shelf-row {
-      display: grid;
-      grid-auto-flow: column;
-      grid-auto-columns: minmax(210px, 260px);
-      gap: 10px;
-      padding-bottom: 4px;
-      overflow-x: auto;
-      scrollbar-width: thin;
-      scrollbar-color: rgba(51, 65, 85, 0.85) transparent;
-    }
-
-    .lib-shelf-row::-webkit-scrollbar {
-      height: 6px;
-    }
-
-    .lib-shelf-row::-webkit-scrollbar-thumb {
-      background: rgba(51, 65, 85, 0.9);
-      border-radius: 999px;
-    }
-
-    .lib-empty {
-      font-size: 13px;
-      color: rgba(148, 163, 184, 0.9);
-      margin-top: 4px;
-    }
-
-    /* Book card */
-
-    .lib-book-card {
-      border-radius: 16px;
-      border: 1px solid rgba(30, 64, 175, 0.7);
-      background: radial-gradient(circle at top, rgba(37, 99, 235, 0.18), rgba(15, 23, 42, 0.98));
-      padding: 8px 9px 9px 9px;
-      display: flex;
-      flex-direction: column;
-      gap: 6px;
-      position: relative;
-      min-height: 120px;
-      box-shadow: 0 16px 44px rgba(15, 23, 42, 0.95);
-    }
-
-    .lib-book-header {
-      display: flex;
-      gap: 8px;
-    }
-
-    .lib-book-cover {
-      width: 42px;
-      height: 60px;
-      border-radius: 7px;
-      background: radial-gradient(circle at top, rgba(15, 23, 42, 0.2), rgba(15, 23, 42, 0.9));
-      border: 1px solid rgba(15, 23, 42, 0.9);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 16px;
-      color: rgba(148, 163, 184, 0.9);
-      text-transform: uppercase;
-      flex-shrink: 0;
-      position: relative;
-      overflow: hidden;
-    }
-
-    .lib-book-cover::after {
-      content: "";
-      position: absolute;
-      inset: 18%;
-      border-radius: 6px;
-      border: 1px solid rgba(148, 163, 184, 0.35);
-    }
-
-    .lib-book-main {
-      flex: 1;
-      min-width: 0;
-      display: flex;
-      flex-direction: column;
-      gap: 2px;
-    }
-
-    .lib-book-title {
-      font-size: 13px;
-      font-weight: 500;
-      color: rgba(226, 232, 255, 0.98);
-      white-space: nowrap;
-      overflow: hidden;
-      text-overflow: ellipsis;
-    }
-
-    .lib-book-author {
-      font-size: 11px;
-      color: rgba(148, 163, 184, 0.9);
-      white-space: nowrap;
-      overflow: hidden;
-      text-overflow: ellipsis;
-    }
-
-    .lib-book-tags {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 4px;
-      margin-top: 2px;
-    }
-
-    .lib-book-tag {
+      padding: 4px 12px;
       font-size: 10px;
-      border-radius: 999px;
-      border: 1px solid rgba(51, 65, 85, 0.9);
-      padding: 1px 6px;
-      color: rgba(191, 219, 254, 0.95);
-      background: rgba(15, 23, 42, 0.96);
-      white-space: nowrap;
-    }
-
-    .lib-book-fav {
-      position: absolute;
-      top: 6px;
-      right: 6px;
-      border-radius: 999px;
-      border: 1px solid transparent;
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+      border: none;
       background: transparent;
       color: rgba(148, 163, 184, 0.9);
-      font-size: 14px;
-      cursor: pointer;
-      padding: 2px 4px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      transition:
-        color 0.15s ease,
-        transform 0.1s ease;
-    }
-
-    .lib-book-fav:hover {
-      transform: translateY(-1px);
-      color: rgba(251, 191, 36, 0.9);
-    }
-
-    .lib-book-fav.active {
-      color: #fbbf24;
-      text-shadow: 0 0 10px rgba(251, 191, 36, 0.9);
-    }
-
-    .lib-book-desc {
-      font-size: 11px;
-      color: rgba(191, 219, 254, 0.9);
-      max-height: 3.2em;
-      overflow: hidden;
-    }
-
-    .lib-book-progress {
-      margin-top: 2px;
-      font-size: 10px;
-      color: rgba(191, 219, 254, 0.9);
-    }
-
-    .lib-book-progress-bar {
-      width: 100%;
-      height: 4px;
-      border-radius: 999px;
-      background: rgba(15, 23, 42, 0.96);
-      overflow: hidden;
-      margin-top: 2px;
-    }
-
-    .lib-book-progress-bar-inner {
-      height: 100%;
-      border-radius: inherit;
-      background: linear-gradient(
-        90deg,
-        var(--color-accent, #60a5fa),
-        rgba(96, 165, 250, 0.1)
-      );
-      width: 0%;
-      transition: width 0.25s ease-out;
-    }
-
-    .lib-book-footer {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 8px;
-      margin-top: 4px;
-    }
-
-    .lib-book-actions {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 6px;
-    }
-
-    .lib-btn {
-      padding: 4px 9px;
-      border-radius: var(--lib-radius-pill);
-      border: 1px solid rgba(191, 219, 254, 0.9);
-      background: rgba(15, 23, 42, 0.98);
-      color: rgba(226, 232, 255, 0.98);
-      font-size: 11px;
-      text-transform: uppercase;
-      letter-spacing: 0.08em;
       text-decoration: none;
-      display: inline-flex;
-      align-items: center;
-      gap: 6px;
       cursor: pointer;
+      opacity: 0.9;
       transition:
         background 0.15s ease,
-        border-color 0.15s ease,
+        color 0.15s ease,
         transform 0.1s ease,
         box-shadow 0.15s ease;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
       white-space: nowrap;
     }
 
-    .lib-btn:hover {
-      background: rgba(37, 99, 235, 0.96);
-      border-color: rgba(191, 219, 254, 1);
+    .lib-nav-link:not(.is-disabled):hover {
+      background: rgba(30, 64, 175, 0.95);
+      color: rgba(226, 232, 255, 0.98);
       box-shadow: 0 0 0 1px rgba(191, 219, 254, 0.6);
       transform: translateY(-1px);
     }
 
-    .lib-btn-secondary {
-      border-color: rgba(51, 65, 85, 0.9);
-      color: rgba(191, 219, 254, 0.9);
-      background: rgba(15, 23, 42, 0.96);
+    .lib-nav-link.is-active {
+      background: radial-gradient(circle at top, #4f46e5 0, #1d4ed8 45%, #020617 110%);
+      color: rgba(226, 232, 255, 0.98);
+      box-shadow: 0 0 0 1px rgba(191, 219, 254, 0.85);
     }
 
-    .lib-btn-secondary:hover {
-      border-color: rgba(148, 163, 184, 0.95);
-      box-shadow: 0 0 0 1px rgba(148, 163, 184, 0.7);
+    .lib-nav-link.is-disabled {
+      opacity: 0.4;
+      cursor: default;
+      pointer-events: none;
     }
 
-    .lib-book-meta-small {
-      font-size: 10px;
-      color: rgba(148, 163, 184, 0.85);
-      text-align: right;
-      white-space: nowrap;
+    @media (max-width: 780px) {
+      .lib-topbar {
+        flex-direction: column;
+        align-items: flex-start;
+      }
     }
 
-    /* Settings section */
+    /* ===== MAIN PANEL ===== */
 
-    .lib-settings {
+    .lib-panel {
+      flex: 1;
       border-radius: var(--lib-radius-lg);
       border: var(--lib-border-subtle);
-      background: var(--lib-glass);
-      padding: 12px 14px 12px 14px;
+      background: linear-gradient(135deg, rgba(15, 23, 42, 0.98), rgba(3, 7, 18, 0.98));
       box-shadow:
-        0 18px 50px rgba(15, 23, 42, 0.96),
-        0 0 0 1px rgba(15, 23, 42, 0.9);
+        0 22px 60px rgba(15, 23, 42, 0.96),
+        0 0 0 1px rgba(15, 23, 42, 0.96);
       display: flex;
       flex-direction: column;
-      gap: 8px;
-      margin-top: 4px;
+      overflow: hidden;
     }
 
-    .lib-settings-header {
+    .lib-toolbar {
+      padding: 10px 16px;
+      border-bottom: 1px solid rgba(15, 23, 42, 0.9);
+      background: linear-gradient(180deg, rgba(15, 23, 42, 0.98), rgba(3, 7, 18, 0.98));
       display: flex;
       align-items: center;
-      justify-content: space-between;
       gap: 8px;
+      flex-wrap: wrap;
     }
 
-    .lib-settings-title {
-      font-size: 11px;
-      text-transform: uppercase;
-      letter-spacing: 0.16em;
-      color: rgba(148, 163, 184, 0.96);
-    }
-
-    .lib-settings-meta {
-      font-size: 11px;
-      color: rgba(148, 163, 184, 0.82);
-    }
-
-    .lib-settings-grid {
-      display: grid;
-      grid-template-columns: repeat(4, minmax(0, 1fr));
-      gap: 10px;
-      margin-top: 6px;
-    }
-
-    @media (max-width: 900px) {
-      .lib-settings-grid {
-        grid-template-columns: repeat(2, minmax(0, 1fr));
-      }
-    }
-
-    @media (max-width: 520px) {
-      .lib-settings-grid {
-        grid-template-columns: minmax(0, 1fr);
-      }
-    }
-
-    .lib-settings-field {
+    .lib-toolbar-group {
       display: flex;
-      flex-direction: column;
-      gap: 4px;
-      font-size: 11px;
-      color: rgba(191, 219, 254, 0.96);
+      align-items: center;
+      gap: 6px;
+      flex-wrap: wrap;
     }
 
-    .lib-settings-field label {
+    .lib-toolbar-btn {
+      padding: 7px 14px;
+      border-radius: 6px;
+      border: 1px solid rgba(31, 41, 55, 0.9);
+      background: #020617;
+      color: rgba(209, 213, 219, 0.96);
+      font-size: 0.78rem;
       text-transform: uppercase;
-      letter-spacing: 0.12em;
-      color: rgba(148, 163, 184, 0.96);
+      letter-spacing: 0.14em;
+      cursor: pointer;
+      user-select: none;
+      transition: all 0.15s ease;
     }
 
-    .lib-color-input {
-      width: 100%;
-      height: 28px;
-      border-radius: 10px;
-      border: 1px solid rgba(51, 65, 85, 0.9);
-      background: rgba(15, 23, 42, 0.96);
-      padding: 0;
+    .lib-toolbar-btn:hover {
+      background: #050816;
+      border-color: rgba(148, 163, 184, 0.85);
     }
 
-    .lib-select-small {
-      border-radius: 10px;
-      border: 1px solid rgba(51, 65, 85, 0.9);
-      background: rgba(15, 23, 42, 0.96);
-      color: rgba(226, 232, 255, 0.98);
-      font-size: 12px;
-      padding: 5px 8px;
+    .lib-toolbar-btn.is-active {
+      background: radial-gradient(circle at 30% 0%, rgba(56, 189, 248, 0.5), #020617);
+      border-color: rgba(56, 189, 248, 0.85);
+      color: #e5f0ff;
+    }
+
+    .lib-toolbar-select {
+      border-radius: 6px;
+      border: 1px solid rgba(31, 41, 55, 0.9);
+      background: rgba(2, 6, 23, 0.96);
+      color: rgba(209, 213, 219, 0.96);
+      font-size: 0.78rem;
+      padding: 6px 8px;
       outline: none;
     }
 
-    .lib-settings-actions {
-      display: flex;
-      gap: 8px;
-      margin-top: 4px;
+    .lib-toolbar-spacer {
+      flex: 1;
     }
 
-    .lib-footer {
-      margin-top: 4px;
-      padding: 4px 2px 0;
-      font-size: 11px;
+    .lib-search-wrap {
       display: flex;
       align-items: center;
-      justify-content: space-between;
-      color: rgba(148, 163, 184, 0.8);
-      gap: 8px;
-      border-top: 1px solid rgba(15, 23, 42, 0.9);
+      border-radius: 6px;
+      border: 1px solid rgba(31, 41, 55, 0.9);
+      background: rgba(2, 6, 23, 0.95);
+      padding: 0 8px;
+      min-width: 190px;
     }
 
-    .lib-footer-links {
-      display: flex;
-      gap: 10px;
-      flex-wrap: wrap;
-      justify-content: flex-end;
-    }
-
-    .lib-footer-links a {
+    .lib-search-icon {
+      font-size: 0.9rem;
       color: rgba(148, 163, 184, 0.9);
-      text-decoration: none;
-      border-bottom: 1px dotted rgba(55, 65, 81, 0.7);
+      padding-right: 4px;
     }
 
-    .lib-footer-links a:hover {
+    .lib-search-input {
+      border: none;
+      outline: none;
+      background: transparent;
+      font-size: 0.8rem;
+      color: var(--lib-text-main);
+      padding: 5px 0;
+      width: 100%;
+    }
+
+    .lib-search-input::placeholder {
+      color: rgba(148, 163, 184, 0.8);
+    }
+
+    .lib-list-area {
+      flex: 1;
+      padding: 10px 16px 14px;
+      overflow: auto;
+      background: radial-gradient(circle at top, rgba(15, 23, 42, 0.95), rgba(2, 6, 23, 0.98));
+    }
+
+    .lib-table {
+      max-width: 100%;
+      border-radius: 10px;
+      overflow: hidden;
+      border: 1px solid rgba(15, 23, 42, 0.9);
+      background: linear-gradient(180deg, rgba(15, 23, 42, 0.95), rgba(2, 6, 23, 0.98));
+    }
+
+    .lib-table-header,
+    .lib-row {
+      display: grid;
+      grid-template-columns: minmax(0, 2.4fr) minmax(0, 1.6fr) minmax(0, 1.4fr) 40px;
+      align-items: center;
+    }
+
+    .lib-table-header {
+      background: linear-gradient(180deg, rgba(15, 23, 42, 0.98), rgba(2, 6, 23, 0.98));
+      border-bottom: 1px solid rgba(15, 23, 42, 0.9);
+      font-size: 0.72rem;
+      text-transform: uppercase;
+      letter-spacing: 0.16em;
+      color: rgba(148, 163, 184, 0.9);
+    }
+
+    .lib-header-cell,
+    .lib-cell {
+      padding: 7px 12px;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .lib-header-cell:first-child,
+    .lib-cell:first-child {
+      padding-left: 16px;
+    }
+
+    .lib-header-cell:last-child,
+    .lib-cell:last-child {
+      padding-right: 16px;
+    }
+
+    .lib-row {
+      font-size: 0.86rem;
+      border-bottom: 1px solid rgba(15, 23, 42, 0.9);
+      cursor: pointer;
+      background: rgba(2, 6, 23, 0.96);
+      transition:
+        background 0.12s ease,
+        box-shadow 0.12s ease,
+        transform 0.06s ease;
+    }
+
+    .lib-row:hover {
+      background: radial-gradient(circle at 0 50%, rgba(37, 99, 235, 0.28), rgba(2, 6, 23, 0.98));
+      box-shadow: inset 0 0 0 1px rgba(30, 64, 175, 0.7);
+      transform: translateY(-0.5px);
+    }
+
+    .lib-cell-title {
+      font-weight: 500;
       color: rgba(226, 232, 255, 0.98);
-      border-bottom-color: rgba(156, 163, 175, 0.9);
+    }
+
+    .lib-cell-author {
+      font-size: 0.82rem;
+      color: rgba(148, 163, 184, 0.9);
+    }
+
+    .lib-cell-type {
+      font-size: 0.82rem;
+      color: rgba(191, 219, 254, 0.96);
+    }
+
+    .lib-cell-star {
+      display: flex;
+      justify-content: flex-end;
+      align-items: center;
+    }
+
+    .lib-star-btn {
+      border: none;
+      outline: none;
+      background: transparent;
+      cursor: pointer;
+      font-size: 1.1rem;
+      color: rgba(148, 163, 184, 0.8);
+      transition:
+        color 0.12s ease,
+        text-shadow 0.12s ease,
+        transform 0.06s ease;
+    }
+
+    .lib-star-btn:hover {
+      transform: scale(1.1);
+      color: rgba(250, 204, 21, 0.85);
+    }
+
+    .lib-star-btn.is-active {
+      color: #facc15;
+      text-shadow: 0 0 8px rgba(250, 204, 21, 0.8);
+    }
+
+    .lib-empty {
+      padding: 16px;
+      font-size: 0.84rem;
+      color: rgba(148, 163, 184, 0.9);
+    }
+
+    @media (max-width: 720px) {
+      .lib-table-header,
+      .lib-row {
+        grid-template-columns: minmax(0, 2.1fr) minmax(0, 1.4fr) minmax(0, 1.3fr) 36px;
+      }
+      .lib-shell {
+        padding-inline: 12px;
+      }
     }
   </style>
 </head>
@@ -749,710 +405,248 @@
         <div class="lib-logo-mark"></div>
         <div class="lib-logo-text">
           <div class="lib-logo-title">Tales of Eden</div>
-          <div class="lib-logo-sub">Narrative Library</div>
+          <div class="lib-logo-sub">Library</div>
         </div>
       </div>
 
-      <div class="lib-top-actions">
-        <a href="index.html" class="lib-link-btn">
-          <span class="icon">◀</span>
-          <span>Archive Hub</span>
-        </a>
-        <a href="codex.html" class="lib-link-btn">
-          <span class="icon">📖</span>
-          <span>Codex</span>
-        </a>
-      </div>
+      <nav class="lib-top-nav">
+        <a href="library.html" class="lib-nav-link is-active">Library</a>
+        <a href="codex.html" class="lib-nav-link">Codex</a>
+       <a href="settings.html" class="lib-nav-link">Settings</a>
+      </nav>
     </header>
 
-    <!-- MAIN -->
-    <main class="lib-main">
-      <!-- LEFT: FILTERS -->
-      <aside class="lib-controls">
-        <div class="lib-controls-header">
-          <div class="lib-controls-title">Library Filters</div>
-          <div class="lib-controls-meta" id="libBookCountMeta">Loading books…</div>
+    <!-- MAIN PANEL -->
+    <section class="lib-panel">
+      <div class="lib-toolbar">
+        <div class="lib-toolbar-group">
+          <button id="libSortBtn" class="lib-toolbar-btn">Filter (A–Z)</button>
+          <button id="libFavBtn" class="lib-toolbar-btn">Favourites</button>
         </div>
 
-        <div class="lib-search-row">
-          <div class="lib-search-field">
-            <input
-              id="libSearchInput"
-              class="lib-search-input"
-              type="search"
-              placeholder="Search by title, author, or description…"
-              autocomplete="off"
-            />
+        <div class="lib-toolbar-group">
+          <select id="libGenreSelect" class="lib-toolbar-select">
+            <option value="all">All genres</option>
+          </select>
+        </div>
+
+        <div class="lib-toolbar-spacer"></div>
+
+        <div class="lib-search-wrap">
+          <span class="lib-search-icon">🔍</span>
+          <input
+            id="libSearchInput"
+            class="lib-search-input"
+            type="search"
+            placeholder="Search title, author or tag…"
+            autocomplete="off"
+          />
+        </div>
+      </div>
+
+      <div class="lib-list-area">
+        <div class="lib-table">
+          <div class="lib-table-header">
+            <div class="lib-header-cell">Title</div>
+            <div class="lib-header-cell">Author</div>
+            <div class="lib-header-cell">Type</div>
+            <div class="lib-header-cell"></div>
           </div>
+          <div id="libList" class="lib-list-body"></div>
         </div>
-
-        <div class="lib-filter-row">
-          <select id="libTypeSelect" class="lib-select">
-            <option value="All">All types</option>
-          </select>
-
-          <select id="libSortSelect" class="lib-select">
-            <option value="title">Sort: Title</option>
-            <option value="author">Sort: Author</option>
-            <option value="recent">Sort: Recently read</option>
-          </select>
-
-          <button id="libFavToggle" type="button" class="lib-toggle-pill">
-            <span class="icon">★</span>
-            <span>Favourites only</span>
-          </button>
-        </div>
-
-        <div class="lib-genres" id="libGenres"></div>
-
-        <div class="lib-controls-footer" id="libFilterSummary">
-          –
-        </div>
-      </aside>
-
-      <!-- RIGHT: SHELVES -->
-      <section class="lib-shelves">
-        <div id="libShelves"></div>
-        <div id="libEmptyState" class="lib-empty" style="display:none;">
-          No books match this view. Try clearing filters or search.
-        </div>
-      </section>
-    </main>
-
-    <!-- SETTINGS SECTION -->
-    <section class="lib-settings" id="settings">
-      <div class="lib-settings-header">
-        <div class="lib-settings-title">Reader &amp; Theme Settings</div>
-        <div class="lib-settings-meta">
-          Adjust colors and font. Settings are stored locally on this device.
-        </div>
-      </div>
-
-      <div class="lib-settings-grid">
-        <div class="lib-settings-field">
-          <label for="themeAccent">Accent</label>
-          <input id="themeAccent" class="lib-color-input" type="color" />
-        </div>
-
-        <div class="lib-settings-field">
-          <label for="themeBgTop">Background Top</label>
-          <input id="themeBgTop" class="lib-color-input" type="color" />
-        </div>
-
-        <div class="lib-settings-field">
-          <label for="themeBgBottom">Background Bottom</label>
-          <input id="themeBgBottom" class="lib-color-input" type="color" />
-        </div>
-
-        <div class="lib-settings-field">
-          <label for="themeFont">Reader Font</label>
-          <select id="themeFont" class="lib-select-small">
-            <option value="serif">Serif (default)</option>
-            <option value="sans">Sans-serif</option>
-            <option value="mono">Monospace</option>
-          </select>
-        </div>
-      </div>
-
-      <div class="lib-settings-actions">
-        <button id="themeApplyBtn" class="lib-btn" type="button">
-          <span>Save Theme</span>
-        </button>
-        <button id="themeResetBtn" class="lib-btn lib-btn-secondary" type="button">
-          <span>Reset to Default</span>
-        </button>
       </div>
     </section>
-
-    <!-- FOOTER -->
-    <footer class="lib-footer">
-      <span>Tales of Eden – Library</span>
-      <div class="lib-footer-links">
-        <a href="index.html">Hub</a>
-        <a href="codex.html">Codex</a>
-      </div>
-    </footer>
   </div>
 
   <script>
     (function () {
       const BOOKS_JSON = "books.json";
 
-      const searchInput     = document.getElementById("libSearchInput");
-      const typeSelect      = document.getElementById("libTypeSelect");
-      const sortSelect      = document.getElementById("libSortSelect");
-      const favToggle       = document.getElementById("libFavToggle");
-      const genresEl        = document.getElementById("libGenres");
-      const shelvesEl       = document.getElementById("libShelves");
-      const emptyStateEl    = document.getElementById("libEmptyState");
-      const bookCountMetaEl = document.getElementById("libBookCountMeta");
-      const filterSummaryEl = document.getElementById("libFilterSummary");
+      const listEl      = document.getElementById("libList");
+      const sortBtn     = document.getElementById("libSortBtn");
+      const favBtn      = document.getElementById("libFavBtn");
+      const genreSelect = document.getElementById("libGenreSelect");
+      const searchInput = document.getElementById("libSearchInput");
 
-      // Theme elements
-      const themeAccentEl   = document.getElementById("themeAccent");
-      const themeBgTopEl    = document.getElementById("themeBgTop");
-      const themeBgBottomEl = document.getElementById("themeBgBottom");
-      const themeFontEl     = document.getElementById("themeFont");
-      const themeApplyBtn   = document.getElementById("themeApplyBtn");
-      const themeResetBtn   = document.getElementById("themeResetBtn");
+      let books        = [];
+      let sortAsc      = true;
+      let favOnly      = false;
+      let searchQuery  = "";
+      let currentGenre = "all";
 
-      let allBooks      = [];
-      let genresSet     = new Set();
-      let typesSet      = new Set(["All"]);
-      let favoritesSet  = new Set();
-      let progressMap   = {};
-      let activeGenre   = "All";
-      let favouritesOnly = false;
+      const favKey = id => "toe_fav_" + id;
+      const isFav  = id => localStorage.getItem(favKey(id)) === "1";
 
-      function loadFavorites() {
-        try {
-          const raw = localStorage.getItem("toe_favorites");
-          if (!raw) return new Set();
-          const arr = JSON.parse(raw);
-          if (!Array.isArray(arr)) return new Set();
-          return new Set(arr);
-        } catch {
-          return new Set();
-        }
+      function computeGenre(book) {
+        if (book.type) return book.type;
+        if (Array.isArray(book.tags) && book.tags.length) return book.tags[0];
+        return "Uncategorised";
       }
 
-      function saveFavorites() {
-        try {
-          localStorage.setItem("toe_favorites", JSON.stringify(Array.from(favoritesSet)));
-        } catch (e) {
-          console.warn("[library] Failed to save favourites:", e);
-        }
-      }
-
-      function loadProgressMap() {
-        const map = {};
-        const now = Date.now();
-        for (let i = 0; i < localStorage.length; i++) {
-          const key = localStorage.key(i);
-          if (!key || !key.startsWith("toe_progress_")) continue;
-          try {
-            const raw = localStorage.getItem(key);
-            if (!raw) continue;
-            const data = JSON.parse(raw);
-            const bookId = key.replace("toe_progress_", "");
-            if (!bookId || typeof data.lastPage !== "number") continue;
-            map[bookId] = {
-              lastPage: data.lastPage,
-              totalPages: data.totalPages || 0,
-              updatedAt: data.updatedAt || now
-            };
-          } catch (e) {
-            console.warn("[library] progress parse error for", key, e);
-          }
-        }
-        return map;
-      }
-
-      function hasProgress(bookId) {
-        const p = progressMap[bookId];
-        return !!(p && p.lastPage && p.lastPage > 0);
-      }
-
-      function progressPercent(book) {
-        const p = progressMap[book.id];
-        if (!p) return 0;
-        const total = p.totalPages || book.totalPages || 0;
-        if (!total) return 0;
-        return Math.min(100, (p.lastPage / total) * 100);
-      }
-
-      function isComplete(book) {
-        const p = progressMap[book.id];
-        const total = book.totalPages || (p && p.totalPages) || 0;
-        if (!total || !p) return false;
-        return p.lastPage >= total;
-      }
-
-      function groupBy(arr, keyFn) {
-        const map = new Map();
-        arr.forEach(item => {
-          const key = keyFn(item);
-          if (!map.has(key)) map.set(key, []);
-          map.get(key).push(item);
-        });
-        return map;
-      }
-
-      function formatPercent(p) {
-        if (!isFinite(p)) return "0%";
-        if (p >= 99.5) return "100%";
-        return Math.round(p) + "%";
-      }
-
-      function fillTypeSelect() {
-        typesSet.clear();
-        typesSet.add("All");
-        allBooks.forEach(b => {
-          if (b.type) typesSet.add(b.type);
-        });
-        typeSelect.innerHTML = "";
-        Array.from(typesSet).forEach(t => {
-          const opt = document.createElement("option");
-          opt.value = t;
-          opt.textContent = t === "All" ? "All types" : t;
-          typeSelect.appendChild(opt);
-        });
-      }
-
-      function renderGenres() {
-        genresEl.innerHTML = "";
-        const arr = Array.from(genresSet);
-        arr.sort((a, b) => {
-          if (a === "All") return -1;
-          if (b === "All") return 1;
-          return a.localeCompare(b);
-        });
-
-        arr.forEach(g => {
-          const btn = document.createElement("button");
-          btn.type = "button";
-          btn.className = "lib-genre-pill" + (g === activeGenre ? " active" : "");
-          btn.innerHTML = `<span class="dot"></span><span>${g}</span>`;
-          btn.addEventListener("click", () => {
-            activeGenre = g;
-            renderGenres();
-            renderShelves();
+      function loadBooks() {
+        return fetch(BOOKS_JSON)
+          .then(r => r.json())
+          .then(data => Array.isArray(data) ? data : [])
+          .catch(err => {
+            console.warn("[library] Failed to load books.json:", err);
+            return [];
           });
-          genresEl.appendChild(btn);
-        });
       }
 
-      function collectGenres() {
-        genresSet.clear();
-        genresSet.add("All");
-        allBooks.forEach(b => {
-          const g = b.genre || "Uncategorized";
-          genresSet.add(g);
+      function populateGenres() {
+        const set = new Set();
+        books.forEach(b => set.add(computeGenre(b)));
+        const genres = Array.from(set).sort((a, b) => a.localeCompare(b));
+
+        while (genreSelect.options.length > 1) {
+          genreSelect.remove(1);
+        }
+        genres.forEach(g => {
+          const opt = document.createElement("option");
+          opt.value = g;
+          opt.textContent = g;
+          genreSelect.appendChild(opt);
         });
       }
 
       function matchesFilters(book) {
-        const q = (searchInput.value || "").trim().toLowerCase();
-        const type = typeSelect.value || "All";
+        if (favOnly && !isFav(book.id)) return false;
 
-        if (favouritesOnly && !favoritesSet.has(book.id)) return false;
-        if (activeGenre !== "All") {
-          if ((book.genre || "Uncategorized") !== activeGenre) return false;
+        if (currentGenre !== "all" && computeGenre(book) !== currentGenre) {
+          return false;
         }
-        if (type !== "All" && book.type !== type) return false;
 
-        if (q) {
-          const hay = [
+        if (searchQuery) {
+          const q = searchQuery.toLowerCase();
+          const blob = [
             book.title || "",
             book.author || "",
-            book.genre || "",
-            book.type || "",
-            book.description || ""
+            (book.tags || []).join(" "),
+            book.type || ""
           ].join(" ").toLowerCase();
-          if (!hay.includes(q)) return false;
+          if (!blob.includes(q)) return false;
         }
+
         return true;
       }
 
-      function filteredBooks() {
-        const base = allBooks.slice();
-        const mode = sortSelect.value || "title";
+      function renderList() {
+        if (!listEl) return;
+        listEl.innerHTML = "";
 
-        if (mode === "recent") {
-          base.sort((a, b) => {
-            const pa = progressMap[a.id];
-            const pb = progressMap[b.id];
-            const ta = pa ? pa.updatedAt || 0 : 0;
-            const tb = pb ? pb.updatedAt || 0 : 0;
-            return tb - ta;
+        const filtered = books
+          .filter(matchesFilters)
+          .sort((a, b) => {
+            const tA = (a.title || "").toLowerCase();
+            const tB = (b.title || "").toLowerCase();
+            if (tA < tB) return sortAsc ? -1 : 1;
+            if (tA > tB) return sortAsc ? 1 : -1;
+            return 0;
           });
-        } else if (mode === "author") {
-          base.sort((a, b) => (a.author || "").localeCompare(b.author || ""));
-        } else {
-          base.sort((a, b) => (a.title || "").localeCompare(b.title || ""));
-        }
 
-        return base.filter(matchesFilters);
-      }
-
-      function createBookCard(book) {
-        const card = document.createElement("article");
-        card.className = "lib-book-card";
-
-        const header = document.createElement("div");
-        header.className = "lib-book-header";
-
-        const cover = document.createElement("div");
-        cover.className = "lib-book-cover";
-        cover.textContent = (book.title || "?").slice(0, 1).toUpperCase();
-
-        const main = document.createElement("div");
-        main.className = "lib-book-main";
-
-        const titleEl = document.createElement("div");
-        titleEl.className = "lib-book-title";
-        titleEl.textContent = book.title || book.id || "Untitled";
-
-        const authorEl = document.createElement("div");
-        authorEl.className = "lib-book-author";
-        authorEl.textContent = book.author ? `by ${book.author}` : "Unknown author";
-
-        const tagsEl = document.createElement("div");
-        tagsEl.className = "lib-book-tags";
-
-        if (book.type) {
-          const t = document.createElement("span");
-          t.className = "lib-book-tag";
-          t.textContent = book.type;
-          tagsEl.appendChild(t);
-        }
-
-        if (book.genre) {
-          const g = document.createElement("span");
-          g.className = "lib-book-tag";
-          g.textContent = book.genre;
-          tagsEl.appendChild(g);
-        }
-
-        if (isComplete(book)) {
-          const c = document.createElement("span");
-          c.className = "lib-book-tag";
-          c.textContent = "Completed";
-          tagsEl.appendChild(c);
-        }
-
-        main.appendChild(titleEl);
-        main.appendChild(authorEl);
-        main.appendChild(tagsEl);
-
-        header.appendChild(cover);
-        header.appendChild(main);
-
-        const favBtn = document.createElement("button");
-        favBtn.type = "button";
-        favBtn.className = "lib-book-fav";
-        favBtn.innerHTML = "★";
-        if (favoritesSet.has(book.id)) {
-          favBtn.classList.add("active");
-        }
-        favBtn.addEventListener("click", () => {
-          if (favoritesSet.has(book.id)) {
-            favoritesSet.delete(book.id);
-            favBtn.classList.remove("active");
-          } else {
-            favoritesSet.add(book.id);
-            favBtn.classList.add("active");
-          }
-          saveFavorites();
-          renderShelves();
-        });
-
-        const descEl = document.createElement("div");
-        descEl.className = "lib-book-desc";
-        const d = book.description || "";
-        descEl.textContent = d.length > 140 ? d.slice(0, 138) + "…" : d;
-
-        const p = progressMap[book.id];
-        const progressWrap = document.createElement("div");
-        const percent = progressPercent(book);
-
-        if (p && percent > 0) {
-          progressWrap.className = "lib-book-progress";
-          const label = document.createElement("div");
-          label.textContent = `Page ${p.lastPage} of ${p.totalPages || book.totalPages || "?"} · ${formatPercent(percent)}`;
-
-          const bar = document.createElement("div");
-          bar.className = "lib-book-progress-bar";
-          const inner = document.createElement("div");
-          inner.className = "lib-book-progress-bar-inner";
-          inner.style.width = formatPercent(percent);
-          bar.appendChild(inner);
-
-          progressWrap.appendChild(label);
-          progressWrap.appendChild(bar);
-        }
-
-        const footer = document.createElement("div");
-        footer.className = "lib-book-footer";
-
-        const actions = document.createElement("div");
-        actions.className = "lib-book-actions";
-
-        const infoUrl = book.path || "#";
-        const readerUrl = infoUrl.replace(/index\.html$/i, "reader.html");
-
-        const readBtn = document.createElement("a");
-        readBtn.href = readerUrl;
-        readBtn.className = "lib-btn";
-        readBtn.innerHTML = `<span>Read</span><span>⮞</span>`;
-
-        const infoBtn = document.createElement("a");
-        infoBtn.href = infoUrl;
-        infoBtn.className = "lib-btn lib-btn-secondary";
-        infoBtn.textContent = "Info";
-
-        const codexBtn = document.createElement("a");
-        codexBtn.href = "codex.html?q=" + encodeURIComponent(book.title || book.id || "");
-        codexBtn.className = "lib-btn lib-btn-secondary";
-        codexBtn.textContent = "Codex";
-
-        actions.appendChild(readBtn);
-        actions.appendChild(infoBtn);
-        actions.appendChild(codexBtn);
-
-        const metaSmall = document.createElement("div");
-        metaSmall.className = "lib-book-meta-small";
-        if (p && p.updatedAt) {
-          const dt = new Date(p.updatedAt);
-          metaSmall.textContent = "Updated " + dt.toLocaleDateString();
-        } else {
-          metaSmall.textContent = book.type || "";
-        }
-
-        footer.appendChild(actions);
-        footer.appendChild(metaSmall);
-
-        card.appendChild(header);
-        card.appendChild(favBtn);
-        card.appendChild(descEl);
-        if (progressWrap.className) card.appendChild(progressWrap);
-        card.appendChild(footer);
-
-        return card;
-      }
-
-      function renderShelves() {
-        const books = filteredBooks();
-        shelvesEl.innerHTML = "";
-        if (!books.length) {
-          emptyStateEl.style.display = "";
+        if (!filtered.length) {
+          const empty = document.createElement("div");
+          empty.className = "lib-empty";
+          empty.textContent = "No books match the current filters.";
+          listEl.appendChild(empty);
           return;
         }
-        emptyStateEl.style.display = "none";
 
-        const total = allBooks.length;
-        const filteredCount = books.length;
-        const genreText = activeGenre === "All" ? "all genres" : activeGenre;
-        const typeText = (typeSelect.value || "All") === "All" ? "all types" : typeSelect.value;
-        const favText = favouritesOnly ? " · favourites only" : "";
-
-        if (filterSummaryEl) {
-          filterSummaryEl.textContent = `${filteredCount} of ${total} works · ${genreText} · ${typeText}${favText}`;
-        }
-
-        // Continue Reading shelf
-        const cont = books.filter(b => hasProgress(b.id) && !isComplete(b));
-        const remaining = books.filter(b => !cont.includes(b));
-
-        if (cont.length) {
-          const shelf = document.createElement("section");
-          shelf.className = "lib-shelf";
-
-          const header = document.createElement("div");
-          header.className = "lib-shelf-header";
-          const title = document.createElement("div");
-          title.className = "lib-shelf-title";
-          title.textContent = "Continue Reading";
-
-          const meta = document.createElement("div");
-          meta.className = "lib-shelf-meta";
-          meta.textContent = `${cont.length} active session${cont.length > 1 ? "s" : ""}`;
-
-          header.appendChild(title);
-          header.appendChild(meta);
-
+        filtered.forEach(book => {
           const row = document.createElement("div");
-          row.className = "lib-shelf-row";
+          row.className = "lib-row";
 
-          cont.forEach(b => {
-            row.appendChild(createBookCard(b));
+          const genre = computeGenre(book);
+
+          const titleCell = document.createElement("div");
+          titleCell.className = "lib-cell lib-cell-title";
+          titleCell.textContent = book.title || book.id || "Untitled";
+
+          const authorCell = document.createElement("div");
+          authorCell.className = "lib-cell lib-cell-author";
+          authorCell.textContent = book.author || "Unknown author";
+
+          const typeCell = document.createElement("div");
+          typeCell.className = "lib-cell lib-cell-type";
+          typeCell.textContent = genre;
+
+          const starCell = document.createElement("div");
+          starCell.className = "lib-cell lib-cell-star";
+
+          const starBtn = document.createElement("button");
+          starBtn.type = "button";
+          starBtn.className = "lib-star-btn";
+          const fav = isFav(book.id);
+          if (fav) starBtn.classList.add("is-active");
+          starBtn.textContent = fav ? "★" : "☆";
+
+          starBtn.addEventListener("click", (ev) => {
+            ev.stopPropagation();
+            const currentlyFav = isFav(book.id);
+            if (currentlyFav) {
+              localStorage.removeItem(favKey(book.id));
+            } else {
+              localStorage.setItem(favKey(book.id), "1");
+            }
+            renderList();
           });
 
-          shelf.appendChild(header);
-          shelf.appendChild(row);
-          shelvesEl.appendChild(shelf);
-        }
+          starCell.appendChild(starBtn);
 
-        // Genre shelves
-        const byGenre = groupBy(remaining, b => b.genre || "Uncategorized");
-        const genreKeys = Array.from(byGenre.keys()).sort();
+          row.appendChild(titleCell);
+          row.appendChild(authorCell);
+          row.appendChild(typeCell);
+          row.appendChild(starCell);
 
-        genreKeys.forEach(g => {
-          const list = byGenre.get(g) || [];
-          if (!list.length) return;
+          row.addEventListener("click", () => {
+            const href = book.path || "";
+            if (href) window.location.href = href;
+          });
 
-          const shelf = document.createElement("section");
-          shelf.className = "lib-shelf";
-
-          const header = document.createElement("div");
-          header.className = "lib-shelf-header";
-
-          const title = document.createElement("div");
-          title.className = "lib-shelf-title";
-          title.textContent = g + " Shelf";
-
-          const meta = document.createElement("div");
-          meta.className = "lib-shelf-meta";
-          meta.textContent = `${list.length} work${list.length > 1 ? "s" : ""}`;
-
-          header.appendChild(title);
-          header.appendChild(meta);
-
-          const row = document.createElement("div");
-          row.className = "lib-shelf-row";
-          list.forEach(b => row.appendChild(createBookCard(b)));
-
-          shelf.appendChild(header);
-          shelf.appendChild(row);
-          shelvesEl.appendChild(shelf);
+          listEl.appendChild(row);
         });
       }
 
-      function attachFilterEvents() {
+      if (sortBtn) {
+        sortBtn.addEventListener("click", () => {
+          sortAsc = !sortAsc;
+          sortBtn.textContent = sortAsc ? "Filter (A–Z)" : "Filter (Z–A)";
+          renderList();
+        });
+      }
+
+      if (favBtn) {
+        favBtn.addEventListener("click", () => {
+          favOnly = !favOnly;
+          favBtn.classList.toggle("is-active", favOnly);
+          renderList();
+        });
+      }
+
+      if (genreSelect) {
+        genreSelect.addEventListener("change", () => {
+          currentGenre = genreSelect.value || "all";
+          renderList();
+        });
+      }
+
+      if (searchInput) {
         let debounce = null;
-        if (searchInput) {
-          searchInput.addEventListener("input", () => {
-            if (debounce) clearTimeout(debounce);
-            debounce = setTimeout(() => {
-              renderShelves();
-            }, 120);
-          });
-        }
-        if (typeSelect) {
-          typeSelect.addEventListener("change", renderShelves);
-        }
-        if (sortSelect) {
-          sortSelect.addEventListener("change", renderShelves);
-        }
-        if (favToggle) {
-          favToggle.addEventListener("click", () => {
-            favouritesOnly = !favouritesOnly;
-            favToggle.classList.toggle("active", favouritesOnly);
-            renderShelves();
-          });
-        }
-      }
-
-      /* THEME SETTINGS */
-
-      function loadStoredTheme() {
-        let obj = null;
-        try {
-          const raw1 = localStorage.getItem("toeTheme");
-          const raw2 = localStorage.getItem("toe_theme");
-          const raw = raw1 || raw2;
-          if (raw) obj = JSON.parse(raw);
-        } catch {
-          obj = null;
-        }
-        return obj || {};
-      }
-
-      function applyTheme(theme) {
-        const root = document.documentElement;
-        if (theme.accent) {
-          root.style.setProperty("--color-accent", theme.accent);
-        }
-        if (theme.bgTop) {
-          root.style.setProperty("--color-bg-main-top", theme.bgTop);
-        }
-        if (theme.bgBottom) {
-          root.style.setProperty("--color-bg-main-bottom", theme.bgBottom);
-        }
-
-        let readerFont = `"Merriweather", "Georgia", serif`;
-        if (theme.font === "sans") {
-          readerFont = `system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif`;
-        } else if (theme.font === "mono") {
-          readerFont = `ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace`;
-        }
-
-        root.style.setProperty("--font-reader", readerFont);
-      }
-
-      function initThemeSettings() {
-        const rootStyle = getComputedStyle(document.documentElement);
-        const current = loadStoredTheme();
-
-        const accent = current.accent || rootStyle.getPropertyValue("--color-accent").trim() || "#60a5fa";
-        const bgTop = current.bgTop || rootStyle.getPropertyValue("--color-bg-main-top").trim() || "#1b2640";
-        const bgBottom = current.bgBottom || rootStyle.getPropertyValue("--color-bg-main-bottom").trim() || "#050814";
-        const font = current.font || "serif";
-
-        if (themeAccentEl) themeAccentEl.value = accent;
-        if (themeBgTopEl) themeBgTopEl.value = bgTop;
-        if (themeBgBottomEl) themeBgBottomEl.value = bgBottom;
-        if (themeFontEl) themeFontEl.value = font;
-
-        applyTheme({ accent, bgTop, bgBottom, font });
-
-        if (themeApplyBtn) {
-          themeApplyBtn.addEventListener("click", () => {
-            const theme = {
-              accent: themeAccentEl ? themeAccentEl.value : accent,
-              bgTop: themeBgTopEl ? themeBgTopEl.value : bgTop,
-              bgBottom: themeBgBottomEl ? themeBgBottomEl.value : bgBottom,
-              font: themeFontEl ? themeFontEl.value : font
-            };
-            applyTheme(theme);
-            try {
-              const raw = JSON.stringify(theme);
-              localStorage.setItem("toeTheme", raw);
-              localStorage.setItem("toe_theme", raw);
-            } catch (e) {
-              console.warn("[library] Failed to save theme:", e);
-            }
-          });
-        }
-
-        if (themeResetBtn) {
-          themeResetBtn.addEventListener("click", () => {
-            const theme = {
-              accent: "#60a5fa",
-              bgTop: "#1b2640",
-              bgBottom: "#050814",
-              font: "serif"
-            };
-            if (themeAccentEl) themeAccentEl.value = theme.accent;
-            if (themeBgTopEl) themeBgTopEl.value = theme.bgTop;
-            if (themeBgBottomEl) themeBgBottomEl.value = theme.bgBottom;
-            if (themeFontEl) themeFontEl.value = theme.font;
-            applyTheme(theme);
-            try {
-              const raw = JSON.stringify(theme);
-              localStorage.setItem("toeTheme", raw);
-              localStorage.setItem("toe_theme", raw);
-            } catch (e) {
-              console.warn("[library] Failed to save theme:", e);
-            }
-          });
-        }
-      }
-
-      // BOOT
-      favoritesSet = loadFavorites();
-      progressMap  = loadProgressMap();
-
-      fetch(BOOKS_JSON)
-        .then(r => r.json())
-        .then(data => {
-          allBooks = Array.isArray(data) ? data : [];
-          if (bookCountMetaEl) {
-            bookCountMetaEl.textContent = `${allBooks.length} works loaded`;
-          }
-          collectGenres();
-          renderGenres();
-          fillTypeSelect();
-          attachFilterEvents();
-          initThemeSettings();
-          renderShelves();
-        })
-        .catch(err => {
-          console.error("[library] Failed to load books.json:", err);
-          if (bookCountMetaEl) bookCountMetaEl.textContent = "Failed to load books.";
-          shelvesEl.innerHTML = "";
-          emptyStateEl.style.display = "";
+        searchInput.addEventListener("input", () => {
+          const value = searchInput.value || "";
+          if (debounce) window.clearTimeout(debounce);
+          debounce = window.setTimeout(() => {
+            searchQuery = value.trim();
+            renderList();
+          }, 120);
         });
+      }
+
+      loadBooks().then(data => {
+        books = data || [];
+        populateGenres();
+        renderList();
+      });
     })();
   </script>
 </body>

@@ -5,6 +5,9 @@
    /* ==== GLOBAL FONTS ==== */
 /* Reader serif font (Google Fonts) */
 @import url('https://fonts.googleapis.com/css2?family=Merriweather:wght@400;700&display=swap');
+@import url("https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Space+Grotesk:wght@400;500;700&family=Merriweather:wght@400;700&family=JetBrains+Mono:wght@400;600&family=Caveat:wght@400;600&family=Orbitron:wght@500;700&display=swap");
+@import url('https://fonts.googleapis.com/css2?family=Merienda:wght@300..900&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Covered+By+Your+Grace&display=swap');
 
 :root {
   /* UI font (menus, buttons, etc.) */
@@ -1012,7 +1015,21 @@ body.reduced-effects {
     cursor: default;
     transform: none;
 }
-
+/* ===========================
+   TEXT TONE CLASSES
+   =========================== */
+.tone-ash    {
+   font-family: "Covered By Your Grace", cursive;
+   color: rgb(255, 255, 255); text-shadow: 0 0 8px rgb(139, 139, 139); 
+   font-size: 1.2em;
+  }
+.tone-tanishiro{
+   font-family: "Merienda", cursive;
+   color: rgb(255, 124, 72); text-shadow: 0 0 8px rgb(9, 255, 0); 
+   font-size: 0.9em;
+  }
+   
+.tone-system { color: #67e8f9; text-shadow: 0 0 8px rgba(103, 232, 249, 0.0); }
 
 /* =========================================================
    RESPONSIVE LAYOUT

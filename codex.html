@@ -4,20 +4,19 @@
   <meta charset="UTF-8" />
   <title>Tales of Eden – Codex</title>
 
-  <!-- Global styles + theme loader -->
   <link rel="stylesheet" href="styles.css" />
   <script src="theme-loader.js"></script>
 
   <style>
     :root {
-      --codex-radius-lg: 22px;
-      --codex-radius-md: 14px;
+      --codex-radius-lg: 24px;
+      --codex-radius-md: 16px;
       --codex-radius-pill: 999px;
-      --codex-border-subtle: 1px solid rgba(148, 163, 184, 0.45);
-      --codex-glass-dark: linear-gradient(
-        145deg,
-        rgba(3, 7, 18, 0.96),
-        rgba(15, 23, 42, 0.96)
+      --codex-border-subtle: 1px solid rgba(255, 255, 255, 0.12);
+      --codex-glass-bg: linear-gradient(
+        135deg,
+        rgba(3, 7, 18, 0.94),
+        rgba(15, 23, 42, 0.94)
       );
     }
 
@@ -42,8 +41,8 @@
       min-height: 100vh;
       display: flex;
       flex-direction: column;
-      padding: 20px clamp(14px, 4vw, 40px);
-      gap: 14px;
+      padding: 24px clamp(16px, 4vw, 40px);
+      gap: 18px;
     }
 
     /* Top bar */
@@ -52,7 +51,7 @@
       display: flex;
       align-items: center;
       justify-content: space-between;
-      gap: 12px;
+      gap: 16px;
     }
 
     .codex-logo-group {
@@ -62,11 +61,11 @@
     }
 
     .codex-logo-mark {
-      width: 30px;
-      height: 30px;
-      border-radius: 10px;
-      background: radial-gradient(circle at 30% 20%, #fbbf24 0, #f97316 18%, #4b5563 55%, #020617 100%);
-      box-shadow: 0 0 24px rgba(248, 250, 252, 0.35);
+      width: 32px;
+      height: 32px;
+      border-radius: 12px;
+      background: radial-gradient(circle at 30% 20%, #38bdf8 0, #6366f1 22%, #020617 70%);
+      box-shadow: 0 0 30px rgba(129, 140, 248, 0.5);
       position: relative;
       overflow: hidden;
     }
@@ -74,22 +73,22 @@
     .codex-logo-mark::after {
       content: "";
       position: absolute;
-      inset: 16%;
-      border-radius: inherit;
+      inset: 12%;
+      border-radius: 10px;
       border: 1px solid rgba(15, 23, 42, 0.8);
     }
 
     .codex-logo-text {
       display: flex;
       flex-direction: column;
-      gap: 1px;
+      gap: 2px;
     }
 
     .codex-logo-title {
       font-size: 15px;
-      text-transform: uppercase;
       letter-spacing: 0.16em;
-      color: rgba(226, 232, 255, 0.98);
+      text-transform: uppercase;
+      color: rgba(226, 232, 255, 0.96);
     }
 
     .codex-logo-sub {
@@ -99,46 +98,72 @@
       color: rgba(148, 163, 184, 0.9);
     }
 
-    .codex-top-actions {
+    /* Top nav pill group */
+
+    .codex-top-nav {
       display: flex;
       align-items: center;
-      gap: 8px;
-      flex-wrap: wrap;
-      justify-content: flex-end;
-    }
-
-    .codex-link-btn {
-      padding: 7px 13px;
+      gap: 2px;
+      padding: 2px;
       border-radius: var(--codex-radius-pill);
       border: 1px solid rgba(148, 163, 184, 0.6);
-      background: rgba(15, 23, 42, 0.96);
-      color: rgba(226, 232, 255, 0.95);
-      font-size: 11px;
-      text-decoration: none;
-      display: inline-flex;
-      align-items: center;
-      gap: 7px;
-      cursor: pointer;
+      background: linear-gradient(
+        135deg,
+        rgba(15, 23, 42, 0.98),
+        rgba(15, 23, 42, 0.9)
+      );
+      box-shadow:
+        0 18px 40px rgba(15, 23, 42, 0.95),
+        0 0 0 1px rgba(15, 23, 42, 0.9);
+    }
+
+    .codex-nav-link {
+      border-radius: var(--codex-radius-pill);
+      padding: 4px 12px;
+      font-size: 10px;
       text-transform: uppercase;
-      letter-spacing: 0.09em;
+      letter-spacing: 0.12em;
+      border: none;
+      background: transparent;
+      color: rgba(148, 163, 184, 0.9);
+      text-decoration: none;
+      cursor: pointer;
+      opacity: 0.9;
       transition:
         background 0.15s ease,
-        border-color 0.15s ease,
+        color 0.15s ease,
         transform 0.1s ease,
         box-shadow 0.15s ease;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
       white-space: nowrap;
     }
 
-    .codex-link-btn:hover {
+    .codex-nav-link:not(.is-disabled):hover {
       background: rgba(30, 64, 175, 0.95);
-      border-color: rgba(191, 219, 254, 0.95);
-      box-shadow: 0 0 0 1px rgba(191, 219, 254, 0.4);
+      color: rgba(226, 232, 255, 0.98);
+      box-shadow: 0 0 0 1px rgba(191, 219, 254, 0.6);
       transform: translateY(-1px);
     }
 
-    .codex-link-btn span.icon {
-      font-size: 14px;
-      opacity: 0.9;
+    .codex-nav-link.is-active {
+      background: radial-gradient(circle at top, #4f46e5 0, #1d4ed8 45%, #020617 110%);
+      color: rgba(226, 232, 255, 0.98);
+      box-shadow: 0 0 0 1px rgba(191, 219, 254, 0.85);
+    }
+
+    .codex-nav-link.is-disabled {
+      opacity: 0.4;
+      cursor: default;
+      pointer-events: none;
+    }
+
+    @media (max-width: 780px) {
+      .codex-topbar {
+        flex-direction: column;
+        align-items: flex-start;
+      }
     }
 
     /* Main layout */
@@ -146,10 +171,9 @@
     .codex-main {
       flex: 1;
       display: grid;
-      grid-template-columns: minmax(0, 1.1fr) minmax(0, 2fr);
-      gap: 16px;
-      margin-top: 4px;
-      min-height: 0;
+      grid-template-columns: minmax(0, 1.5fr) minmax(0, 2.2fr);
+      gap: 18px;
+      margin-top: 6px;
     }
 
     @media (max-width: 900px) {
@@ -159,16 +183,16 @@
       }
     }
 
-    /* Left panel: navigation */
+    /* Left: Nav */
 
     .codex-nav {
       border-radius: var(--codex-radius-lg);
       border: var(--codex-border-subtle);
-      background: var(--codex-glass-dark);
-      padding: 10px 10px 10px 12px;
+      background: var(--codex-glass-bg);
       box-shadow:
-        0 20px 60px rgba(15, 23, 42, 0.95),
+        0 20px 70px rgba(15, 23, 42, 0.98),
         0 0 0 1px rgba(15, 23, 42, 0.9);
+      padding: 14px 14px 14px 16px;
       display: flex;
       flex-direction: column;
       gap: 10px;
@@ -177,98 +201,74 @@
 
     .codex-nav-header {
       display: flex;
-      align-items: center;
+      align-items: baseline;
       justify-content: space-between;
-      gap: 6px;
+      gap: 8px;
     }
 
     .codex-nav-title {
-      font-size: 11px;
-      letter-spacing: 0.16em;
+      font-size: 13px;
       text-transform: uppercase;
-      color: rgba(148, 163, 184, 0.96);
+      letter-spacing: 0.16em;
+      color: rgba(226, 232, 255, 0.96);
     }
 
     .codex-nav-count {
       font-size: 11px;
-      color: rgba(148, 163, 184, 0.8);
+      color: rgba(148, 163, 184, 0.9);
     }
 
     .codex-search-wrap {
-      margin-top: 2px;
-    }
-
-    .codex-search-input {
-      width: 100%;
-      border-radius: var(--codex-radius-pill);
-      border: 1px solid rgba(51, 65, 85, 0.9);
-      background: radial-gradient(circle at top, rgba(15, 23, 42, 0.96), rgba(15, 23, 42, 0.96));
-      color: rgba(226, 232, 255, 0.98);
-      font-size: 12px;
-      padding: 6px 10px 6px 26px;
-      outline: none;
-      transition:
-        border-color 0.15s ease,
-        box-shadow 0.15s ease,
-        background 0.15s ease;
-    }
-
-    .codex-search-input::placeholder {
-      color: rgba(148, 163, 184, 0.9);
+      margin-top: 4px;
     }
 
     .codex-search-field {
       position: relative;
     }
 
-    .codex-search-field::before {
-      content: "🔎";
-      position: absolute;
-      left: 7px;
-      top: 50%;
-      transform: translateY(-50%);
-      font-size: 11px;
-      opacity: 0.9;
+    .codex-search-input {
+      width: 100%;
+      border-radius: 999px;
+      border: 1px solid rgba(55, 65, 81, 0.9);
+      background: rgba(15, 23, 42, 0.98);
+      padding: 7px 11px;
+      padding-right: 26px;
+      color: rgba(226, 232, 255, 0.98);
+      font-size: 12px;
+      outline: none;
     }
 
-    .codex-search-input:focus {
-      border-color: rgba(96, 165, 250, 0.95);
-      box-shadow: 0 0 0 1px rgba(96, 165, 250, 0.7);
-      background: radial-gradient(circle at top, rgba(15, 23, 42, 0.98), rgba(15, 23, 42, 0.96));
+    .codex-search-input::placeholder {
+      color: rgba(100, 116, 139, 0.9);
     }
-
-    /* Category chips */
 
     .codex-categories {
       display: flex;
       flex-wrap: wrap;
       gap: 6px;
-      margin-top: 4px;
-      padding-bottom: 4px;
-      border-bottom: 1px solid rgba(30, 41, 59, 0.9);
+      margin-top: 8px;
     }
 
     .codex-cat-pill {
-      padding: 4px 10px;
+      padding: 3px 9px;
       border-radius: var(--codex-radius-pill);
-      border: 1px solid rgba(51, 65, 85, 0.9);
+      border: 1px solid rgba(51, 65, 85, 0.95);
       background: rgba(15, 23, 42, 0.96);
       color: rgba(148, 163, 184, 0.96);
       font-size: 11px;
-      cursor: pointer;
-      white-space: nowrap;
       display: inline-flex;
       align-items: center;
       gap: 6px;
+      cursor: pointer;
       transition:
         background 0.15s ease,
         border-color 0.15s ease,
         color 0.15s ease,
-        box-shadow 0.15s ease,
-        transform 0.1s ease;
+        transform 0.1s ease,
+        box-shadow 0.15s ease;
     }
 
-    .codex-cat-pill span.dot {
+    .codex-cat-pill .dot {
       width: 6px;
       height: 6px;
       border-radius: 999px;
@@ -276,35 +276,34 @@
     }
 
     .codex-cat-pill.active {
-      border-color: rgba(96, 165, 250, 0.95);
+      border-color: rgba(59, 130, 246, 0.9);
+      background: radial-gradient(circle at top left, rgba(59, 130, 246, 0.45), rgba(15, 23, 42, 0.98));
       color: rgba(226, 232, 255, 0.98);
-      background: radial-gradient(circle at top, rgba(37, 99, 235, 0.35), rgba(15, 23, 42, 0.98));
       box-shadow: 0 0 0 1px rgba(96, 165, 250, 0.7);
     }
 
-    .codex-cat-pill.active span.dot {
-      background: #60a5fa;
+    .codex-cat-pill.active .dot {
+      background: rgba(248, 250, 252, 0.95);
     }
-
-    .codex-cat-pill:hover {
-      transform: translateY(-1px);
-      border-color: rgba(148, 163, 184, 0.9);
-    }
-
-    /* Entries list */
 
     .codex-entry-list-wrap {
       flex: 1;
       min-height: 0;
-      margin-top: 4px;
+      margin-top: 6px;
+      border-radius: var(--codex-radius-md);
+      border: 1px solid rgba(30, 64, 175, 0.7);
+      background: radial-gradient(circle at top, rgba(30, 64, 175, 0.18), rgba(15, 23, 42, 0.98));
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
     }
 
     .codex-entry-list {
       list-style: none;
-      padding: 0;
       margin: 0;
-      max-height: 100%;
+      padding: 4px;
       overflow-y: auto;
+      flex: 1;
       scrollbar-width: thin;
       scrollbar-color: rgba(51, 65, 85, 0.85) transparent;
     }
@@ -319,106 +318,97 @@
     }
 
     .codex-entry-item {
-      margin-bottom: 4px;
-    }
-
-    .codex-entry-btn {
-      width: 100%;
-      border: none;
-      text-align: left;
-      padding: 7px 8px;
       border-radius: 10px;
-      background: rgba(15, 23, 42, 0.9);
-      color: rgba(226, 232, 255, 0.9);
-      font-size: 12px;
+      padding: 6px 7px;
+      border: 1px solid transparent;
+      margin-bottom: 3px;
       cursor: pointer;
       display: flex;
       flex-direction: column;
       gap: 2px;
       transition:
-        background 0.15s ease,
-        box-shadow 0.15s ease,
-        transform 0.1s ease;
+        background 0.12s ease,
+        border-color 0.12s ease,
+        transform 0.08s ease;
     }
 
-    .codex-entry-btn:hover {
-      background: rgba(30, 64, 175, 0.96);
-      box-shadow: 0 10px 30px rgba(15, 23, 42, 0.9);
-      transform: translateY(-1px);
+    .codex-entry-item:last-child {
+      margin-bottom: 0;
     }
 
-    .codex-entry-btn.active {
-      background: radial-gradient(circle at top left, rgba(37, 99, 235, 0.5), rgba(15, 23, 42, 0.98));
-      box-shadow: 0 16px 40px rgba(15, 23, 42, 0.95);
+    .codex-entry-item:hover {
+      background: rgba(15, 23, 42, 0.95);
+      border-color: rgba(51, 65, 85, 1);
+      transform: translateY(-0.5px);
     }
 
-    .codex-entry-title {
-      font-size: 12px;
-      font-weight: 500;
-      white-space: nowrap;
-      overflow: hidden;
-      text-overflow: ellipsis;
+    .codex-entry-item.active {
+      background: radial-gradient(circle at top left, rgba(37, 99, 235, 0.35), rgba(15, 23, 42, 0.98));
+      border-color: rgba(96, 165, 250, 0.9);
+      box-shadow: 0 0 0 1px rgba(96, 165, 250, 0.55);
     }
 
-    .codex-entry-meta {
+    .codex-entry-item-id {
+      font-size: 11px;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+      color: rgba(148, 163, 184, 0.96);
+    }
+
+    .codex-entry-item-title {
+      font-size: 13px;
+      color: rgba(226, 232, 255, 0.98);
+    }
+
+    .codex-entry-item-meta {
       font-size: 11px;
       color: rgba(148, 163, 184, 0.9);
-      display: flex;
-      justify-content: space-between;
-      gap: 6px;
-    }
-
-    .codex-entry-meta span {
-      white-space: nowrap;
-      overflow: hidden;
-      text-overflow: ellipsis;
     }
 
     .codex-entry-empty {
+      padding: 8px 10px;
       font-size: 12px;
       color: rgba(148, 163, 184, 0.9);
-      padding: 6px 2px;
+      border-top: 1px solid rgba(30, 64, 175, 0.7);
     }
 
-    /* Right panel: entry view */
+    /* Right panel */
 
     .codex-entry-panel {
       border-radius: var(--codex-radius-lg);
       border: var(--codex-border-subtle);
-      background: var(--codex-glass-dark);
-      padding: 14px 18px 16px 18px;
+      background: var(--codex-glass-bg);
       box-shadow:
-        0 22px 70px rgba(15, 23, 42, 0.95),
+        0 20px 70px rgba(15, 23, 42, 0.98),
         0 0 0 1px rgba(15, 23, 42, 0.9);
-      min-height: 0;
+      padding: 14px 14px 14px 16px;
       display: flex;
       flex-direction: column;
       gap: 8px;
+      min-height: 0;
     }
 
     .codex-entry-header {
       display: flex;
       align-items: flex-start;
       justify-content: space-between;
-      gap: 8px;
-      border-bottom: 1px solid rgba(30, 41, 59, 0.9);
-      padding-bottom: 8px;
-      margin-bottom: 4px;
-    }
-
-    .codex-entry-main-title {
-      font-size: 18px;
-      letter-spacing: 0.12em;
-      text-transform: uppercase;
-      color: rgba(226, 232, 255, 0.98);
-      margin-bottom: 4px;
+      gap: 10px;
     }
 
     .codex-entry-id {
       font-size: 11px;
-      color: rgba(148, 163, 184, 0.9);
-      letter-spacing: 0.14em;
+      letter-spacing: 0.16em;
       text-transform: uppercase;
+      color: rgba(148, 163, 184, 0.9);
+      margin-bottom: 2px;
+    }
+
+    .codex-entry-main-title {
+      margin: 0;
+      font-size: 20px;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: rgba(226, 232, 255, 0.98);
     }
 
     .codex-entry-chips {
@@ -493,7 +483,7 @@
       text-align: right;
     }
 
-    /* Appears in section */
+    /* Appears in */
 
     .codex-appears {
       border-radius: var(--codex-radius-md);
@@ -667,16 +657,11 @@
         </div>
       </div>
 
-      <div class="codex-top-actions">
-        <a href="index.html" class="codex-link-btn">
-          <span class="icon">◀</span>
-          <span>Archive Hub</span>
-        </a>
-        <a href="library.html" class="codex-link-btn">
-          <span class="icon">📚</span>
-          <span>Library</span>
-        </a>
-      </div>
+      <nav class="codex-top-nav">
+        <a href="library.html" class="codex-nav-link">Library</a>
+        <a href="codex.html" class="codex-nav-link is-active">Codex</a>
+<a href="settings.html" class="codex-nav-link">Settings</a>
+      </nav>
     </header>
 
     <!-- MAIN -->
@@ -849,7 +834,7 @@
             currentLines.push("");
             return;
           }
-          // Simple section header detection: "## Something"
+          // "## Section"
           if (/^#{2,}\s+/.test(trimmed)) {
             flushBlock();
             currentTitle = trimmed.replace(/^#{2,}\s+/, "").trim();
@@ -864,7 +849,6 @@
 
       function formatInline(text) {
         if (!text) return "";
-        // brave but simple: **bold** and _italic_
         return text
           .replace(/\*\*(.+?)\*\*/g, "<strong>$1</strong>")
           .replace(/_(.+?)_/g, "<em>$1</em>");
@@ -882,9 +866,8 @@
           if (block.title) {
             htmlParts.push("<h3>" + formatInline(block.title) + "</h3>");
           }
-          // bullet detection: lines starting with "- " or "* "
+
           const lines = text.split("\n");
-          let bulletMode = false;
           let bulletBuf = [];
 
           function flushBullets() {
@@ -903,11 +886,9 @@
               flushBullets();
               htmlParts.push("<p>&nbsp;</p>");
             } else if (/^[-*]\s+/.test(trimmed)) {
-              bulletMode = true;
               bulletBuf.push(trimmed);
             } else {
               flushBullets();
-              bulletMode = false;
               htmlParts.push("<p>" + formatInline(trimmed) + "</p>");
             }
           });
@@ -956,133 +937,111 @@
         const q = query.toLowerCase();
         const cat = activeCategory;
 
-        const scored = entries.map(e => {
-          let include = true;
-          if (cat && cat !== "All" && e.category !== cat) include = false;
-          let score = 0;
-          if (q) {
-            const s = simpleSearchScore(e, q);
-            if (s <= 0) include = false;
-            score = s;
-          }
-          return { entry: e, include, score };
-        }).filter(x => x.include);
+        const scored = entries
+          .map(e => {
+            let include = true;
+            if (cat && cat !== "All" && e.category !== cat) include = false;
+            let score = 0;
+            if (q) {
+              const s = simpleSearchScore(e, q);
+              if (s <= 0) include = false;
+              score = s;
+            }
+            return { entry: e, include, score };
+          })
+          .filter(x => x.include);
 
-        // sort: if query, by score desc then title; else by category+title
         if (q) {
           scored.sort((a, b) => {
             if (b.score !== a.score) return b.score - a.score;
-            return (a.entry.title || "").localeCompare(b.entry.title || "");
+            return (a.entry.title || a.entry.id || "").localeCompare(
+              b.entry.title || b.entry.id || ""
+            );
           });
         } else {
           scored.sort((a, b) => {
-            const ac = a.entry.category || "";
-            const bc = b.entry.category || "";
-            if (ac !== bc) return ac.localeCompare(bc);
-            return (a.entry.title || "").localeCompare(b.entry.title || "");
+            const ca = a.entry.category || "";
+            const cb = b.entry.category || "";
+            if (ca !== cb) return ca.localeCompare(cb);
+            return (a.entry.title || a.entry.id || "").localeCompare(
+              b.entry.title || b.entry.id || ""
+            );
           });
         }
 
-        return scored.map(s => s.entry);
+        return scored.map(x => x.entry);
       }
 
       function renderEntryList() {
         if (!listEl || !listEmptyEl) return;
-        const subset = filteredEntries();
 
+        const subset = filteredEntries();
         listEl.innerHTML = "";
+
         if (!subset.length) {
           listEmptyEl.style.display = "";
           return;
-        } else {
-          listEmptyEl.style.display = "none";
         }
+        listEmptyEl.style.display = "none";
 
-        subset.forEach(e => {
+        subset.forEach(entry => {
           const li = document.createElement("li");
-          li.className = "codex-entry-item";
+          li.className = "codex-entry-item" + (entry.id === activeEntryId ? " active" : "");
+          li.dataset.id = entry.id || "";
 
-          const btn = document.createElement("button");
-          btn.type = "button";
-          btn.className = "codex-entry-btn" + (e.id === activeEntryId ? " active" : "");
-          btn.dataset.entryId = e.id;
+          const idDiv = document.createElement("div");
+          idDiv.className = "codex-entry-item-id";
+          idDiv.textContent = entry.id || "—";
 
-          const t = document.createElement("div");
-          t.className = "codex-entry-title";
-          t.textContent = e.title || e.id || "Untitled";
+          const titleDiv = document.createElement("div");
+          titleDiv.className = "codex-entry-item-title";
+          titleDiv.textContent = entry.title || entry.id || "Untitled";
 
-          const meta = document.createElement("div");
-          meta.className = "codex-entry-meta";
+          const metaDiv = document.createElement("div");
+          metaDiv.className = "codex-entry-item-meta";
+          const cat = entry.category || "Uncategorized";
+          const type = entry.type || "";
+          metaDiv.textContent = type ? `${cat} · ${type}` : cat;
 
-          const catSpan = document.createElement("span");
-          catSpan.textContent = e.category || "Uncategorized";
+          li.appendChild(idDiv);
+          li.appendChild(titleDiv);
+          li.appendChild(metaDiv);
 
-          const short = document.createElement("span");
-          const s = e.summary || "";
-          short.textContent = s.length > 42 ? s.slice(0, 40) + "…" : s;
-
-          meta.appendChild(catSpan);
-          meta.appendChild(short);
-
-          btn.appendChild(t);
-          btn.appendChild(meta);
-
-          btn.addEventListener("click", () => {
-            activeEntryId = e.id;
+          li.addEventListener("click", () => {
+            activeEntryId = entry.id || null;
             updateUrl(activeEntryId, activeCategory, searchInput.value || "");
             renderEntryList();
             renderEntryDetail();
           });
 
-          li.appendChild(btn);
           listEl.appendChild(li);
         });
       }
 
-      function dedupeAppearsIn(raw) {
-        if (!raw) return [];
-        // Accept forms:
-        // - "Alexander"
-        // - { bookId: "Alexander", pages: [10, 20] }
-        // - { book: "Alexander Colt", pages: "10–20" }
+      function dedupeAppearsIn(arr) {
+        if (!Array.isArray(arr)) return [];
         const map = new Map();
-
-        raw.forEach(it => {
-          if (!it) return;
-          let bookId = "";
-          let pages = null;
-
-          if (typeof it === "string") {
-            bookId = it;
-          } else if (typeof it === "object") {
-            bookId = it.bookId || it.book || "";
-            pages = it.pages || it.page || null;
-          }
-
-          if (!bookId) return;
-          const key = String(bookId);
-
+        arr.forEach(item => {
+          if (!item || !item.bookId) return;
+          const key = item.bookId;
+          const page = item.page || item.pages;
           if (!map.has(key)) {
-            map.set(key, { bookId: key, pages: [] });
+            map.set(key, { bookId: item.bookId, pages: [] });
           }
-          const entry = map.get(key);
-
-          if (pages != null) {
-            if (Array.isArray(pages)) {
-              pages.forEach(p => {
-                if (typeof p === "number" || typeof p === "string") {
-                  entry.pages.push(p);
-                }
-              });
-            } else {
-              entry.pages.push(pages);
-            }
+          const rec = map.get(key);
+          if (Array.isArray(page)) {
+            page.forEach(p => {
+              const n = Number(p);
+              if (!Number.isFinite(n)) return;
+              if (!rec.pages.includes(n)) rec.pages.push(n);
+            });
+          } else if (page != null) {
+            const n = Number(page);
+            if (Number.isFinite(n) && !rec.pages.includes(n)) rec.pages.push(n);
           }
         });
-
         const out = Array.from(map.values());
         out.forEach(o => {
-          // dedupe pages & stringify
           o.pages = Array.from(new Set(o.pages.map(x => String(x))));
         });
         return out;
@@ -1133,7 +1092,6 @@
 
           const mainSpan = document.createElement("span");
           mainSpan.textContent = label;
-
           a.appendChild(mainSpan);
 
           if (item.pages && item.pages.length) {
@@ -1172,7 +1130,6 @@
         entryIdEl.textContent = entry.id || "–";
         entryTitleEl.textContent = entry.title || entry.id || "Untitled";
 
-        // Chips: category, type, etc.
         entryChipsEl.innerHTML = "";
         if (entry.category) {
           const catChip = document.createElement("div");
@@ -1193,14 +1150,12 @@
           entryChipsEl.appendChild(statusChip);
         }
 
-        // Summary
         if (entry.summary) {
           entrySummaryEl.textContent = entry.summary;
         } else {
           entrySummaryEl.textContent = "";
         }
 
-        // Body
         const bodyHtml = buildBodyHtml(entry);
         entryBodyEl.innerHTML = bodyHtml;
 
@@ -1210,19 +1165,21 @@
           entryEmptyStateEl.style.display = "none";
         }
 
-        // Meta line
         const catText = entry.category || "Uncategorized";
         const appearsCount = Array.isArray(entry.appearsIn) ? dedupeAppearsIn(entry.appearsIn).length : 0;
-        const appearsText = appearsCount ? `Appears in ${appearsCount} work${appearsCount > 1 ? "s" : ""}` : "No linked works";
+        const appearsText = appearsCount
+          ? `Appears in ${appearsCount} work${appearsCount > 1 ? "s" : ""}`
+          : "No linked works";
         entryMetaLineEl.textContent = `${catText} · ${appearsText}`;
 
-        // Appears in section
         renderAppearsIn(entry);
 
-        // Open primary related book button
         const mainAppear = pickPrimaryBookForEntry(entry);
         if (mainAppear) {
-          const url = buildReaderUrlForBookId(mainAppear.bookId, mainAppear.pages && mainAppear.pages[0]);
+          const url = buildReaderUrlForBookId(
+            mainAppear.bookId,
+            mainAppear.pages && mainAppear.pages[0]
+          );
           if (url) {
             openBookBtn.href = url;
             openBookBtn.style.display = "";
@@ -1292,12 +1249,13 @@
               searchInput.value = qp.q;
             }
 
-            // Set initial active entry
             if (qp.id && entries.some(e => e.id === qp.id)) {
               activeEntryId = qp.id;
             } else {
               const subset = filteredEntries();
-              activeEntryId = subset.length ? subset[0].id : (entries[0] && entries[0].id) || null;
+              activeEntryId = subset.length
+                ? subset[0].id
+                : (entries[0] && entries[0].id) || null;
             }
 
             renderEntryList();

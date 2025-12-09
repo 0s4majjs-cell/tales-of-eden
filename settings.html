@@ -1,0 +1,693 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Tales of Eden – Settings</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <link rel="stylesheet" href="styles.css" />
+  <script src="theme-loader.js"></script>
+
+  <style>
+    :root {
+      --set-radius-lg: 24px;
+      --set-radius-md: 16px;
+      --set-radius-pill: 999px;
+      --set-border-subtle: 1px solid rgba(148, 163, 184, 0.35);
+    }
+
+    *, *::before, *::after {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      font-family: var(--font-ui, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif);
+      color: var(--color-text-main, #e5e7eb);
+      background:
+        radial-gradient(circle at 15% 0%, rgba(56, 189, 248, 0.16), transparent 55%),
+        radial-gradient(circle at 85% 100%, rgba(37, 99, 235, 0.18), transparent 65%),
+        linear-gradient(to bottom, var(--color-bg-main-top, #020617), var(--color-bg-main-bottom, #020617));
+      background-attachment: fixed;
+    }
+
+    .set-shell {
+      max-width: 1120px;
+      margin: 0 auto;
+      width: 100%;
+      padding: 24px clamp(16px, 4vw, 40px);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      gap: 18px;
+    }
+
+    /* Top bar (same style as others) */
+
+    .set-topbar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+    }
+
+    .set-logo-group {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .set-logo-mark {
+      width: 32px;
+      height: 32px;
+      border-radius: 12px;
+      background:
+        radial-gradient(circle at 30% 20%, #38bdf8 0, #6366f1 22%, #020617 70%);
+      box-shadow: 0 0 30px rgba(129, 140, 248, 0.5);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .set-logo-mark::after {
+      content: "";
+      position: absolute;
+      inset: 12%;
+      border-radius: 10px;
+      border: 1px solid rgba(15, 23, 42, 0.8);
+    }
+
+    .set-logo-text {
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+    }
+
+    .set-logo-title {
+      font-size: 15px;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+      color: rgba(226, 232, 255, 0.96);
+    }
+
+    .set-logo-sub {
+      font-size: 11px;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: rgba(148, 163, 184, 0.9);
+    }
+
+    .set-top-nav {
+      display: flex;
+      align-items: center;
+      gap: 2px;
+      padding: 2px;
+      border-radius: var(--set-radius-pill);
+      border: 1px solid rgba(148, 163, 184, 0.6);
+      background: linear-gradient(
+        135deg,
+        rgba(15, 23, 42, 0.98),
+        rgba(15, 23, 42, 0.9)
+      );
+      box-shadow:
+        0 18px 40px rgba(15, 23, 42, 0.95),
+        0 0 0 1px rgba(15, 23, 42, 0.9);
+    }
+
+    .set-nav-link {
+      border-radius: 999px;
+      padding: 4px 12px;
+      font-size: 10px;
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+      border: none;
+      background: transparent;
+      color: rgba(148, 163, 184, 0.9);
+      text-decoration: none;
+      cursor: pointer;
+      opacity: 0.9;
+      transition:
+        background 0.15s ease,
+        color 0.15s ease,
+        transform 0.1s ease,
+        box-shadow 0.15s ease;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      white-space: nowrap;
+    }
+
+    .set-nav-link:not(.is-disabled):hover {
+      background: rgba(30, 64, 175, 0.95);
+      color: rgba(226, 232, 255, 0.98);
+      box-shadow: 0 0 0 1px rgba(191, 219, 254, 0.6);
+      transform: translateY(-1px);
+    }
+
+    .set-nav-link.is-active {
+      background: radial-gradient(circle at top, #4f46e5 0, #1d4ed8 45%, #020617 110%);
+      color: rgba(226, 232, 255, 0.98);
+      box-shadow: 0 0 0 1px rgba(191, 219, 254, 0.85);
+    }
+
+    .set-nav-link.is-disabled {
+      opacity: 0.4;
+      cursor: default;
+      pointer-events: none;
+    }
+
+    @media (max-width: 780px) {
+      .set-topbar {
+        flex-direction: column;
+        align-items: flex-start;
+      }
+    }
+
+    /* Layout */
+
+    .set-main {
+      flex: 1;
+      display: grid;
+      grid-template-columns: minmax(0, 2fr) minmax(0, 1.4fr);
+      gap: 18px;
+      margin-top: 6px;
+    }
+
+    @media (max-width: 960px) {
+      .set-main {
+        grid-template-columns: minmax(0, 1fr);
+      }
+    }
+
+    .set-panel {
+      border-radius: var(--set-radius-lg);
+      border: var(--set-border-subtle);
+      background: linear-gradient(135deg, rgba(15, 23, 42, 0.98), rgba(3, 7, 18, 0.98));
+      box-shadow:
+        0 22px 60px rgba(15, 23, 42, 0.96),
+        0 0 0 1px rgba(15, 23, 42, 0.96);
+      padding: 18px 18px 20px;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .set-panel-header {
+      display: flex;
+      align-items: baseline;
+      justify-content: space-between;
+      gap: 8px;
+    }
+
+    .set-panel-title {
+      font-size: 13px;
+      text-transform: uppercase;
+      letter-spacing: 0.16em;
+      color: rgba(226, 232, 255, 0.96);
+    }
+
+    .set-panel-sub {
+      font-size: 11px;
+      color: rgba(148, 163, 184, 0.85);
+    }
+
+    .set-section {
+      margin-top: 6px;
+      padding-top: 6px;
+      border-top: 1px solid rgba(15, 23, 42, 0.9);
+    }
+
+    .set-section-title {
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: 0.14em;
+      color: rgba(148, 163, 184, 0.95);
+      margin-bottom: 6px;
+    }
+
+    .set-field {
+      margin-bottom: 10px;
+    }
+
+    .set-label {
+      font-size: 11px;
+      color: rgba(148, 163, 184, 0.98);
+      margin-bottom: 4px;
+      display: flex;
+      justify-content: space-between;
+      gap: 8px;
+    }
+
+    .set-label span.key {
+      text-transform: uppercase;
+      letter-spacing: 0.14em;
+    }
+
+    .set-control-row {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .set-color-input {
+      width: 36px;
+      height: 24px;
+      padding: 0;
+      border-radius: 6px;
+      border: 1px solid rgba(31, 41, 55, 0.9);
+      background: transparent;
+      cursor: pointer;
+    }
+
+    .set-hex-input {
+      flex: 1;
+      min-width: 0;
+      border-radius: 6px;
+      border: 1px solid rgba(31, 41, 55, 0.9);
+      background: rgba(2, 6, 23, 0.95);
+      color: rgba(226, 232, 255, 0.96);
+      font-size: 0.8rem;
+      padding: 6px 8px;
+      outline: none;
+    }
+
+    .set-hex-input::placeholder {
+      color: rgba(148, 163, 184, 0.7);
+    }
+
+    .set-buttons-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-top: 4px;
+    }
+
+    .set-btn {
+      border-radius: 999px;
+      border: 1px solid rgba(31, 41, 55, 0.9);
+      background: #020617;
+      color: rgba(209, 213, 219, 0.96);
+      padding: 6px 12px;
+      font-size: 0.75rem;
+      text-transform: uppercase;
+      letter-spacing: 0.14em;
+      cursor: pointer;
+      transition:
+        background 0.15s ease,
+        border-color 0.15s ease,
+        transform 0.08s ease,
+        box-shadow 0.15s ease;
+    }
+
+    .set-btn:hover {
+      background: #050816;
+      border-color: rgba(148, 163, 184, 0.85);
+      box-shadow: 0 8px 24px rgba(15, 23, 42, 0.9);
+      transform: translateY(-1px);
+    }
+
+    .set-btn-primary {
+      border-color: rgba(56, 189, 248, 0.9);
+      background: radial-gradient(circle at 30% 0%, #38bdf8, #0f172a);
+      color: #e5f0ff;
+    }
+
+    .set-btn-danger {
+      border-color: rgba(248, 113, 113, 0.9);
+      color: rgba(252, 165, 165, 0.96);
+    }
+
+    .set-preset-tagline {
+      font-size: 11px;
+      color: rgba(148, 163, 184, 0.9);
+      margin-top: 4px;
+    }
+
+    .set-preview {
+      border-radius: var(--set-radius-md);
+      border: 1px solid rgba(30, 64, 175, 0.7);
+      background: radial-gradient(circle at top, rgba(15, 23, 42, 0.96), rgba(3, 7, 18, 0.98));
+      padding: 12px;
+      font-size: 12px;
+      color: rgba(226, 232, 255, 0.96);
+      line-height: 1.5;
+    }
+
+    .set-preview-pill {
+      display: inline-flex;
+      align-items: center;
+      border-radius: 999px;
+      border: 1px solid rgba(148, 163, 184, 0.8);
+      padding: 3px 9px;
+      font-size: 10px;
+      text-transform: uppercase;
+      letter-spacing: 0.14em;
+      margin-right: 6px;
+      margin-bottom: 4px;
+    }
+
+    .set-preview-accent {
+      border-color: var(--color-accent, #38bdf8);
+      color: var(--color-accent, #38bdf8);
+    }
+
+    .set-footer-note {
+      font-size: 11px;
+      color: rgba(148, 163, 184, 0.85);
+      margin-top: 6px;
+    }
+
+    @media (max-width: 720px) {
+      .set-shell {
+        padding-inline: 12px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="set-shell">
+    <!-- TOP BAR -->
+    <header class="set-topbar">
+      <div class="set-logo-group">
+        <div class="set-logo-mark"></div>
+        <div class="set-logo-text">
+          <div class="set-logo-title">Tales of Eden</div>
+          <div class="set-logo-sub">Settings / Customization</div>
+        </div>
+      </div>
+
+      <nav class="set-top-nav">
+        <a href="library.html" class="set-nav-link">Library</a>
+        <a href="codex.html" class="set-nav-link">Codex</a>
+        <span class="set-nav-link is-active">Settings</span>
+      </nav>
+    </header>
+
+    <!-- MAIN -->
+    <main class="set-main">
+      <!-- LEFT: COLOR CONTROLS -->
+      <section class="set-panel">
+        <header class="set-panel-header">
+          <div class="set-panel-title">Theme &amp; Colors</div>
+          <div class="set-panel-sub">Customize how the archive looks on your device.</div>
+        </header>
+
+        <div class="set-section">
+          <div class="set-section-title">Presets</div>
+          <div class="set-buttons-row">
+            <button type="button" class="set-btn set-btn-primary" data-preset="default">Default</button>
+            <button type="button" class="set-btn" data-preset="midnight">Midnight</button>
+            <button type="button" class="set-btn" data-preset="eden">Eden Neon</button>
+            <button type="button" class="set-btn" data-preset="paper">Soft Paper</button>
+          </div>
+          <div class="set-preset-tagline">
+            Presets are just shortcuts – you can still tweak everything below.
+          </div>
+        </div>
+
+        <div class="set-section">
+          <div class="set-section-title">Colors</div>
+
+          <div class="set-field">
+            <div class="set-label">
+              <span class="key">Accent</span>
+              <span>--color-accent</span>
+            </div>
+            <div class="set-control-row">
+              <input type="color" id="accentColor" class="set-color-input" />
+              <input type="text" id="accentHex" class="set-hex-input" placeholder="#38bdf8" />
+            </div>
+          </div>
+
+          <div class="set-field">
+            <div class="set-label">
+              <span class="key">Background Top</span>
+              <span>--color-bg-main-top</span>
+            </div>
+            <div class="set-control-row">
+              <input type="color" id="bgTopColor" class="set-color-input" />
+              <input type="text" id="bgTopHex" class="set-hex-input" placeholder="#020617" />
+            </div>
+          </div>
+
+          <div class="set-field">
+            <div class="set-label">
+              <span class="key">Background Bottom</span>
+              <span>--color-bg-main-bottom</span>
+            </div>
+            <div class="set-control-row">
+              <input type="color" id="bgBottomColor" class="set-color-input" />
+              <input type="text" id="bgBottomHex" class="set-hex-input" placeholder="#020617" />
+            </div>
+          </div>
+
+          <div class="set-field">
+            <div class="set-label">
+              <span class="key">Text Main</span>
+              <span>--color-text-main</span>
+            </div>
+            <div class="set-control-row">
+              <input type="color" id="textMainColor" class="set-color-input" />
+              <input type="text" id="textMainHex" class="set-hex-input" placeholder="#e5e7eb" />
+            </div>
+          </div>
+
+          <div class="set-field">
+            <div class="set-label">
+              <span class="key">Text Muted</span>
+              <span>--color-text-muted</span>
+            </div>
+            <div class="set-control-row">
+              <input type="color" id="textMutedColor" class="set-color-input" />
+              <input type="text" id="textMutedHex" class="set-hex-input" placeholder="#9ca3af" />
+            </div>
+          </div>
+
+          <div class="set-buttons-row">
+            <button type="button" id="setSaveBtn" class="set-btn set-btn-primary">Save theme</button>
+            <button type="button" id="setResetBtn" class="set-btn set-btn-danger">Reset to default</button>
+          </div>
+          <div class="set-footer-note">
+            Theme is stored locally in your browser. Clearing site data will reset it.
+          </div>
+        </div>
+      </section>
+
+      <!-- RIGHT: PREVIEW / INFO -->
+      <section class="set-panel">
+        <header class="set-panel-header">
+          <div class="set-panel-title">Live preview</div>
+          <div class="set-panel-sub">Rough idea of how your colors will feel.</div>
+        </header>
+
+        <div class="set-preview">
+          <div class="set-preview-pill">Hub</div>
+          <div class="set-preview-pill">Library</div>
+          <div class="set-preview-pill set-preview-accent">Codex</div>
+
+          <p style="margin-top:10px;">
+            This is sample text using <strong>main text color</strong> and
+            <span style="color: var(--color-text-muted);">muted text color</span>.
+          </p>
+          <p>
+            Background gradient is controlled by
+            <code>--color-bg-main-top</code> and
+            <code>--color-bg-main-bottom</code>. Accent color is used for buttons,
+            highlights and some borders.
+          </p>
+        </div>
+
+        <div class="set-footer-note">
+          Later you can add more toggles here (reader font, paragraph width, line spacing,
+          “minimal mode”, etc). For now, this page focuses on color theme only.
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <script>
+    (function () {
+      const api = window.__toeTheme || null;
+
+      const VARS = {
+        accent: "--color-accent",
+        bgTop: "--color-bg-main-top",
+        bgBottom: "--color-bg-main-bottom",
+        textMain: "--color-text-main",
+        textMuted: "--color-text-muted"
+      };
+
+      const inputs = {
+        accent: {
+          color: document.getElementById("accentColor"),
+          hex: document.getElementById("accentHex")
+        },
+        bgTop: {
+          color: document.getElementById("bgTopColor"),
+          hex: document.getElementById("bgTopHex")
+        },
+        bgBottom: {
+          color: document.getElementById("bgBottomColor"),
+          hex: document.getElementById("bgBottomHex")
+        },
+        textMain: {
+          color: document.getElementById("textMainColor"),
+          hex: document.getElementById("textMainHex")
+        },
+        textMuted: {
+          color: document.getElementById("textMutedColor"),
+          hex: document.getElementById("textMutedHex")
+        }
+      };
+
+      const presets = {
+        default: {
+          [VARS.accent]: "#38bdf8",
+          [VARS.bgTop]: "#020617",
+          [VARS.bgBottom]: "#020617",
+          [VARS.textMain]: "#e5e7eb",
+          [VARS.textMuted]: "#9ca3af"
+        },
+        midnight: {
+          [VARS.accent]: "#60a5fa",
+          [VARS.bgTop]: "#020617",
+          [VARS.bgBottom]: "#000000",
+          [VARS.textMain]: "#e5e7eb",
+          [VARS.textMuted]: "#6b7280"
+        },
+        eden: {
+          [VARS.accent]: "#22c55e",
+          [VARS.bgTop]: "#020617",
+          [VARS.bgBottom]: "#022c22",
+          [VARS.textMain]: "#e5f9ed",
+          [VARS.textMuted]: "#9ca3af"
+        },
+        paper: {
+          [VARS.accent]: "#f97316",
+          [VARS.bgTop]: "#0b1120",
+          [VARS.bgBottom]: "#111827",
+          [VARS.textMain]: "#f9fafb",
+          [VARS.textMuted]: "#9ca3af"
+        }
+      };
+
+      function toHex(v) {
+        if (!v) return "";
+        v = v.trim();
+        if (/^#([0-9a-f]{3}|[0-9a-f]{6})$/i.test(v)) return v;
+        return "";
+      }
+
+      function syncInputsFromTheme(theme) {
+        const t = theme || (api ? api.getTheme() : {});
+        const defs = api ? api.getDefaults() : {};
+
+        function setPair(key, varName) {
+          const pair = inputs[key];
+          if (!pair) return;
+          const val = toHex(t[varName] || defs[varName]);
+          if (val) {
+            pair.color.value = val;
+            pair.hex.value = val;
+          }
+        }
+
+        setPair("accent", VARS.accent);
+        setPair("bgTop", VARS.bgTop);
+        setPair("bgBottom", VARS.bgBottom);
+        setPair("textMain", VARS.textMain);
+        setPair("textMuted", VARS.textMuted);
+      }
+
+      function updateVar(key, value) {
+        const hex = toHex(value);
+        if (!hex) return; // ignore invalid
+        const varName = VARS[key];
+        if (!varName) return;
+
+        if (api && typeof api.setTheme === "function") {
+          const obj = {};
+          obj[varName] = hex;
+          api.setTheme(obj);
+        } else {
+          document.documentElement.style.setProperty(varName, hex);
+        }
+      }
+
+      function wireField(key) {
+        const pair = inputs[key];
+        if (!pair) return;
+
+        pair.color.addEventListener("input", () => {
+          pair.hex.value = pair.color.value;
+          updateVar(key, pair.color.value);
+        });
+
+        pair.hex.addEventListener("change", () => {
+          const hex = toHex(pair.hex.value);
+          if (!hex) {
+            // revert to color input if invalid
+            pair.hex.value = pair.color.value;
+            return;
+          }
+          pair.color.value = hex;
+          updateVar(key, hex);
+        });
+      }
+
+      Object.keys(inputs).forEach(wireField);
+
+      // Preset buttons
+      document
+        .querySelectorAll("[data-preset]")
+        .forEach((btn) => {
+          btn.addEventListener("click", () => {
+            const name = btn.getAttribute("data-preset");
+            const preset = presets[name];
+            if (!preset) return;
+            if (api && typeof api.setTheme === "function") {
+              api.setTheme(preset);
+              syncInputsFromTheme(api.getTheme());
+            } else {
+              Object.keys(preset).forEach((k) => {
+                document.documentElement.style.setProperty(k, preset[k]);
+              });
+              syncInputsFromTheme(preset);
+            }
+          });
+        });
+
+      const saveBtn = document.getElementById("setSaveBtn");
+      const resetBtn = document.getElementById("setResetBtn");
+
+      if (saveBtn) {
+        saveBtn.addEventListener("click", () => {
+          // already saved via setTheme on each change, so this is mostly just a "nice" button
+          if (api && api.getTheme) {
+            const t = api.getTheme();
+            api.setTheme(t);
+          }
+        });
+      }
+
+      if (resetBtn) {
+        resetBtn.addEventListener("click", () => {
+          if (api && api.resetTheme) {
+            api.resetTheme();
+            syncInputsFromTheme(api.getTheme());
+          } else {
+            // hard reset
+            Object.keys(VARS).forEach((k) => {
+              document.documentElement.style.removeProperty(VARS[k]);
+            });
+            syncInputsFromTheme({});
+          }
+        });
+      }
+
+      // Initial state
+      syncInputsFromTheme(api ? api.getTheme() : {});
+    })();
+  </script>
+</body>
+</html>
