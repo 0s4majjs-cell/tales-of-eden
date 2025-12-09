@@ -1,0 +1,690 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Tales of Eden – Library</title>
+
+  <link rel="stylesheet" href="styles.css" />
+  <script src="theme-loader.js"></script>
+
+  <style>
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      font-family: var(--font-ui, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif);
+      color: var(--color-text-main, #e5e7eb);
+      background:
+        radial-gradient(circle at top, var(--color-bg-main-top, #111827) 0, var(--color-bg-main-bottom, #020617) 60%),
+        #020617;
+      background-attachment: fixed;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .lib-shell {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      padding: 12px clamp(16px, 4vw, 40px);
+    }
+
+    /* TOP BAR */
+
+    .lib-topbar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      font-size: 12px;
+      padding-bottom: 8px;
+      border-bottom: 1px solid rgba(15, 23, 42, 0.9);
+    }
+
+    .lib-top-left {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .lib-logo-dot {
+      width: 18px;
+      height: 18px;
+      border-radius: 999px;
+      background: radial-gradient(circle at 30% 20%, #fbbf24 0, #f97316 30%, #111827 85%);
+    }
+
+    .lib-title-main {
+      text-transform: uppercase;
+      letter-spacing: 0.16em;
+      font-size: 12px;
+    }
+
+    .lib-nav {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+
+    .lib-nav a {
+      text-decoration: none;
+      color: #e5e7eb;
+      font-size: 11px;
+      padding: 5px 10px;
+      border-radius: 999px;
+      border: 1px solid transparent;
+      opacity: 0.9;
+    }
+
+    .lib-nav a:hover {
+      border-color: rgba(148, 163, 184, 0.7);
+      background: rgba(15, 23, 42, 0.8);
+    }
+
+    .lib-nav a.active {
+      border-color: rgba(96, 165, 250, 0.9);
+      background: rgba(15, 23, 42, 0.9);
+    }
+
+    /* MAIN */
+
+    .lib-main {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      padding-top: 10px;
+    }
+
+    .lib-headline {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+      max-width: 700px;
+    }
+
+    .lib-headline h1 {
+      margin: 0;
+      font-size: 18px;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+    }
+
+    .lib-headline p {
+      margin: 0;
+      font-size: 12px;
+      color: #9ca3af;
+    }
+
+    /* CONTROLS */
+
+    .lib-controls {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      align-items: center;
+      font-size: 11px;
+    }
+
+    .lib-search-wrap {
+      position: relative;
+      flex: 1;
+      min-width: 160px;
+    }
+
+    .lib-search {
+      width: 100%;
+      border-radius: 999px;
+      border: 1px solid rgba(55, 65, 81, 0.9);
+      background: rgba(17, 24, 39, 0.96);
+      color: #e5e7eb;
+      font-size: 12px;
+      padding: 6px 10px 6px 26px;
+      outline: none;
+    }
+
+    .lib-search::placeholder {
+      color: #9ca3af;
+    }
+
+    .lib-search-wrap::before {
+      content: "🔎";
+      position: absolute;
+      left: 7px;
+      top: 50%;
+      transform: translateY(-50%);
+      font-size: 11px;
+    }
+
+    .lib-select {
+      border-radius: 999px;
+      border: 1px solid rgba(55, 65, 81, 0.9);
+      background: rgba(17, 24, 39, 0.96);
+      color: #e5e7eb;
+      font-size: 11px;
+      padding: 6px 10px;
+      outline: none;
+      cursor: pointer;
+    }
+
+    .lib-toggle {
+      border-radius: 999px;
+      border: 1px solid rgba(55, 65, 81, 0.9);
+      background: rgba(17, 24, 39, 0.96);
+      color: #9ca3af;
+      font-size: 11px;
+      padding: 5px 10px;
+      cursor: pointer;
+    }
+
+    .lib-toggle.active {
+      border-color: rgba(250, 204, 21, 0.9);
+      color: #facc15;
+    }
+
+    .lib-meta {
+      font-size: 11px;
+      color: #9ca3af;
+    }
+
+    /* TABLE */
+
+    .lib-table-wrap {
+      flex: 1;
+      overflow: auto;
+      border-radius: 6px;
+      border: 1px solid rgba(31, 41, 55, 0.9);
+      background: rgba(15, 23, 42, 0.9);
+    }
+
+    table.lib-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 12px;
+    }
+
+    .lib-table thead {
+      background: rgba(15, 23, 42, 1);
+    }
+
+    .lib-table th,
+    .lib-table td {
+      padding: 6px 10px;
+      border-bottom: 1px solid rgba(31, 41, 55, 0.9);
+      text-align: left;
+      white-space: nowrap;
+    }
+
+    .lib-table th {
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+      color: #9ca3af;
+    }
+
+    .lib-table tbody tr:hover {
+      background: rgba(30, 64, 175, 0.18);
+    }
+
+    .lib-col-title {
+      max-width: 260px;
+    }
+
+    .lib-col-title-main {
+      display: block;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .lib-col-title-sub {
+      font-size: 11px;
+      color: #9ca3af;
+    }
+
+    .lib-progress-text {
+      font-size: 11px;
+      color: #bfdbfe;
+    }
+
+    .lib-actions {
+      display: flex;
+      gap: 6px;
+      flex-wrap: wrap;
+    }
+
+    .lib-btn {
+      border-radius: 999px;
+      border: 1px solid rgba(156, 163, 175, 0.9);
+      background: rgba(15, 23, 42, 1);
+      color: #e5e7eb;
+      font-size: 11px;
+      padding: 3px 9px;
+      text-decoration: none;
+      cursor: pointer;
+    }
+
+    .lib-btn.primary {
+      border-color: rgba(96, 165, 250, 0.9);
+    }
+
+    .lib-fav {
+      border: none;
+      background: transparent;
+      cursor: pointer;
+      font-size: 14px;
+      padding: 0 4px;
+      color: #9ca3af;
+    }
+
+    .lib-fav.active {
+      color: #facc15;
+      text-shadow: 0 0 6px rgba(250, 204, 21, 0.9);
+    }
+
+    .lib-empty {
+      padding: 8px 10px;
+      font-size: 12px;
+      color: #9ca3af;
+    }
+
+    /* FOOTER */
+
+    .lib-footer {
+      font-size: 11px;
+      color: #6b7280;
+      padding-top: 6px;
+      border-top: 1px solid rgba(15, 23, 42, 0.9);
+      text-align: left;
+    }
+
+    .lib-footer a {
+      color: inherit;
+      text-decoration: none;
+      border-bottom: 1px dotted rgba(75, 85, 99, 0.9);
+    }
+  </style>
+</head>
+<body>
+  <div class="lib-shell">
+    <header class="lib-topbar">
+      <div class="lib-top-left">
+        <div class="lib-logo-dot"></div>
+        <div class="lib-title-main">Tales of Eden – Library</div>
+      </div>
+      <nav class="lib-nav">
+        <a href="index.html">Home</a>
+        <a href="library.html" class="active">Library</a>
+        <a href="codex.html">Codex</a>
+      </nav>
+    </header>
+
+    <main class="lib-main">
+      <section class="lib-headline">
+        <h1>Library</h1>
+        <p>Select a book to read or continue. All data is local to this site.</p>
+      </section>
+
+      <section class="lib-controls">
+        <div class="lib-search-wrap">
+          <input id="libSearch" class="lib-search" type="search"
+                 placeholder="Search title, author, description…" autocomplete="off" />
+        </div>
+
+        <select id="libGenre" class="lib-select">
+          <option value="All">All genres</option>
+        </select>
+
+        <select id="libType" class="lib-select">
+          <option value="All">All types</option>
+        </select>
+
+        <select id="libSort" class="lib-select">
+          <option value="title">Sort: Title</option>
+          <option value="author">Sort: Author</option>
+          <option value="recent">Sort: Recently read</option>
+        </select>
+
+        <button id="libFavOnly" type="button" class="lib-toggle">
+          ★ Favourites
+        </button>
+
+        <div class="lib-meta" id="libMeta">Loading…</div>
+      </section>
+
+      <section class="lib-table-wrap">
+        <table class="lib-table">
+          <thead>
+            <tr>
+              <th class="lib-col-title">Title</th>
+              <th>Author</th>
+              <th>Genre</th>
+              <th>Type</th>
+              <th>Progress</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody id="libBody"></tbody>
+        </table>
+        <div id="libEmpty" class="lib-empty" style="display:none;">
+          No books match this view. Try changing filters or search.
+        </div>
+      </section>
+    </main>
+
+    <footer class="lib-footer">
+      <span>Progress is stored as <code>toe_progress_*</code> in your browser. <a href="index.html">Back to hub</a></span>
+    </footer>
+  </div>
+
+  <script>
+    (function () {
+      const BOOKS_JSON = "books.json";
+
+      const searchInput  = document.getElementById("libSearch");
+      const genreSelect  = document.getElementById("libGenre");
+      const typeSelect   = document.getElementById("libType");
+      const sortSelect   = document.getElementById("libSort");
+      const favToggle    = document.getElementById("libFavOnly");
+
+      const metaEl       = document.getElementById("libMeta");
+      const bodyEl       = document.getElementById("libBody");
+      const emptyEl      = document.getElementById("libEmpty");
+
+      let allBooks    = [];
+      let favourites  = new Set();
+      let progressMap = {};
+      let favOnly     = false;
+
+      function loadFavorites() {
+        try {
+          const raw = localStorage.getItem("toe_favorites");
+          if (!raw) return new Set();
+          const arr = JSON.parse(raw);
+          return new Set(Array.isArray(arr) ? arr : []);
+        } catch {
+          return new Set();
+        }
+      }
+
+      function saveFavorites() {
+        try {
+          localStorage.setItem("toe_favorites", JSON.stringify(Array.from(favourites)));
+        } catch {}
+      }
+
+      function loadProgress() {
+        const map = {};
+        const now = Date.now();
+        for (let i = 0; i < localStorage.length; i++) {
+          const key = localStorage.key(i);
+          if (!key || !key.startsWith("toe_progress_")) continue;
+          try {
+            const raw = localStorage.getItem(key);
+            if (!raw) continue;
+            const data = JSON.parse(raw);
+            const bookId = key.replace("toe_progress_", "");
+            if (!bookId || typeof data.lastPage !== "number") continue;
+            map[bookId] = {
+              lastPage: data.lastPage,
+              totalPages: data.totalPages || 0,
+              updatedAt: data.updatedAt || now
+            };
+          } catch {}
+        }
+        return map;
+      }
+
+      function hasProgress(id) {
+        const p = progressMap[id];
+        return !!(p && p.lastPage && p.lastPage > 0);
+      }
+
+      function progressPercent(book) {
+        const p = progressMap[book.id];
+        if (!p) return 0;
+        const total = p.totalPages || book.totalPages || 0;
+        if (!total) return 0;
+        return Math.min(100, (p.lastPage / total) * 100);
+      }
+
+      function isComplete(book) {
+        const p = progressMap[book.id];
+        const total = book.totalPages || (p && p.totalPages) || 0;
+        if (!p || !total) return false;
+        return p.lastPage >= total;
+      }
+
+      function formatPercent(n) {
+        if (!isFinite(n)) return "0%";
+        if (n >= 99.5) return "100%";
+        return Math.round(n) + "%";
+      }
+
+      function buildSelectOptions() {
+        const genres = new Set(["All"]);
+        const types  = new Set(["All"]);
+        allBooks.forEach(b => {
+          genres.add(b.genre || "Uncategorized");
+          if (b.type) types.add(b.type);
+        });
+
+        genreSelect.innerHTML = "";
+        Array.from(genres).sort((a, b) => {
+          if (a === "All") return -1;
+          if (b === "All") return 1;
+          return a.localeCompare(b);
+        }).forEach(g => {
+          const opt = document.createElement("option");
+          opt.value = g;
+          opt.textContent = g === "All" ? "All genres" : g;
+          genreSelect.appendChild(opt);
+        });
+
+        typeSelect.innerHTML = "";
+        Array.from(types).forEach(t => {
+          const opt = document.createElement("option");
+          opt.value = t;
+          opt.textContent = t === "All" ? "All types" : t;
+          typeSelect.appendChild(opt);
+        });
+      }
+
+      function matchesFilters(book) {
+        const q      = (searchInput.value || "").trim().toLowerCase();
+        const genre  = genreSelect.value || "All";
+        const type   = typeSelect.value || "All";
+
+        if (favOnly && !favourites.has(book.id)) return false;
+        if (genre !== "All" && (book.genre || "Uncategorized") !== genre) return false;
+        if (type !== "All" && book.type !== type) return false;
+
+        if (q) {
+          const hay = [
+            book.title || "",
+            book.author || "",
+            book.genre || "",
+            book.type || "",
+            book.description || ""
+          ].join(" ").toLowerCase();
+          if (!hay.includes(q)) return false;
+        }
+        return true;
+      }
+
+      function filtered() {
+        const mode = sortSelect.value || "title";
+        const books = allBooks.slice();
+
+        if (mode === "recent") {
+          books.sort((a, b) => {
+            const pa = progressMap[a.id];
+            const pb = progressMap[b.id];
+            const ta = pa ? pa.updatedAt || 0 : 0;
+            const tb = pb ? pb.updatedAt || 0 : 0;
+            return tb - ta;
+          });
+        } else if (mode === "author") {
+          books.sort((a, b) => (a.author || "").localeCompare(b.author || ""));
+        } else {
+          books.sort((a, b) => (a.title || "").localeCompare(b.title || ""));
+        }
+
+        return books.filter(matchesFilters);
+      }
+
+      function buildReaderUrl(book, page) {
+        if (!book || !book.path) return "#";
+        const base = book.path.replace(/index\.html$/i, "reader.html");
+        return base + (page ? "?p=" + page : "");
+      }
+
+      function render() {
+        const books = filtered();
+        bodyEl.innerHTML = "";
+
+        const total = allBooks.length;
+        const count = books.length;
+        const favText = favOnly ? " · favourites only" : "";
+        metaEl.textContent = `${count} of ${total} works${favText}`;
+
+        if (!books.length) {
+          emptyEl.style.display = "";
+          return;
+        }
+        emptyEl.style.display = "none";
+
+        books.forEach(book => {
+          const tr = document.createElement("tr");
+
+          // Title col
+          const tdTitle = document.createElement("td");
+          tdTitle.className = "lib-col-title";
+          const main = document.createElement("span");
+          main.className = "lib-col-title-main";
+          main.textContent = book.title || book.id || "Untitled";
+
+          const sub = document.createElement("span");
+          sub.className = "lib-col-title-sub";
+          sub.textContent = book.description ? book.description.slice(0, 80) + "…" : "";
+
+          tdTitle.appendChild(main);
+          if (sub.textContent) tdTitle.appendChild(document.createElement("br")), tdTitle.appendChild(sub);
+
+          // Author
+          const tdAuthor = document.createElement("td");
+          tdAuthor.textContent = book.author || "Unknown";
+
+          // Genre
+          const tdGenre = document.createElement("td");
+          tdGenre.textContent = book.genre || "—";
+
+          // Type
+          const tdType = document.createElement("td");
+          tdType.textContent = book.type || "—";
+
+          // Progress
+          const tdProg = document.createElement("td");
+          if (hasProgress(book.id)) {
+            const p = progressMap[book.id];
+            const pct = progressPercent(book);
+            const span = document.createElement("span");
+            span.className = "lib-progress-text";
+            span.textContent = `Page ${p.lastPage} of ${p.totalPages || book.totalPages || "?"} · ${formatPercent(pct)}`;
+            if (isComplete(book)) span.textContent += " · completed";
+            tdProg.appendChild(span);
+          } else {
+            tdProg.textContent = "—";
+          }
+
+          // Actions
+          const tdActions = document.createElement("td");
+          const actions = document.createElement("div");
+          actions.className = "lib-actions";
+
+          const infoUrl = book.path || "#";
+          const readUrl = buildReaderUrl(book, (progressMap[book.id] && progressMap[book.id].lastPage) || 1);
+
+          const readBtn = document.createElement("a");
+          readBtn.href = readUrl;
+          readBtn.className = "lib-btn primary";
+          readBtn.textContent = hasProgress(book.id) ? "Continue" : "Read";
+
+          const infoBtn = document.createElement("a");
+          infoBtn.href = infoUrl;
+          infoBtn.className = "lib-btn";
+          infoBtn.textContent = "Info";
+
+          const favBtn = document.createElement("button");
+          favBtn.type = "button";
+          favBtn.className = "lib-fav" + (favourites.has(book.id) ? " active" : "");
+          favBtn.textContent = "★";
+          favBtn.addEventListener("click", () => {
+            if (favourites.has(book.id)) {
+              favourites.delete(book.id);
+              favBtn.classList.remove("active");
+            } else {
+              favourites.add(book.id);
+              favBtn.classList.add("active");
+            }
+            saveFavorites();
+            render();
+          });
+
+          actions.appendChild(readBtn);
+          actions.appendChild(infoBtn);
+          actions.appendChild(favBtn);
+          tdActions.appendChild(actions);
+
+          tr.appendChild(tdTitle);
+          tr.appendChild(tdAuthor);
+          tr.appendChild(tdGenre);
+          tr.appendChild(tdType);
+          tr.appendChild(tdProg);
+          tr.appendChild(tdActions);
+
+          bodyEl.appendChild(tr);
+        });
+      }
+
+      function attachEvents() {
+        let timer = null;
+        function trigger() {
+          if (timer) clearTimeout(timer);
+          timer = setTimeout(render, 120);
+        }
+
+        searchInput.addEventListener("input", trigger);
+        genreSelect.addEventListener("change", trigger);
+        typeSelect.addEventListener("change", trigger);
+        sortSelect.addEventListener("change", trigger);
+
+        favToggle.addEventListener("click", () => {
+          favOnly = !favOnly;
+          favToggle.classList.toggle("active", favOnly);
+          render();
+        });
+      }
+
+      // boot
+      favourites  = loadFavorites();
+      progressMap = loadProgress();
+
+      fetch(BOOKS_JSON)
+        .then(r => r.json())
+        .then(data => {
+          allBooks = Array.isArray(data) ? data : [];
+          metaEl.textContent = `${allBooks.length} works loaded`;
+          buildSelectOptions();
+          attachEvents();
+          render();
+        })
+        .catch(err => {
+          console.error("[library] failed to load books.json", err);
+          metaEl.textContent = "Failed to load books.";
+          emptyEl.style.display = "";
+        });
+    })();
+  </script>
+</body>
+</html>

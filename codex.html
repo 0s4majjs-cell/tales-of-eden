@@ -6,620 +6,847 @@
 
   <link rel="stylesheet" href="styles.css" />
   <script src="theme-loader.js"></script>
-  <link rel="stylesheet" href="overlays.css" />
-  <script src="overlays.js"></script>
+
   <style>
+    * { box-sizing: border-box; }
+
     body {
       margin: 0;
-      font-family: var(--font-ui, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif);
-      background: radial-gradient(circle at top, var(--color-bg-main-top, #161d2a) 0, var(--color-bg-main-bottom, #05060a) 55%);
-      color: var(--color-text-main, #e9f1ff);
-    }
-
-    .codex-shell {
       min-height: 100vh;
+      font-family: var(--font-ui, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif);
+      color: var(--color-text-main, #e5e7eb);
+      background:
+        radial-gradient(circle at top, var(--color-bg-main-top, #111827) 0, var(--color-bg-main-bottom, #020617) 60%),
+        #020617;
+      background-attachment: fixed;
       display: flex;
       flex-direction: column;
     }
 
-    header.codex-top {
-      height: 52px;
+    .cx-shell {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      padding: 12px clamp(16px, 4vw, 40px);
+    }
+
+    /* TOP BAR */
+
+    .cx-topbar {
       display: flex;
       align-items: center;
       justify-content: space-between;
-      padding: 0 32px;
-      border-bottom: 1px solid rgba(255,255,255,0.08);
-      background: linear-gradient(to bottom, rgba(0,0,0,0.9), rgba(0,0,0,0.4));
-      backdrop-filter: blur(16px);
-      box-shadow: 0 10px 30px rgba(0,0,0,0.7);
-      z-index: 10;
+      font-size: 12px;
+      padding-bottom: 8px;
+      border-bottom: 1px solid rgba(15, 23, 42, 0.9);
     }
 
-    .codex-top-left,
-    .codex-top-right {
+    .cx-top-left {
       display: flex;
       align-items: center;
       gap: 8px;
     }
 
-    .codex-title {
-      font-size: 14px;
-      letter-spacing: 0.18em;
+    .cx-logo-dot {
+      width: 18px;
+      height: 18px;
+      border-radius: 999px;
+      background: radial-gradient(circle at 30% 20%, #fbbf24 0, #f97316 30%, #111827 85%);
+    }
+
+    .cx-title-main {
       text-transform: uppercase;
-      color: rgba(223,235,255,0.9);
-    }
-
-    .codex-search {
-      width: 260px;
-      border-radius: 999px;
-      border: 1px solid rgba(255,255,255,0.16);
-      background: rgba(6,12,20,0.9);
-      color: var(--color-text-main);
-      padding: 6px 12px;
-      font-size: 13px;
-      outline: none;
-    }
-
-    .codex-search::placeholder {
-      color: rgba(155,166,195,0.7);
-    }
-
-    .codex-btn {
-      padding: 6px 14px;
-      border-radius: 999px;
-      border: 1px solid rgba(255,255,255,0.16);
-      background: rgba(6,12,20,0.9);
-      color: var(--color-text-main);
+      letter-spacing: 0.16em;
       font-size: 12px;
-      cursor: pointer;
-      text-decoration: none;
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      gap: 6px;
-      white-space: nowrap;
-      transition:
-        background 0.15s ease,
-        border-color 0.15s ease,
-        transform 0.10s ease,
-        box-shadow 0.15s ease;
     }
 
-    .codex-btn:hover {
-      background: rgba(22,40,72,0.98);
-      border-color: var(--color-accent, #4ea1ff);
-      box-shadow: 0 0 0 1px rgba(255,255,255,0.16);
-      transform: translateY(-1px);
-    }
-
-    main.codex-main {
-      flex: 1;
+    .cx-nav {
       display: flex;
-      min-height: 0;
-    }
-
-    .codex-list-panel {
-      width: 320px;
-      max-width: 40%;
-      border-right: 1px solid rgba(255,255,255,0.06);
-      background: radial-gradient(circle at top left, rgba(18,26,46,0.9), rgba(4,6,12,0.96));
-      padding: 10px 0 12px;
-      display: flex;
-      flex-direction: column;
-      min-height: 0;
-    }
-
-    .codex-category-row {
-      padding: 0 10px 6px 12px;
-      display: flex;
+      gap: 8px;
       flex-wrap: wrap;
-      gap: 4px;
-      border-bottom: 1px solid rgba(255,255,255,0.08);
     }
 
-    .codex-cat-pill {
-      padding: 3px 9px;
-      border-radius: 999px;
-      border: 1px solid rgba(255,255,255,0.16);
-      background: rgba(6,12,20,0.85);
-      font-size: 11px;
-      color: rgba(223,235,255,0.9);
-      cursor: pointer;
-      white-space: nowrap;
-      transition:
-        background 0.12s ease,
-        border-color 0.12s ease,
-        box-shadow 0.12s ease,
-        transform 0.08s ease;
-    }
-
-    .codex-cat-pill:hover {
-      background: rgba(34,52,88,0.98);
-      border-color: rgba(255,255,255,0.34);
-      transform: translateY(-1px);
-    }
-
-    .codex-cat-pill.active {
-      background: rgba(80,118,188,0.98);
-      border-color: var(--color-accent, #4ea1ff);
-      box-shadow: 0 0 0 1px rgba(255,255,255,0.18);
-    }
-
-    .codex-list {
-      list-style: none;
-      margin: 0;
-      padding: 4px 0 0;
-      overflow-y: auto;
-      flex: 1;
-    }
-
-    .codex-item {
-      padding: 7px 16px 7px 22px;
-      cursor: pointer;
-      border-left: 3px solid transparent;
-      font-size: 13px;
-      color: rgba(223,235,255,0.85);
-      display: flex;
-      flex-direction: column;
-      gap: 2px;
-    }
-
-    .codex-item-title {
-      font-weight: 500;
-    }
-
-    .codex-item-meta {
-      font-size: 11px;
-      color: rgba(155,166,195,0.8);
-    }
-
-    .codex-item:hover {
-      background: radial-gradient(circle at left, rgba(46,62,102,0.6), rgba(4,6,12,0.96));
-      border-left-color: rgba(111,191,255,0.9);
-    }
-
-    .codex-item.active {
-      background: radial-gradient(circle at left, rgba(84,118,187,0.9), rgba(4,6,12,0.96));
-      border-left-color: var(--color-accent, #4ea1ff);
-    }
-
-    .codex-detail-panel {
-      flex: 1;
-      padding: 24px 40px 40px;
-      overflow-y: auto;
-    }
-
-    .codex-detail-title {
-      font-size: 20px;
-      font-weight: 600;
-      margin-bottom: 4px;
-    }
-
-    .codex-detail-meta {
-      font-size: 12px;
-      color: rgba(155,166,195,0.9);
-      margin-bottom: 16px;
-    }
-
-    .codex-detail-body p {
-      margin: 0 0 10px;
-      font-size: 14px;
-      line-height: 1.7;
-    }
-
-    .codex-section-title {
-      margin-top: 28px;
-      margin-bottom: 6px;
-      font-size: 13px;
-      text-transform: uppercase;
-      letter-spacing: 0.18em;
-      color: rgba(155,166,195,0.9);
-    }
-
-    .codex-appears {
-      font-size: 13px;
-      padding-left: 0;
-      list-style: none;
-    }
-
-    .codex-appears li {
-      margin-bottom: 4px;
-    }
-
-    .codex-appears a {
-      color: var(--color-accent, #9ad0ff);
+    .cx-nav a {
       text-decoration: none;
+      color: #e5e7eb;
+      font-size: 11px;
+      padding: 5px 10px;
+      border-radius: 999px;
+      border: 1px solid transparent;
+      opacity: 0.9;
     }
 
-    .codex-appears a:hover {
-      text-decoration: underline;
+    .cx-nav a:hover {
+      border-color: rgba(148, 163, 184, 0.7);
+      background: rgba(15, 23, 42, 0.8);
     }
 
-    .codex-empty {
-      font-size: 13px;
-      color: rgba(155,166,195,0.9);
+    .cx-nav a.active {
+      border-color: rgba(96, 165, 250, 0.9);
+      background: rgba(15, 23, 42, 0.9);
+    }
+
+    /* LAYOUT */
+
+    .cx-main {
+      flex: 1;
+      display: grid;
+      grid-template-columns: minmax(220px, 320px) minmax(0, 1fr);
+      gap: 14px;
+      padding-top: 10px;
+      min-height: 0;
     }
 
     @media (max-width: 900px) {
-      header.codex-top {
-        padding: 0 16px;
+      .cx-main {
+        grid-template-columns: minmax(0, 1fr);
+        grid-auto-rows: minmax(0, auto);
       }
-      .codex-search {
-        width: 180px;
-      }
-      main.codex-main {
-        flex-direction: column;
-      }
-      .codex-list-panel {
-        width: 100%;
-        max-width: 100%;
-        border-right: none;
-        border-bottom: 1px solid rgba(255,255,255,0.06);
-        max-height: 260px;
-      }
-      .codex-detail-panel {
-        padding: 16px 16px 24px;
-      }
+    }
+
+    /* LEFT PANEL */
+
+    .cx-left {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+
+    .cx-left-head h1 {
+      margin: 0;
+      font-size: 16px;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+    }
+
+    .cx-left-head p {
+      margin: 0;
+      font-size: 12px;
+      color: #9ca3af;
+    }
+
+    .cx-filters {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      font-size: 11px;
+    }
+
+    .cx-search-wrap {
+      position: relative;
+    }
+
+    .cx-search {
+      width: 100%;
+      border-radius: 999px;
+      border: 1px solid rgba(55, 65, 81, 0.9);
+      background: rgba(17, 24, 39, 0.96);
+      color: #e5e7eb;
+      font-size: 12px;
+      padding: 6px 10px 6px 26px;
+      outline: none;
+    }
+
+    .cx-search::placeholder {
+      color: #9ca3af;
+    }
+
+    .cx-search-wrap::before {
+      content: "🔎";
+      position: absolute;
+      left: 7px;
+      top: 50%;
+      transform: translateY(-50%);
+      font-size: 11px;
+    }
+
+    .cx-cat-row {
+      display: flex;
+      gap: 6px;
+      align-items: center;
+      flex-wrap: wrap;
+    }
+
+    .cx-select {
+      border-radius: 999px;
+      border: 1px solid rgba(55, 65, 81, 0.9);
+      background: rgba(17, 24, 39, 0.96);
+      color: #e5e7eb;
+      font-size: 11px;
+      padding: 6px 10px;
+      outline: none;
+      cursor: pointer;
+    }
+
+    .cx-count {
+      font-size: 11px;
+      color: #9ca3af;
+    }
+
+    .cx-list-wrap {
+      flex: 1;
+      border-radius: 6px;
+      border: 1px solid rgba(31, 41, 55, 0.9);
+      background: rgba(15, 23, 42, 0.9);
+      overflow-y: auto;
+      min-height: 0;
+    }
+
+    .cx-list {
+      list-style: none;
+      margin: 0;
+      padding: 4px 0;
+      font-size: 12px;
+    }
+
+    .cx-list-empty {
+      padding: 6px 10px;
+      font-size: 12px;
+      color: #9ca3af;
+    }
+
+    .cx-item-btn {
+      width: 100%;
+      padding: 4px 10px;
+      border: none;
+      background: transparent;
+      color: #e5e7eb;
+      text-align: left;
+      display: block;
+      cursor: pointer;
+    }
+
+    .cx-item-btn:hover {
+      background: rgba(30, 64, 175, 0.25);
+    }
+
+    .cx-item-btn.active {
+      background: rgba(15, 23, 42, 1);
+    }
+
+    .cx-item-title {
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .cx-item-meta {
+      font-size: 11px;
+      color: #9ca3af;
+    }
+
+    /* RIGHT PANEL */
+
+    .cx-right {
+      display: flex;
+      flex-direction: column;
+      min-height: 0;
+      border-radius: 6px;
+      border: 1px solid rgba(31, 41, 55, 0.9);
+      background: rgba(15, 23, 42, 0.9);
+      padding: 10px 12px;
+      font-size: 13px;
+    }
+
+    .cx-entry-id {
+      font-size: 11px;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: #9ca3af;
+    }
+
+    .cx-entry-title {
+      font-size: 18px;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      margin: 2px 0 0;
+    }
+
+    .cx-entry-tags {
+      font-size: 11px;
+      color: #cbd5f5;
+      margin-top: 4px;
+    }
+
+    .cx-entry-summary {
+      font-size: 12px;
+      color: #cbd5f5;
+      margin-top: 4px;
+    }
+
+    .cx-entry-meta {
+      font-size: 11px;
+      color: #9ca3af;
+      margin-top: 2px;
+    }
+
+    .cx-open-book {
+      margin-top: 6px;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 11px;
+      padding: 4px 9px;
+      border-radius: 999px;
+      border: 1px solid rgba(59, 130, 246, 0.9);
+      background: rgba(15, 23, 42, 1);
+      color: #e5e7eb;
+      text-decoration: none;
+    }
+
+    .cx-body-wrap {
+      flex: 1;
+      margin-top: 8px;
+      overflow-y: auto;
+    }
+
+    .cx-body-wrap::-webkit-scrollbar {
+      width: 6px;
+    }
+
+    .cx-body-wrap::-webkit-scrollbar-thumb {
+      background: rgba(55, 65, 81, 0.9);
+      border-radius: 999px;
+    }
+
+    .cx-body {
+      line-height: 1.6;
+    }
+
+    .cx-body h3 {
+      margin: 12px 0 4px;
+      font-size: 12px;
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+      color: #bfdbfe;
+    }
+
+    .cx-body p {
+      margin: 0 0 8px;
+    }
+
+    .cx-body ul {
+      margin: 4px 0 8px 18px;
+      padding: 0;
+    }
+
+    .cx-body-empty {
+      font-size: 12px;
+      color: #9ca3af;
+    }
+
+    .cx-appears {
+      margin-top: 8px;
+      font-size: 11px;
+      color: #bfdbfe;
+    }
+
+    .cx-appears-list {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      margin-top: 4px;
+    }
+
+    .cx-appears-link {
+      border-radius: 999px;
+      border: 1px solid rgba(59, 130, 246, 0.9);
+      padding: 3px 7px;
+      color: #e5e7eb;
+      text-decoration: none;
+      font-size: 11px;
+    }
+
+    /* FOOTER */
+
+    .cx-footer {
+      font-size: 11px;
+      color: #6b7280;
+      padding-top: 6px;
+      border-top: 1px solid rgba(15, 23, 42, 0.9);
+      text-align: left;
+    }
+
+    .cx-footer a {
+      color: inherit;
+      text-decoration: none;
+      border-bottom: 1px dotted rgba(75, 85, 99, 0.9);
     }
   </style>
 </head>
 <body>
-  <div class="codex-shell">
-    <header class="codex-top">
-      <div class="codex-top-left">
-        <a href="index.html" class="codex-btn">← Library</a>
-        <div class="codex-title">Codex</div>
+  <div class="cx-shell">
+    <header class="cx-topbar">
+      <div class="cx-top-left">
+        <div class="cx-logo-dot"></div>
+        <div class="cx-title-main">Tales of Eden – Codex</div>
       </div>
-
-      <div class="codex-top-right">
-        <input
-          id="searchInput"
-          type="search"
-          class="codex-search"
-          placeholder="Search Codex..."
-        />
-      </div>
+      <nav class="cx-nav">
+        <a href="index.html">Home</a>
+        <a href="library.html">Library</a>
+        <a href="codex.html" class="active">Codex</a>
+      </nav>
     </header>
 
-    <main class="codex-main">
-      <section class="codex-list-panel">
-        <div id="categoryRow" class="codex-category-row"></div>
-        <ul id="codexList" class="codex-list"></ul>
-      </section>
+    <main class="cx-main">
+      <!-- LEFT: list -->
+      <aside class="cx-left">
+        <div class="cx-left-head">
+          <h1>Codex</h1>
+          <p>Reference entries for locations, anomalies, people and organisations.</p>
+        </div>
 
-      <section class="codex-detail-panel" id="codexDetail">
-        <div class="codex-empty">
-          Select a Codex entry on the left, or search by name or category.
+        <div class="cx-filters">
+          <div class="cx-search-wrap">
+            <input id="cxSearch" class="cx-search" type="search"
+                   placeholder="Search by title, id, summary…" />
+          </div>
+          <div class="cx-cat-row">
+            <select id="cxCategory" class="cx-select">
+              <option value="All">All categories</option>
+            </select>
+            <span class="cx-count" id="cxCount">Loading…</span>
+          </div>
+        </div>
+
+        <div class="cx-list-wrap">
+          <ul id="cxList" class="cx-list"></ul>
+          <div id="cxListEmpty" class="cx-list-empty" style="display:none;">
+            No entries match this view.
+          </div>
+        </div>
+      </aside>
+
+      <!-- RIGHT: entry -->
+      <section class="cx-right">
+        <div class="cx-entry-id" id="cxEntryId">–</div>
+        <div class="cx-entry-title" id="cxEntryTitle">Select a codex entry</div>
+        <div class="cx-entry-tags" id="cxEntryTags"></div>
+        <div class="cx-entry-summary" id="cxEntrySummary">
+          Use the list on the left to choose an entry.
+        </div>
+        <div class="cx-entry-meta" id="cxEntryMeta">–</div>
+
+        <a id="cxOpenBook" href="#" class="cx-open-book" style="display:none;">Open related book</a>
+
+        <div class="cx-appears" id="cxAppears" style="display:none;">
+          Appears in:
+          <div class="cx-appears-list" id="cxAppearsList"></div>
+        </div>
+
+        <div class="cx-body-wrap">
+          <div class="cx-body" id="cxBody"></div>
+          <div class="cx-body-empty" id="cxBodyEmpty" style="display:none;">
+            No additional body content for this entry.
+          </div>
         </div>
       </section>
     </main>
+
+    <footer class="cx-footer">
+      <span>Codex entries are in <code>Codex/codex.json</code>. Linked books come from <code>books.json</code>.</span>
+    </footer>
   </div>
 
   <script>
     (function () {
       const CODEX_JSON = "Codex/codex.json";
-      const REFS_JSON  = "Codex/references.json";
       const BOOKS_JSON = "books.json";
 
-      const listEl      = document.getElementById("codexList");
-      const detailEl    = document.getElementById("codexDetail");
-      const searchEl    = document.getElementById("searchInput");
-      const categoryRow = document.getElementById("categoryRow");
+      const searchInput   = document.getElementById("cxSearch");
+      const categorySel   = document.getElementById("cxCategory");
+      const countEl       = document.getElementById("cxCount");
+      const listEl        = document.getElementById("cxList");
+      const listEmptyEl   = document.getElementById("cxListEmpty");
 
-      let entries       = [];
-      let refsMap       = {};
-      let booksMap      = {};
-      let activeId      = null;
+      const entryIdEl     = document.getElementById("cxEntryId");
+      const entryTitleEl  = document.getElementById("cxEntryTitle");
+      const entryTagsEl   = document.getElementById("cxEntryTags");
+      const entrySummaryEl= document.getElementById("cxEntrySummary");
+      const entryMetaEl   = document.getElementById("cxEntryMeta");
+      const bodyEl        = document.getElementById("cxBody");
+      const bodyEmptyEl   = document.getElementById("cxBodyEmpty");
+      const openBookEl    = document.getElementById("cxOpenBook");
+      const appearsWrapEl = document.getElementById("cxAppears");
+      const appearsListEl = document.getElementById("cxAppearsList");
 
-      let categories    = [];
-      let activeCategory = "All";
+      let entries    = [];
+      let booksIndex = {};
+      let activeId   = null;
 
-      function fetchJson(url, fallback) {
-        return fetch(url)
-          .then(r => {
-            if (!r.ok) throw new Error("HTTP " + r.status);
-            return r.json();
-          })
-          .catch(err => {
-            console.warn("[codex] Failed to load", url, err);
-            return fallback;
-          });
+      function qp() {
+        const p = new URLSearchParams(window.location.search);
+        return {
+          id: p.get("id") || null,
+          q: p.get("q") || "",
+          category: p.get("category") || "All"
+        };
       }
 
-      function buildBooksMap(list) {
-        const map = {};
-        (list || []).forEach(b => {
-          if (b && b.id) {
-            map[b.id] = b;
+      function updateURL(id, category, q) {
+        const params = new URLSearchParams();
+        if (id) params.set("id", id);
+        if (category && category !== "All") params.set("category", category);
+        if (q && q.trim()) params.set("q", q.trim());
+        const s = params.toString();
+        history.replaceState(null, "", window.location.pathname + (s ? "?" + s : ""));
+      }
+
+      function simpleScore(entry, query) {
+        if (!query) return 0;
+        const q = query.toLowerCase();
+        let score = 0;
+        if (entry.title && entry.title.toLowerCase().includes(q)) score += 3;
+        if (entry.id && entry.id.toLowerCase().includes(q)) score += 2;
+        if (entry.summary && entry.summary.toLowerCase().includes(q)) score += 1;
+        return score;
+      }
+
+      function normBody(entry) {
+        if (!entry) return [];
+        if (Array.isArray(entry.body)) return entry.body;
+        if (typeof entry.body === "string" && entry.body.trim()) return [entry.body];
+        return [];
+      }
+
+      function parseBodyBlocks(arr) {
+        const blocks = [];
+        let curTitle = null;
+        let curLines = [];
+
+        function flush() {
+          if (!curTitle && !curLines.length) return;
+          blocks.push({ title: curTitle, text: curLines.join("\n") });
+          curTitle = null;
+          curLines = [];
+        }
+
+        (arr || []).forEach(line => {
+          if (typeof line !== "string") return;
+          const trim = line.trim();
+          if (!trim) {
+            curLines.push("");
+            return;
+          }
+          if (/^#{2,}\s+/.test(trim)) {
+            flush();
+            curTitle = trim.replace(/^#{2,}\s+/, "").trim();
+          } else {
+            curLines.push(line);
           }
         });
-        return map;
+
+        flush();
+        return blocks;
+      }
+
+      function formatInline(t) {
+        if (!t) return "";
+        return t
+          .replace(/\*\*(.+?)\*\*/g, "<strong>$1</strong>")
+          .replace(/_(.+?)_/g, "<em>$1</em>");
+      }
+
+      function bodyHTML(entry) {
+        const blocks = parseBodyBlocks(normBody(entry));
+        if (!blocks.length) return "";
+        const out = [];
+        blocks.forEach(b => {
+          if (b.title) {
+            out.push("<h3>" + formatInline(b.title) + "</h3>");
+          }
+          const lines = (b.text || "").split("\n");
+          let bullets = [];
+          function flushBullets() {
+            if (!bullets.length) return;
+            out.push("<ul>");
+            bullets.forEach(l => out.push("<li>" + formatInline(l.replace(/^[-*]\s*/, "")) + "</li>"));
+            out.push("</ul>");
+            bullets = [];
+          }
+          lines.forEach(line => {
+            const t = line.trim();
+            if (!t) {
+              flushBullets();
+              out.push("<p>&nbsp;</p>");
+            } else if (/^[-*]\s+/.test(t)) {
+              bullets.push(t);
+            } else {
+              flushBullets();
+              out.push("<p>" + formatInline(t) + "</p>");
+            }
+          });
+          flushBullets();
+        });
+        return out.join("");
       }
 
       function buildCategories() {
-        const set = new Set();
-        (entries || []).forEach(e => {
-          if (e.category) set.add(e.category);
+        const set = new Set(["All"]);
+        entries.forEach(e => { if (e.category) set.add(e.category); });
+        categorySel.innerHTML = "";
+        Array.from(set).sort((a, b) => {
+          if (a === "All") return -1;
+          if (b === "All") return 1;
+          return a.localeCompare(b);
+        }).forEach(cat => {
+          const opt = document.createElement("option");
+          opt.value = cat;
+          opt.textContent = cat === "All" ? "All categories" : cat;
+          categorySel.appendChild(opt);
         });
-        const cats = Array.from(set).sort((a, b) => a.localeCompare(b));
-        categories = ["All", ...cats];
-        if (!categories.includes(activeCategory)) {
-          activeCategory = "All";
-        }
       }
 
-      function renderCategories() {
-        categoryRow.innerHTML = "";
-        categories.forEach(cat => {
-          const btn = document.createElement("button");
-          btn.type  = "button";
-          btn.className = "codex-cat-pill" + (cat === activeCategory ? " active" : "");
-          btn.textContent = cat;
-          btn.addEventListener("click", () => {
-            activeCategory = cat;
-            renderCategories();
-            renderList(searchEl ? searchEl.value : "");
+      function filteredEntries() {
+        const q   = (searchInput.value || "").trim();
+        const cat = categorySel.value || "All";
+        const arr = entries.map(e => {
+          let include = true;
+          if (cat !== "All" && e.category !== cat) include = false;
+          let score = 0;
+          if (q) {
+            score = simpleScore(e, q);
+            if (score <= 0) include = false;
+          }
+          return { entry: e, include, score };
+        }).filter(x => x.include);
+
+        if (q) {
+          arr.sort((a, b) => {
+            if (b.score !== a.score) return b.score - a.score;
+            return (a.entry.title || "").localeCompare(b.entry.title || "");
           });
-          categoryRow.appendChild(btn);
-        });
+        } else {
+          arr.sort((a, b) => {
+            const ac = a.entry.category || "";
+            const bc = b.entry.category || "";
+            if (ac !== bc) return ac.localeCompare(bc);
+            return (a.entry.title || "").localeCompare(b.entry.title || "");
+          });
+        }
+
+        return arr.map(x => x.entry);
       }
 
-      function renderList(filterText) {
-        if (!listEl) return;
+      function dedupeAppears(raw) {
+        if (!raw) return [];
+        const map = new Map();
+        raw.forEach(it => {
+          if (!it) return;
+          let bookId = "";
+          let pages = null;
 
-        const q = (filterText || "").toLowerCase().trim();
+          if (typeof it === "string") {
+            bookId = it;
+          } else if (typeof it === "object") {
+            bookId = it.bookId || it.book || "";
+            pages = it.pages || it.page || null;
+          }
 
-        const filtered = entries.filter(e => {
-          // category filter
-          if (activeCategory !== "All") {
-            if (!e.category || e.category !== activeCategory) {
-              return false;
+          if (!bookId) return;
+          const key = String(bookId);
+          if (!map.has(key)) {
+            map.set(key, { bookId: key, pages: [] });
+          }
+          const e = map.get(key);
+          if (pages != null) {
+            if (Array.isArray(pages)) {
+              pages.forEach(p => e.pages.push(String(p)));
+            } else {
+              e.pages.push(String(pages));
             }
           }
-
-          if (!q) return true;
-
-          const hay = [
-            e.title || "",
-            e.category || "",
-            e.universe || "",
-            (e.tags || []).join(" ")
-          ].join(" ").toLowerCase();
-
-          return hay.includes(q);
         });
 
+        const out = Array.from(map.values());
+        out.forEach(o => {
+          o.pages = Array.from(new Set(o.pages));
+        });
+        return out;
+      }
+
+      function readerUrl(bookId, firstPage) {
+        const book = booksIndex[bookId];
+        if (!book || !book.path) return null;
+        const base = book.path.replace(/index\.html$/i, "reader.html");
+        return firstPage ? base + "?p=" + encodeURIComponent(firstPage) : base;
+      }
+
+      function renderList() {
+        const list = filteredEntries();
         listEl.innerHTML = "";
+        countEl.textContent = `${entries.length} entries`;
 
-        filtered.forEach(entry => {
+        if (!list.length) {
+          listEmptyEl.style.display = "";
+          return;
+        }
+        listEmptyEl.style.display = "none";
+
+        list.forEach(e => {
           const li = document.createElement("li");
-          li.className = "codex-item";
-          li.dataset.id = entry.id;
-
-          if (entry.id === activeId) {
-            li.classList.add("active");
-          }
+          const btn = document.createElement("button");
+          btn.type = "button";
+          btn.className = "cx-item-btn" + (e.id === activeId ? " active" : "");
+          btn.dataset.id = e.id;
 
           const title = document.createElement("div");
-          title.className = "codex-item-title";
-          title.textContent = entry.title || entry.id || "(untitled)";
+          title.className = "cx-item-title";
+          title.textContent = e.title || e.id || "Untitled";
 
           const meta = document.createElement("div");
-          meta.className = "codex-item-meta";
-          const parts = [];
-          if (entry.category) parts.push(entry.category);
-          if (entry.universe) parts.push(entry.universe);
-          meta.textContent = parts.join(" · ");
+          meta.className = "cx-item-meta";
+          meta.textContent = e.category || "Uncategorized";
 
-          li.appendChild(title);
-          li.appendChild(meta);
-
-          li.addEventListener("click", () => {
-            selectEntry(entry.id);
+          btn.appendChild(title);
+          btn.appendChild(meta);
+          btn.addEventListener("click", () => {
+            activeId = e.id;
+            updateURL(activeId, categorySel.value, searchInput.value || "");
+            renderList();
+            renderEntry();
           });
 
+          li.appendChild(btn);
           listEl.appendChild(li);
         });
-
-        if (!filtered.length) {
-          const li = document.createElement("li");
-          li.className = "codex-item";
-          li.textContent = "No entries match your filters.";
-          listEl.appendChild(li);
-        }
       }
 
-      function clearActiveListItem() {
-        const items = listEl.querySelectorAll(".codex-item.active");
-        items.forEach(i => i.classList.remove("active"));
-      }
-
-      function markActiveListItem(id) {
-        clearActiveListItem();
-        const node = listEl.querySelector('.codex-item[data-id="' + id + '"]');
-        if (node) node.classList.add("active");
-      }
-
-      function makeReaderLink(ref) {
-        const book = booksMap[ref.bookId];
-        let readerUrl = "";
-        if (book && book.path) {
-          const dir = book.path.replace(/\/index\.html$/i, "");
-          readerUrl = dir + "/reader.html?p=" + ref.page;
-        } else {
-          // fallback guess
-          readerUrl = "Books/" + (ref.bookId || "").toLowerCase() + "/reader.html?p=" + ref.page;
-        }
-        return readerUrl;
-      }
-
-      function renderDetail(entry) {
-        if (!detailEl) return;
+      function renderEntry() {
+        const entry = entries.find(e => e.id === activeId) || null;
 
         if (!entry) {
-          detailEl.innerHTML = "<div class='codex-empty'>Select a Codex entry on the left.</div>";
+          entryIdEl.textContent = "–";
+          entryTitleEl.textContent = "Select a codex entry";
+          entryTagsEl.textContent = "";
+          entrySummaryEl.textContent = "Use the list on the left to choose an entry.";
+          entryMetaEl.textContent = "–";
+          bodyEl.innerHTML = "";
+          bodyEmptyEl.style.display = "none";
+          openBookEl.style.display = "none";
+          appearsWrapEl.style.display = "none";
           return;
         }
 
-        const title    = entry.title || entry.id || "(Untitled)";
-        const category = entry.category || "Codex";
-        const universe = entry.universe;
+        entryIdEl.textContent = entry.id || "–";
+        entryTitleEl.textContent = entry.title || entry.id || "Untitled";
 
-        const bodyParts = [];
-        if (entry.summary) bodyParts.push(entry.summary);
-        if (Array.isArray(entry.body)) {
-          entry.body.forEach(p => bodyParts.push(p));
-        }
+        const tagParts = [];
+        if (entry.category) tagParts.push(entry.category);
+        if (entry.type) tagParts.push(entry.type);
+        if (entry.status) tagParts.push(entry.status);
+        entryTagsEl.textContent = tagParts.join(" · ");
 
-        const refs = refsMap[entry.id] || [];
+        entrySummaryEl.textContent = entry.summary || "";
+        const appears = Array.isArray(entry.appearsIn) ? dedupeAppears(entry.appearsIn) : [];
+        entryMetaEl.textContent = appears.length
+          ? `Linked to ${appears.length} work${appears.length > 1 ? "s" : ""}.`
+          : "No linked works.";
 
-        let html = "";
+        const html = bodyHTML(entry);
+        bodyEl.innerHTML = html;
+        bodyEmptyEl.style.display = html ? "none" : "block";
 
-        html += "<div class='codex-detail-title'>" + title + "</div>";
-        html += "<div class='codex-detail-meta'>";
-        html += category;
-        if (universe) {
-          html += " · " + universe;
-        }
-        html += "</div>";
-
-        html += "<div class='codex-detail-body'>";
-        if (bodyParts.length) {
-          bodyParts.forEach(p => {
-            html += "<p>" + p + "</p>";
-          });
+        appearsListEl.innerHTML = "";
+        if (!appears.length) {
+          appearsWrapEl.style.display = "none";
+          openBookEl.style.display = "none";
         } else {
-          html += "<p>No description available.</p>";
-        }
-        html += "</div>";
+          appearsWrapEl.style.display = "";
+          appears.forEach(a => {
+            const book = booksIndex[a.bookId];
+            const label = (book && book.title) || a.bookId;
+            const first = a.pages && a.pages.length ? a.pages[0] : null;
+            const url = readerUrl(a.bookId, first) || "library.html";
 
-        // ---- Appears in (grouped by book) ----
-        html += "<div class='codex-section-title'>Appears in</div>";
-        if (!refs.length) {
-          html += "<div class='codex-empty'>This entry is not referenced in any book yet.</div>";
-        } else {
-          // group by bookId so each book appears only once
-          const perBook = {};
-          refs.forEach(ref => {
-            const key = ref.bookId || ref.bookTitle || "unknown";
-            const existing = perBook[key];
-            if (!existing) {
-              perBook[key] = {
-                bookId: ref.bookId,
-                bookTitle: ref.bookTitle,
-                page: ref.page
-              };
-            } else {
-              if (ref.page && ref.page < existing.page) {
-                existing.page = ref.page;
-              }
-            }
+            const link = document.createElement("a");
+            link.className = "cx-appears-link";
+            link.href = url;
+            link.target = "_blank";
+            link.textContent = label + (first ? ` (page ${first})` : "");
+            appearsListEl.appendChild(link);
           });
 
-          const perBookList = Object.values(perBook).sort((a, b) => {
-            const ta = (a.bookTitle || a.bookId || "").toLowerCase();
-            const tb = (b.bookTitle || b.bookId || "").toLowerCase();
-            return ta.localeCompare(tb);
-          });
-
-          html += "<ul class='codex-appears'>";
-          perBookList.forEach(ref => {
-            const readerUrl = makeReaderLink(ref);
-            const label = ref.bookTitle || ref.bookId || "Unknown book";
-            html += "<li><a href='" + readerUrl + "'>" + label + "</a></li>";
-          });
-          html += "</ul>";
-        }
-
-        detailEl.innerHTML = html;
-      }
-
-      function selectEntry(id) {
-        const entry = entries.find(e => e.id === id);
-        if (!entry) return;
-        activeId = id;
-        markActiveListItem(id);
-        renderDetail(entry);
-
-        const url = new URL(window.location.href);
-        url.searchParams.set("id", id);
-        url.searchParams.delete("q");
-        window.history.replaceState(null, "", url.toString());
-      }
-
-      function initSearch() {
-        if (!searchEl) return;
-        searchEl.addEventListener("input", () => {
-          const q = searchEl.value;
-          renderList(q);
-        });
-      }
-
-      function initDeepLink() {
-        const params = new URLSearchParams(window.location.search);
-        const idParam = params.get("id");
-        const qParam  = params.get("q");
-
-        if (qParam && searchEl) {
-          searchEl.value = qParam;
-        }
-
-        renderCategories();
-        renderList(searchEl ? searchEl.value : "");
-
-        if (idParam) {
-          const found = entries.find(e => e.id === idParam);
-          if (found) {
-            // Make sure the active category includes this entry (or set to All)
-            if (activeCategory !== "All" && found.category && found.category !== activeCategory) {
-              activeCategory = "All";
-              renderCategories();
-              renderList(searchEl ? searchEl.value : "");
-            }
-            selectEntry(idParam);
-            return;
+          const a0 = appears[0];
+          const url0 = readerUrl(a0.bookId, a0.pages && a0.pages[0]);
+          if (url0) {
+            openBookEl.href = url0;
+            openBookEl.style.display = "inline-flex";
+          } else {
+            openBookEl.style.display = "none";
           }
         }
-
-        const q = (searchEl && searchEl.value) ? searchEl.value.toLowerCase().trim() : "";
-        if (q) {
-          const firstMatch = entries.find(e => {
-            if (activeCategory !== "All" && e.category !== activeCategory) return false;
-            const hay = [
-              e.title || "",
-              e.category || "",
-              e.universe || "",
-              (e.tags || []).join(" ")
-            ].join(" ").toLowerCase();
-            return hay.includes(q);
-          });
-          if (firstMatch) {
-            selectEntry(firstMatch.id);
-            return;
-          }
-        }
-
-        renderDetail(null);
       }
 
-      Promise.all([
-        fetchJson(CODEX_JSON, []),
-        fetchJson(REFS_JSON, {}),
-        fetchJson(BOOKS_JSON, [])
-      ]).then(([codexData, refsData, booksData]) => {
-        entries = (codexData || []).slice().sort((a, b) => {
-          const ta = (a.title || a.id || "").toLowerCase();
-          const tb = (b.title || b.id || "").toLowerCase();
-          return ta.localeCompare(tb);
-        });
-        refsMap  = refsData || {};
-        booksMap = buildBooksMap(booksData || []);
+      function attachEvents() {
+        let t = null;
+        function trigger() {
+          if (t) clearTimeout(t);
+          t = setTimeout(() => {
+            updateURL(activeId, categorySel.value, searchInput.value || "");
+            renderList();
+          }, 120);
+        }
+        searchInput.addEventListener("input", trigger);
+        categorySel.addEventListener("change", trigger);
+      }
 
-        buildCategories();
-        renderCategories();
-        initSearch();
-        initDeepLink();
-      });
+      function fetchBooks() {
+        return fetch(BOOKS_JSON)
+          .then(r => r.json())
+          .then(data => {
+            booksIndex = {};
+            (data || []).forEach(b => {
+              if (!b || !b.id) return;
+              booksIndex[b.id] = b;
+            });
+          })
+          .catch(err => console.warn("[codex] books.json load failed:", err));
+      }
+
+      function fetchCodex() {
+        return fetch(CODEX_JSON)
+          .then(r => r.json())
+          .then(data => {
+            entries = Array.isArray(data) ? data : [];
+          })
+          .catch(err => {
+            console.error("[codex] codex.json load failed:", err);
+            entries = [];
+          });
+      }
+
+      function boot() {
+        const params = qp();
+        fetchBooks()
+          .then(fetchCodex)
+          .then(() => {
+            countEl.textContent = `${entries.length} entries`;
+            buildCategories();
+
+            if (params.category && params.category !== "All") {
+              categorySel.value = params.category;
+            }
+            if (params.q && params.q.trim()) {
+              searchInput.value = params.q;
+            }
+
+            const list = filteredEntries();
+            if (params.id && entries.some(e => e.id === params.id)) {
+              activeId = params.id;
+            } else if (list.length) {
+              activeId = list[0].id;
+            } else if (entries[0]) {
+              activeId = entries[0].id;
+            }
+
+            renderList();
+            renderEntry();
+            attachEvents();
+          });
+      }
+
+      boot();
     })();
   </script>
 </body>
