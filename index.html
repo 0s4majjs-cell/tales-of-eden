@@ -2,1075 +2,308 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>Tales of Eden – Library</title>
+  <title>Tales of Eden – World Wiki</title>
   <link rel="stylesheet" href="styles.css">
-  <link rel="stylesheet" href="overlays.css" />
-  <script src="overlays.js"></script>
+  <link rel="stylesheet" href="overlay.css">
+  <script src="overlay.js"></script>
 </head>
 <body>
-  
-  <div class="app">
-    <!-- SIDEBAR -->
-    <aside class="sidebar">
-      <div class="sidebar-top">
-        <div class="sidebar-logo">Tales of Eden</div>
-
-        <!-- Library -->
-        <button class="sidebar-item active" type="button" data-view="library">
-          <span class="icon-slot" data-icon-key="library">
-            <!-- Default SVG icon -->
-            <svg class="icon-svg" viewBox="0 0 24 24" aria-hidden="true">
-              <rect x="4" y="4" width="6" height="16" rx="1.2"></rect>
-              <rect x="10" y="5" width="6" height="15" rx="1.2"></rect>
-              <rect x="16" y="6" width="4" height="14" rx="1.2"></rect>
-              <line x1="6" y1="8" x2="8" y2="8"></line>
-              <line x1="12" y1="9" x2="14" y2="9"></line>
-            </svg>
-            <!-- Custom icon (hidden until user uploads) -->
-            <img class="icon-img" alt="">
-          </span>
-          <span>Library</span>
-        </button>
-        
-        <!-- Codex -->
-        <a href="codex.html" class="sidebar-item">
-          <!-- If you have your own icon system, replace [📖] with your icon -->
-          <span class="sidebar-icon">📖</span>
-          <span class="sidebar-label">Codex</span>
-        </a>
-
-        <!-- Customization -->
-        <button class="sidebar-item" type="button" data-view="customization">
-          <span class="icon-slot" data-icon-key="customization">
-            <svg class="icon-svg" viewBox="0 0 24 24" aria-hidden="true">
-              <circle cx="12" cy="12" r="7.5"></circle>
-              <circle cx="9" cy="10" r="0.9"></circle>
-              <circle cx="13" cy="8" r="0.9"></circle>
-              <circle cx="15" cy="12" r="0.9"></circle>
-              <circle cx="11" cy="14" r="0.9"></circle>
-            </svg>
-            <img class="icon-img" alt="">
-          </span>
-          <span>Customization</span>
-        </button>
-      </div>
-
-      <div class="sidebar-bottom">
-        <!-- Settings -->
-        <button class="sidebar-item" type="button" data-view="settings">
-          <span class="icon-slot" data-icon-key="settings">
-            <svg class="icon-svg" viewBox="0 0 24 24" aria-hidden="true">
-              <circle cx="12" cy="12" r="3.2"></circle>
-              <path d="M4.8 12a7.2 7.2 0 0 1 .1-1l-1.9-1.5 1.6-2.7 2.3.7a7.3 7.3 0 0 1 1.2-.7l.4-2.4h3.2l.4 2.4a7.3 7.3 0 0 1 1.2.7l2.3-.7 1.6 2.7-1.9 1.5a7.2 7.2 0 0 1 0 2l1.9 1.5-1.6 2.7-2.3-.7a7.3 7.3 0 0 1-1.2.7l-.4 2.4h-3.2l-.4-2.4a7.3 7.3 0 0 1-1.2-.7l-2.3.7-1.6-2.7 1.9-1.5a7.2 7.2 0 0 1-.1-1z"></path>
-            </svg>
-            <img class="icon-img" alt="">
-          </span>
-          <span>Settings</span>
-        </button>
-      </div>
-    </aside>
-
-    <!-- MAIN AREA -->
-    <main class="main">
-      <!-- LIBRARY VIEW -->
-      <section id="view-library" class="view view-active">
-        <header class="topbar">
-          <div class="filters">
-            <button id="sortBtn" class="filter-btn" type="button">Sort A–Z</button>
-
-            <!-- GENRE BUTTON + DROPDOWN -->
-            <div class="genre-wrapper">
-              <button id="genreBtn" class="filter-btn" type="button">
-                Genre: All ▾
-              </button>
-              <div class="genre-dropdown" id="genreDropdown">
-                <!-- options injected by JS -->
-              </div>
-            </div>
-
-            <button id="favFilterBtn" class="filter-btn" type="button">Favourites</button>
-          </div>
-
-          <div class="search-box">
-            <input
-              class="search-input"
-              type="text"
-              placeholder="Search by title, author, genre..."
-            >
-          </div>
-        </header>
-
-        <section class="library-table">
-          <div class="table-header">
-            <span>Title</span>
-            <span>Author</span>
-            <span>Genre</span>
-            <span>Type</span>
-            <span></span>
-          </div>
-
-          <div id="library-rows"></div>
-        </section>
-      </section>
-
-      <!-- CUSTOMIZATION VIEW -->
-      <section id="view-customization" class="view">
-        <div class="view-header">
-          <h1>Customization</h1>
-          <p>Tune colors, fonts, backgrounds and icons for Tales of Eden.</p>
+  <div class="site-shell">
+    <header class="site-header">
+      <div class="brand">
+        <div class="brand-mark">TE</div>
+        <div class="brand-text">
+          <span class="brand-label">Tales of Eden</span>
+          <span class="brand-sub">Living world reference</span>
         </div>
+      </div>
+      <nav class="top-nav">
+        <a href="#codex" class="nav-link">Codex</a>
+        <a href="#timeline" class="nav-link">Timeline</a>
+        <a href="#world" class="nav-link">World Atlas</a>
+        <a href="#reader" class="nav-link">Reader</a>
+        <a href="codex.html" class="nav-pill">Open full Codex</a>
+      </nav>
+    </header>
 
-        <div class="custom-grid">
-          <!-- Presets -->
-          <div class="custom-card">
-            <h2>Color presets</h2>
-            <p class="custom-sub">Pick a base look. You can tweak it further below.</p>
-            <div class="preset-list">
-              <button class="preset-card" type="button" data-preset="eden">
-                <div class="preset-swatches">
-                  <span class="preset-pill preset-pill-1"></span>
-                  <span class="preset-pill preset-pill-2"></span>
-                </div>
-                <div class="preset-info">
-                  <div class="preset-name">Eden Nightfall</div>
-                  <div class="preset-desc">Deep blues, sci-fi vibes.</div>
-                </div>
-              </button>
-
-              <button class="preset-card" type="button" data-preset="parchment">
-                <div class="preset-swatches">
-                  <span class="preset-pill preset-pill-parchment-1"></span>
-                  <span class="preset-pill preset-pill-parchment-2"></span>
-                </div>
-                <div class="preset-info">
-                  <div class="preset-name">Warm Parchment</div>
-                  <div class="preset-desc">Soft browns, cozy reading.</div>
-                </div>
-              </button>
-
-              <button class="preset-card" type="button" data-preset="crimson">
-                <div class="preset-swatches">
-                  <span class="preset-pill preset-pill-crimson-1"></span>
-                  <span class="preset-pill preset-pill-crimson-2"></span>
-                </div>
-                <div class="preset-info">
-                  <div class="preset-name">Crimson Void</div>
-                  <div class="preset-desc">Dark, dramatic atmosphere.</div>
-                </div>
-              </button>
-            </div>
-
-            <button id="resetThemeBtn" class="secondary-btn" type="button">
-              Reset theme to defaults
-            </button>
+    <main class="site-main">
+      <section class="hero">
+        <div class="hero-copy">
+          <p class="eyebrow">The Eden Archive</p>
+          <h1>Everything in one wiki-like sanctuary.</h1>
+          <p class="lede">Explore the codex for lore entries, trace major events on the timeline, roam the world atlas, and dive into immersive reading sessions. Curated for historians, storytellers, and curious wanderers.</p>
+          <div class="hero-actions">
+            <a class="primary-btn" href="codex.html">Launch Codex</a>
+            <a class="ghost-btn" href="#timeline">View timeline</a>
           </div>
-
-          <!-- Accent & reader -->
-          <div class="custom-card">
-            <h2>Accent & reader</h2>
-
-            <div class="field-row">
-              <label for="accentColorInput">Accent color</label>
-              <input type="color" id="accentColorInput">
+          <div class="stat-row">
+            <div class="stat">
+              <span class="stat-number">120+</span>
+              <span class="stat-label">entries indexed</span>
             </div>
-
-            <div class="field-row">
-              <label for="readerFontSelect">Reader font</label>
-              <select id="readerFontSelect">
-                <option value="serif">Serif (book-like)</option>
-                <option value="sans">Sans-serif (clean)</option>
-                <option value="mono">Monospace (typewriter)</option>
-              </select>
+            <div class="stat">
+              <span class="stat-number">4</span>
+              <span class="stat-label">domains of knowledge</span>
             </div>
-
-            <div class="field-row">
-              <span>Reader text size</span>
-              <div class="chip-row" id="readerFontSizeChips">
-                <button type="button" class="chip" data-size="small">Small</button>
-                <button type="button" class="chip chip-active" data-size="normal">Normal</button>
-                <button type="button" class="chip" data-size="large">Large</button>
+            <div class="stat">
+              <span class="stat-number">∞</span>
+              <span class="stat-label">stories to discover</span>
+            </div>
+          </div>
+        </div>
+        <div class="hero-panel">
+          <div class="panel-heading">
+            <p class="eyebrow">Quick access</p>
+            <h2>Choose a domain</h2>
+            <p class="panel-sub">Jump directly to the tools you need.</p>
+          </div>
+          <div class="panel-grid">
+            <a class="panel-card" href="codex.html">
+              <div class="card-icon">📖</div>
+              <div class="card-body">
+                <h3>Codex</h3>
+                <p>Lore entries, biographies, artifacts, and factions, neatly organized.</p>
               </div>
-            </div>
-          </div>
-
-          <!-- Backgrounds -->
-          <div class="custom-card">
-            <h2>Backgrounds</h2>
-            <p class="custom-sub">Change the overall mood of the app.</p>
-            <div class="bg-list" id="bgPresetList">
-              <button class="bg-chip" type="button" data-bg="nebula">Nebula</button>
-              <button class="bg-chip" type="button" data-bg="parchment">Parchment</button>
-              <button class="bg-chip" type="button" data-bg="void">Void</button>
-            </div>
-          </div>
-
-          <!-- Advanced colors -->
-          <div class="custom-card">
-            <h2>Advanced colors</h2>
-            <p class="custom-sub">Fine-tune the core colors used across the app.</p>
-
-            <div class="field-row">
-              <label for="colorMainTop">Main background (top)</label>
-              <input type="color" id="colorMainTop">
-            </div>
-            <div class="field-row">
-              <label for="colorMainBottom">Main background (bottom)</label>
-              <input type="color" id="colorMainBottom">
-            </div>
-
-            <div class="field-row">
-              <label for="colorSidebarTop">Sidebar (top)</label>
-              <input type="color" id="colorSidebarTop">
-            </div>
-            <div class="field-row">
-              <label for="colorSidebarBottom">Sidebar (bottom)</label>
-              <input type="color" id="colorSidebarBottom">
-            </div>
-
-            <div class="field-row">
-              <label for="colorCardTop">Card / panel (top)</label>
-              <input type="color" id="colorCardTop">
-            </div>
-            <div class="field-row">
-              <label for="colorCardBottom">Card / panel (bottom)</label>
-              <input type="color" id="colorCardBottom">
-            </div>
-
-            <div class="field-row">
-              <label for="colorReaderPage">Reader page</label>
-              <input type="color" id="colorReaderPage">
-            </div>
-            <div class="field-row">
-              <label for="colorTextMain">Text (main)</label>
-              <input type="color" id="colorTextMain">
-            </div>
-            <div class="field-row">
-              <label for="colorTextMuted">Text (muted)</label>
-              <input type="color" id="colorTextMuted">
-            </div>
-          </div>
-
-          <!-- ICON CUSTOMIZATION -->
-          <div class="custom-card">
-            <h2>Icons</h2>
-            <p class="custom-sub">
-              Replace the default sidebar icons with your own images
-              (PNG, JPG, SVG). Stored locally in your browser.
-            </p>
-
-            <div class="icon-upload-row">
-              <span>Library</span>
-              <input type="file" accept="image/png,image/jpeg,image/svg+xml" data-icon-upload="library">
-              <div class="icon-preview" data-icon-preview="library"></div>
-            </div>
-
-            <div class="icon-upload-row">
-              <span>Customization</span>
-              <input type="file" accept="image/png,image/jpeg,image/svg+xml" data-icon-upload="customization">
-              <div class="icon-preview" data-icon-preview="customization"></div>
-            </div>
-
-            <div class="icon-upload-row">
-              <span>Settings</span>
-              <input type="file" accept="image/png,image/jpeg,image/svg+xml" data-icon-upload="settings">
-              <div class="icon-preview" data-icon-preview="settings"></div>
-            </div>
-
-            <button id="resetIconsBtn" class="secondary-btn" type="button">
-              Reset icons to defaults
-            </button>
-          </div>
-
-          <!-- Workshop stub -->
-          <div class="custom-card">
-            <h2>Workshop</h2>
-            <p class="custom-sub">
-              A future place to install presets from other readers:
-              color schemes, icon packs and more.
-            </p>
-            <button class="disabled-btn" type="button" disabled>
-              Workshop coming soon
-            </button>
+              <span class="card-tag">Browse</span>
+            </a>
+            <a class="panel-card" href="#timeline">
+              <div class="card-icon">🕰️</div>
+              <div class="card-body">
+                <h3>Timeline</h3>
+                <p>Track every turning point—from origin myths to modern unrest.</p>
+              </div>
+              <span class="card-tag">Jump in</span>
+            </a>
+            <a class="panel-card" href="#world">
+              <div class="card-icon">🌍</div>
+              <div class="card-body">
+                <h3>World Atlas</h3>
+                <p>Regions, cities, and hidden places with context that matters.</p>
+              </div>
+              <span class="card-tag">Explore</span>
+            </a>
+            <a class="panel-card" href="#reader">
+              <div class="card-icon">📜</div>
+              <div class="card-body">
+                <h3>Reader</h3>
+                <p>Immersive reading experience with your preferred theme.</p>
+              </div>
+              <span class="card-tag">Read</span>
+            </a>
           </div>
         </div>
       </section>
 
-      <!-- SETTINGS VIEW -->
-      <section id="view-settings" class="view">
-        <div class="view-header">
-          <h1>Settings</h1>
-          <p>Adjust behaviour and accessibility.</p>
+      <section id="codex" class="wiki-section">
+        <div class="section-heading">
+          <p class="eyebrow">Codex</p>
+          <div class="section-title-row">
+            <h2>Reference library</h2>
+            <a href="codex.html" class="text-link">Open full codex →</a>
+          </div>
+          <p class="section-lede">Browse major people, places, and artifacts. The curated sample below mirrors the structure inside the dedicated codex experience.</p>
         </div>
-
-        <div class="settings-list">
-          <label class="settings-item">
-            <input type="checkbox" id="settingDisableAnimations">
-            <div class="settings-text">
-              <div class="settings-title">Disable UI animations</div>
-              <div class="settings-desc">
-                Turn off transitions and dropdown animations.
-              </div>
+        <div class="codex-grid">
+          <article class="codex-card">
+            <div class="card-top">
+              <span class="pill">Faction</span>
+              <span class="micro-text">Updated 3d ago</span>
             </div>
-          </label>
-
-          <label class="settings-item">
-            <input type="checkbox" id="settingReducedEffects">
-            <div class="settings-text">
-              <div class="settings-title">Reduce glow & shadows</div>
-              <div class="settings-desc">
-                Use flatter cards with softer lighting.
-              </div>
+            <h3>Order of Blackstone</h3>
+            <p>Scholars turned covert operatives who guard the secrets of Eden’s catacombs.</p>
+            <ul class="detail-list">
+              <li><strong>Focus:</strong> Preservation and strategic leaks</li>
+              <li><strong>Key seat:</strong> The Hollow Archive</li>
+              <li><strong>Allies:</strong> Remnants of the Northwind Court</li>
+            </ul>
+          </article>
+          <article class="codex-card">
+            <div class="card-top">
+              <span class="pill">Artifact</span>
+              <span class="micro-text">Updated 1w ago</span>
             </div>
-          </label>
+            <h3>Amber Crown</h3>
+            <p>A translucent diadem that remembers every ruler who dares to wear it.</p>
+            <ul class="detail-list">
+              <li><strong>Effect:</strong> Echoed memories</li>
+              <li><strong>Status:</strong> Restricted vault</li>
+              <li><strong>Warning:</strong> Invites the will of prior bearers</li>
+            </ul>
+          </article>
+          <article class="codex-card">
+            <div class="card-top">
+              <span class="pill">Persona</span>
+              <span class="micro-text">Updated 2w ago</span>
+            </div>
+            <h3>Archivist Lyra Venn</h3>
+            <p>Chief compiler of the Eden archive, famed for mapping “silent chapters” of history.</p>
+            <ul class="detail-list">
+              <li><strong>Notable work:</strong> The 12 Silent Cities</li>
+              <li><strong>Traits:</strong> Patient, unflinching, quietly defiant</li>
+              <li><strong>Known for:</strong> Annotated timelines</li>
+            </ul>
+          </article>
+        </div>
+      </section>
 
-          <button id="resetSettingsBtn" class="secondary-btn" type="button">
-            Reset settings to defaults
-          </button>
+      <section id="timeline" class="wiki-section">
+        <div class="section-heading">
+          <p class="eyebrow">Timeline</p>
+          <div class="section-title-row">
+            <h2>From myths to uprisings</h2>
+            <a href="#" class="text-link">Export chronology →</a>
+          </div>
+          <p class="section-lede">A condensed sequence of pivotal events. Use it to orient your campaigns or reading order.</p>
+        </div>
+        <div class="timeline">
+          <div class="timeline-item">
+            <div class="timeline-dot"></div>
+            <div>
+              <p class="micro-text">Year 0 — Origin</p>
+              <h3>Dawning at the Eden Spire</h3>
+              <p>The twin moons align, revealing the Spire’s hidden chamber of living script.</p>
+            </div>
+          </div>
+          <div class="timeline-item">
+            <div class="timeline-dot"></div>
+            <div>
+              <p class="micro-text">Year 148</p>
+              <h3>Fracture of the Five Courts</h3>
+              <p>Diplomatic quarrels turn into open conflict, pushing scholars to smuggle archives to safety.</p>
+            </div>
+          </div>
+          <div class="timeline-item">
+            <div class="timeline-dot"></div>
+            <div>
+              <p class="micro-text">Year 237</p>
+              <h3>The Nightfall Concord</h3>
+              <p>Secret accord between rival heirs forms the shadow government protecting Eden’s bridges.</p>
+            </div>
+          </div>
+          <div class="timeline-item">
+            <div class="timeline-dot"></div>
+            <div>
+              <p class="micro-text">Year 312</p>
+              <h3>Era of the Hollow Archive</h3>
+              <p>Restoration begins. Blackstone custodians open curated sections to the public under strict watch.</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section id="world" class="wiki-section">
+        <div class="section-heading">
+          <p class="eyebrow">World Atlas</p>
+          <h2>Places worth getting lost in</h2>
+          <p class="section-lede">Map-ready overviews of regions you can expand with maps, NPCs, and travel hooks.</p>
+        </div>
+        <div class="atlas-grid">
+          <article class="atlas-card">
+            <div class="atlas-top">
+              <span class="pill">Region</span>
+              <span class="micro-text">Fog &amp; fjords</span>
+            </div>
+            <h3>Northwind Reach</h3>
+            <p>Wind-scoured cliffs, rune-lit harbors, and colossal bridges draped in prayer flags.</p>
+            <div class="tag-row">
+              <span class="tag">Sky ports</span>
+              <span class="tag">Runic trade</span>
+              <span class="tag">Storm festivals</span>
+            </div>
+          </article>
+          <article class="atlas-card">
+            <div class="atlas-top">
+              <span class="pill">City</span>
+              <span class="micro-text">Hidden capital</span>
+            </div>
+            <h3>Glasshaven</h3>
+            <p>A city of mirrored canals where rumors travel faster than riverlight. Home to the Nightfall Concord.</p>
+            <div class="tag-row">
+              <span class="tag">Espionage</span>
+              <span class="tag">Whisper markets</span>
+              <span class="tag">Crescent docks</span>
+            </div>
+          </article>
+          <article class="atlas-card">
+            <div class="atlas-top">
+              <span class="pill">Wilds</span>
+              <span class="micro-text">Uncharted</span>
+            </div>
+            <h3>The Verdant Sink</h3>
+            <p>An ancient crater overgrown with luminescent flora and rumors of an inverted temple.</p>
+            <div class="tag-row">
+              <span class="tag">Bioluminescence</span>
+              <span class="tag">Relic hunters</span>
+              <span class="tag">Mire spirits</span>
+            </div>
+          </article>
+          <article class="atlas-card">
+            <div class="atlas-top">
+              <span class="pill">Sanctum</span>
+              <span class="micro-text">Restricted</span>
+            </div>
+            <h3>The Hollow Archive</h3>
+            <p>Subterranean vault beneath the Eden Spire, sealed with shifting inscriptions only Archivist Venn deciphers.</p>
+            <div class="tag-row">
+              <span class="tag">Ward sigils</span>
+              <span class="tag">Living script</span>
+              <span class="tag">Guided access</span>
+            </div>
+          </article>
+        </div>
+      </section>
+
+      <section id="reader" class="wiki-section reader-section">
+        <div class="section-heading">
+          <p class="eyebrow">Reader</p>
+          <h2>Settle into the story</h2>
+          <p class="section-lede">Comfortable reading with theme, font, and overlay controls. Pair this with the codex to keep characters and locations straight.</p>
+        </div>
+        <div class="reader-grid">
+          <article class="reader-card">
+            <div class="reader-meta">
+              <span class="pill">Current</span>
+              <span class="micro-text">Chapter 12</span>
+            </div>
+            <h3>Echoes beneath the bridges</h3>
+            <p>The Concord tests the Amber Crown on an unwilling envoy as storms gather over Glasshaven.</p>
+            <div class="tag-row">
+              <span class="tag">Intrigue</span>
+              <span class="tag">Mythic tech</span>
+              <span class="tag">Slow burn</span>
+            </div>
+          </article>
+          <div class="reader-actions">
+            <div class="action-card">
+              <h4>Choose your overlay</h4>
+              <p>Snowfall, parchment grain, or a clean void—tap the overlay picker to set the mood.</p>
+            </div>
+            <div class="action-card">
+              <h4>Switch reader fonts</h4>
+              <p>Serif for storybook vibes, sans for clarity, mono for notes. Your preference persists.</p>
+            </div>
+            <div class="action-card">
+              <h4>Pick your place to start</h4>
+              <p>Continue from bookmarks or jump into any arc via codex references.</p>
+            </div>
+            <a class="primary-btn" href="codex.html">Open reader tools</a>
+          </div>
         </div>
       </section>
     </main>
+
+    <footer class="site-footer">
+      <div>
+        <p class="eyebrow">Tales of Eden</p>
+        <p class="micro-text">A living, breathing wiki for storytellers and readers.</p>
+      </div>
+      <div class="footer-actions">
+        <a href="#codex" class="text-link">Codex</a>
+        <a href="#timeline" class="text-link">Timeline</a>
+        <a href="#world" class="text-link">World</a>
+        <a href="#reader" class="text-link">Reader</a>
+      </div>
+    </footer>
   </div>
-
-  <script>
-    /* ===========================
-       THEME & SETTINGS
-       =========================== */
-    const THEME_STORAGE_KEY = "toe_theme";
-    const SETTINGS_STORAGE_KEY = "toe_settings";
-    const ICON_STORAGE_KEY   = "toe_icons";
-
-    const THEME_PRESETS = {
-      eden: {
-        id: "eden",
-        accent: "#4ea1ff",
-        bgMainTop: "#182538",
-        bgMainBottom: "#05060a",
-        sidebarTop: "#1b252f",
-        sidebarBottom: "#05070b",
-        cardTop: "#0d1420",
-        cardBottom: "#05070c",
-        readerPage: "#08121e",
-        textMain: "#e9f1ff",
-        textMuted: "#9aa4c3",
-        bgStyle: "nebula",
-      },
-      parchment: {
-        id: "parchment",
-        accent: "#c27b48",
-        bgMainTop: "#3f3425",
-        bgMainBottom: "#1f1910",
-        sidebarTop: "#59442c",
-        sidebarBottom: "#1f1710",
-        cardTop: "#2b2116",
-        cardBottom: "#15100a",
-        readerPage: "#21170f",
-        textMain: "#f4e2c8",
-        textMuted: "#c9b096",
-        bgStyle: "parchment",
-      },
-      crimson: {
-        id: "crimson",
-        accent: "#ff5d7a",
-        bgMainTop: "#371524",
-        bgMainBottom: "#09030a",
-        sidebarTop: "#421727",
-        sidebarBottom: "#12030a",
-        cardTop: "#230815",
-        cardBottom: "#0c0208",
-        readerPage: "#190612",
-        textMain: "#ffe5f0",
-        textMuted: "#f0a9c7",
-        bgStyle: "void",
-      }
-    };
-
-    const defaultTheme = {
-      presetId: "eden",
-      accent: "#4ea1ff",
-      bgMainTop: "#182538",
-      bgMainBottom: "#05060a",
-      sidebarTop: "#1b252f",
-      sidebarBottom: "#05070b",
-      cardTop: "#0d1420",
-      cardBottom: "#05070c",
-      readerPage: "#08121e",
-      textMain: "#e9f1ff",
-      textMuted: "#9aa4c3",
-      bgStyle: "nebula",
-      readerFont: "serif",      // serif | sans | mono
-      readerFontSize: "normal", // small | normal | large
-    };
-
-    const defaultSettings = {
-      animationsEnabled: true,
-      reducedEffects: false,
-    };
-
-    const defaultIcons = {
-      library: null,
-      customization: null,
-      settings: null,
-    };
-
-    // Advanced color inputs mapping
-    const advancedColorConfig = [
-      { id: "colorMainTop",      key: "bgMainTop" },
-      { id: "colorMainBottom",   key: "bgMainBottom" },
-      { id: "colorSidebarTop",   key: "sidebarTop" },
-      { id: "colorSidebarBottom",key: "sidebarBottom" },
-      { id: "colorCardTop",      key: "cardTop" },
-      { id: "colorCardBottom",   key: "cardBottom" },
-      { id: "colorReaderPage",   key: "readerPage" },
-      { id: "colorTextMain",     key: "textMain" },
-      { id: "colorTextMuted",    key: "textMuted" },
-    ];
-
-    let currentTheme = null;
-    let currentSettings = null;
-    let currentIcons = null;
-
-    function loadTheme() {
-      try {
-        const raw = localStorage.getItem(THEME_STORAGE_KEY);
-        if (!raw) return { ...defaultTheme };
-        const parsed = JSON.parse(raw);
-        return { ...defaultTheme, ...parsed };
-      } catch {
-        return { ...defaultTheme };
-      }
-    }
-
-    function saveTheme() {
-      localStorage.setItem(THEME_STORAGE_KEY, JSON.stringify(currentTheme));
-    }
-
-    function applyTheme(theme) {
-      const root = document.documentElement;
-
-      root.style.setProperty("--color-accent", theme.accent);
-      root.style.setProperty("--color-bg-main-top", theme.bgMainTop);
-      root.style.setProperty("--color-bg-main-bottom", theme.bgMainBottom);
-      root.style.setProperty("--color-bg-sidebar-top", theme.sidebarTop);
-      root.style.setProperty("--color-bg-sidebar-bottom", theme.sidebarBottom);
-      root.style.setProperty("--color-card-top", theme.cardTop);
-      root.style.setProperty("--color-card-bottom", theme.cardBottom);
-      root.style.setProperty("--color-reader-page", theme.readerPage);
-      root.style.setProperty("--color-text-main", theme.textMain);
-      root.style.setProperty("--color-text-muted", theme.textMuted);
-
-      root.setAttribute("data-bg-style", theme.bgStyle || "nebula");
-
-      let fontStack;
-      if (theme.readerFont === "mono") {
-        fontStack = '"JetBrains Mono", "Cascadia Code", monospace';
-      } else if (theme.readerFont === "sans") {
-        fontStack = 'system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif';
-      } else {
-        fontStack = '"Georgia", "Times New Roman", serif';
-      }
-      root.style.setProperty("--font-reader", fontStack);
-
-      let sizeRem = "0.98rem";
-      if (theme.readerFontSize === "small") sizeRem = "0.9rem";
-      if (theme.readerFontSize === "large") sizeRem = "1.08rem";
-      root.style.setProperty("--reader-font-size", sizeRem);
-    }
-
-    function resetThemeToDefaults() {
-      currentTheme = { ...defaultTheme };
-      saveTheme();
-      applyTheme(currentTheme);
-      updateCustomizationUI();
-    }
-
-    function loadSettings() {
-      try {
-        const raw = localStorage.getItem(SETTINGS_STORAGE_KEY);
-        if (!raw) return { ...defaultSettings };
-        const parsed = JSON.parse(raw);
-        return { ...defaultSettings, ...parsed };
-      } catch {
-        return { ...defaultSettings };
-      }
-    }
-
-    function saveSettings() {
-      localStorage.setItem(SETTINGS_STORAGE_KEY, JSON.stringify(currentSettings));
-    }
-
-    function applySettings(settings) {
-      document.body.classList.toggle("no-animations", !settings.animationsEnabled);
-      document.body.classList.toggle("reduced-effects", !!settings.reducedEffects);
-    }
-
-    function resetSettingsToDefaults() {
-      currentSettings = { ...defaultSettings };
-      saveSettings();
-      applySettings(currentSettings);
-
-      const disableAnimCheckbox = document.getElementById("settingDisableAnimations");
-      const reducedEffectsCheckbox = document.getElementById("settingReducedEffects");
-      if (disableAnimCheckbox) disableAnimCheckbox.checked = !currentSettings.animationsEnabled;
-      if (reducedEffectsCheckbox) reducedEffectsCheckbox.checked = currentSettings.reducedEffects;
-    }
-
-    function applyPreset(presetId) {
-      const preset = THEME_PRESETS[presetId] || THEME_PRESETS.eden;
-      currentTheme = {
-        ...currentTheme,
-        ...preset,
-        presetId,
-      };
-      saveTheme();
-      applyTheme(currentTheme);
-      updateCustomizationUI();
-    }
-
-    /* ===========================
-       ICONS
-       =========================== */
-    function loadIcons() {
-      try {
-        const raw = localStorage.getItem(ICON_STORAGE_KEY);
-        if (!raw) return { ...defaultIcons };
-        const parsed = JSON.parse(raw);
-        return { ...defaultIcons, ...parsed };
-      } catch {
-        return { ...defaultIcons };
-      }
-    }
-
-    function saveIcons() {
-      localStorage.setItem(ICON_STORAGE_KEY, JSON.stringify(currentIcons));
-    }
-
-    function applyIcons() {
-      const slots = document.querySelectorAll(".icon-slot");
-      slots.forEach(slot => {
-        const key = slot.dataset.iconKey;
-        const img = slot.querySelector(".icon-img");
-        const svg = slot.querySelector(".icon-svg");
-        const data = currentIcons && currentIcons[key];
-
-        if (!img || !svg) return;
-
-        if (data) {
-          img.src = data;
-          slot.classList.add("icon-slot-custom");
-        } else {
-          img.removeAttribute("src");
-          slot.classList.remove("icon-slot-custom");
-        }
-      });
-    }
-
-    function updateIconCustomizationUI() {
-      ["library", "customization", "settings"].forEach(key => {
-        const preview = document.querySelector(`[data-icon-preview="${key}"]`);
-        if (!preview) return;
-        const data = currentIcons && currentIcons[key];
-        if (data) {
-          preview.style.backgroundImage = `url(${data})`;
-          preview.classList.add("has-icon");
-        } else {
-          preview.style.backgroundImage = "none";
-          preview.classList.remove("has-icon");
-        }
-      });
-    }
-
-    function resetIconsToDefaults() {
-      currentIcons = { ...defaultIcons };
-      saveIcons();
-      applyIcons();
-      updateIconCustomizationUI();
-    }
-
-    /* ===========================
-       LIBRARY STATE
-       =========================== */
-    const FAV_KEY = "toe_favourites";
-
-    let books = [];
-    let favourites = new Set();
-    let genres = ["All"];
-    let genreDropdownOpen = false;
-
-    const state = {
-      search: "",
-      sortDir: 1,       // 1 = A–Z, -1 = Z–A
-      genre: "All",
-      onlyFavourites: false,
-    };
-
-    // DOM refs
-    const rowsContainer = document.getElementById("library-rows");
-    const searchInput = document.querySelector(".search-input");
-    const sortBtn = document.getElementById("sortBtn");
-    const genreBtn = document.getElementById("genreBtn");
-    const favFilterBtn = document.getElementById("favFilterBtn");
-    const genreDropdown = document.getElementById("genreDropdown");
-    const genreWrapper = document.querySelector(".genre-wrapper");
-
-    // Favourites
-    function loadFavourites() {
-      try {
-        const raw = localStorage.getItem(FAV_KEY);
-        if (!raw) return;
-        const arr = JSON.parse(raw);
-        if (Array.isArray(arr)) favourites = new Set(arr);
-      } catch {
-        favourites = new Set();
-      }
-    }
-
-    function saveFavourites() {
-      localStorage.setItem(FAV_KEY, JSON.stringify([...favourites]));
-    }
-
-    function toggleFavourite(id) {
-      if (favourites.has(id)) {
-        favourites.delete(id);
-      } else {
-        favourites.add(id);
-      }
-      saveFavourites();
-      renderRows();
-    }
-
-    // Filtering / sorting
-    function applyFilters() {
-      const q = state.search.toLowerCase().trim();
-      let list = books.slice();
-
-      if (state.onlyFavourites) {
-        list = list.filter(b => favourites.has(b.id));
-      }
-
-      if (state.genre !== "All") {
-        list = list.filter(b => (b.genre || "").toLowerCase() === state.genre.toLowerCase());
-      }
-
-      if (q) {
-        list = list.filter(b => {
-          const haystack = (
-            (b.title || "") + " " +
-            (b.author || "") + " " +
-            (b.genre || "") + " " +
-            (b.type || "")
-          ).toLowerCase();
-          return haystack.includes(q);
-        });
-      }
-
-      list.sort((a, b) => state.sortDir * a.title.localeCompare(b.title));
-      return list;
-    }
-
-    function renderRows() {
-      const filtered = applyFilters();
-      rowsContainer.innerHTML = "";
-
-      if (!filtered.length) {
-        rowsContainer.innerHTML =
-          "<p style='padding:10px;color:#9aa;'>No books match your filters.</p>";
-        return;
-      }
-
-      filtered.forEach(book => {
-        const isFav = favourites.has(book.id);
-
-        const row = document.createElement("button");
-        row.type = "button";
-        row.className = "table-row";
-        row.onclick = () => location.href = book.path;
-
-        row.innerHTML = `
-          <span class="title">${book.title}</span>
-          <span>${book.author}</span>
-          <span>${book.genre}</span>
-          <span>${book.type}</span>
-          <span class="fav ${isFav ? "fav-on" : ""}" title="Toggle favourite">
-            ${isFav ? "★" : "☆"}
-          </span>
-        `;
-
-        const favSpan = row.querySelector(".fav");
-        favSpan.addEventListener("click", (ev) => {
-          ev.stopPropagation();
-          toggleFavourite(book.id);
-        });
-
-        rowsContainer.appendChild(row);
-      });
-    }
-
-    function updateFilterButtons() {
-      sortBtn.textContent = state.sortDir === 1 ? "Sort A–Z" : "Sort Z–A";
-
-      const g = state.genre;
-      genreBtn.textContent = `Genre: ${g} ▾`;
-      if (g !== "All") {
-        genreBtn.classList.add("active");
-      } else {
-        genreBtn.classList.remove("active");
-      }
-
-      if (state.onlyFavourites) {
-        favFilterBtn.classList.add("active");
-      } else {
-        favFilterBtn.classList.remove("active");
-      }
-    }
-
-    // Genres / dropdown
-    function computeGenres() {
-      const set = new Set();
-      books.forEach(b => {
-        if (b.genre) set.add(b.genre);
-      });
-      genres = ["All", ...Array.from(set).sort((a, b) => a.localeCompare(b))];
-    }
-
-    function renderGenreDropdown() {
-      if (!genreDropdown) return;
-      genreDropdown.innerHTML = "";
-
-      genres.forEach(g => {
-        const btn = document.createElement("button");
-        btn.type = "button";
-        btn.className = "genre-option" + (g === state.genre ? " selected" : "");
-        btn.textContent = g;
-        btn.onclick = () => {
-          state.genre = g;
-          closeGenreDropdown();
-          updateFilterButtons();
-          renderRows();
-        };
-        genreDropdown.appendChild(btn);
-      });
-    }
-
-    function openGenreDropdown() {
-      if (!genreDropdown) return;
-      genreDropdownOpen = true;
-      renderGenreDropdown();
-      genreDropdown.classList.add("open");
-    }
-
-    function closeGenreDropdown() {
-      if (!genreDropdown) return;
-      genreDropdownOpen = false;
-      genreDropdown.classList.remove("open");
-    }
-
-    /* ===========================
-       VIEW NAVIGATION (SIDEBAR)
-       =========================== */
-    function initViewNavigation() {
-      const views = {
-        library: document.getElementById("view-library"),
-        customization: document.getElementById("view-customization"),
-        settings: document.getElementById("view-settings"),
-      };
-
-      const sidebarButtons = document.querySelectorAll(".sidebar-item[data-view]");
-
-      function showView(name) {
-        Object.entries(views).forEach(([key, el]) => {
-          if (!el) return;
-          el.classList.toggle("view-active", key === name);
-        });
-
-        sidebarButtons.forEach(btn => {
-          btn.classList.toggle("active", btn.dataset.view === name);
-        });
-
-        if (name !== "library") {
-          closeGenreDropdown();
-        }
-      }
-
-      sidebarButtons.forEach(btn => {
-        btn.addEventListener("click", () => {
-          const view = btn.dataset.view;
-          if (view) showView(view);
-        });
-      });
-    }
-
-    /* ===========================
-       CUSTOMIZATION UI
-       =========================== */
-    function updateCustomizationUI() {
-      // presets
-      const presetButtons = document.querySelectorAll(".preset-card");
-      presetButtons.forEach(btn => {
-        const id = btn.dataset.preset;
-        btn.classList.toggle("preset-active", id === currentTheme.presetId);
-      });
-
-      // accent
-      const accentInput = document.getElementById("accentColorInput");
-      if (accentInput && currentTheme.accent) {
-        accentInput.value = currentTheme.accent;
-      }
-
-      // reader font
-      const fontSelect = document.getElementById("readerFontSelect");
-      if (fontSelect) {
-        fontSelect.value = currentTheme.readerFont || "serif";
-      }
-
-      // reader font size chips
-      const chips = document.querySelectorAll("#readerFontSizeChips .chip");
-      chips.forEach(chip => {
-        const size = chip.dataset.size;
-        chip.classList.toggle("chip-active", size === currentTheme.readerFontSize);
-      });
-
-      // background chips
-      const bgChips = document.querySelectorAll("#bgPresetList .bg-chip");
-      bgChips.forEach(chip => {
-        const bg = chip.dataset.bg;
-        chip.classList.toggle("bg-chip-active", bg === currentTheme.bgStyle);
-      });
-
-      // advanced colors
-      advancedColorConfig.forEach(({ id, key }) => {
-        const input = document.getElementById(id);
-        if (input && currentTheme[key]) {
-          input.value = currentTheme[key];
-        }
-      });
-
-      // icon previews
-      updateIconCustomizationUI();
-    }
-
-    function initCustomizationControls() {
-      // presets
-      document.querySelectorAll(".preset-card").forEach(btn => {
-        btn.addEventListener("click", () => {
-          const id = btn.dataset.preset || "eden";
-          applyPreset(id);
-        });
-      });
-
-      // accent
-      const accentInput = document.getElementById("accentColorInput");
-      if (accentInput) {
-        accentInput.addEventListener("input", (e) => {
-          currentTheme.accent = e.target.value;
-          currentTheme.presetId = "custom";
-          saveTheme();
-          applyTheme(currentTheme);
-          updateCustomizationUI();
-        });
-      }
-
-      // reader font
-      const fontSelect = document.getElementById("readerFontSelect");
-      if (fontSelect) {
-        fontSelect.addEventListener("change", (e) => {
-          currentTheme.readerFont = e.target.value;
-          currentTheme.presetId = "custom";
-          saveTheme();
-          applyTheme(currentTheme);
-          updateCustomizationUI();
-        });
-      }
-
-      // font size chips
-      const chips = document.querySelectorAll("#readerFontSizeChips .chip");
-      chips.forEach(chip => {
-        chip.addEventListener("click", () => {
-          const size = chip.dataset.size || "normal";
-          currentTheme.readerFontSize = size;
-          currentTheme.presetId = "custom";
-          saveTheme();
-          applyTheme(currentTheme);
-          updateCustomizationUI();
-        });
-      });
-
-      // background style
-      const bgChips = document.querySelectorAll("#bgPresetList .bg-chip");
-      bgChips.forEach(chip => {
-        chip.addEventListener("click", () => {
-          const bg = chip.dataset.bg || "nebula";
-          currentTheme.bgStyle = bg;
-          currentTheme.presetId = "custom";
-          saveTheme();
-          applyTheme(currentTheme);
-          updateCustomizationUI();
-        });
-      });
-
-      // advanced color inputs
-      advancedColorConfig.forEach(({ id, key }) => {
-        const input = document.getElementById(id);
-        if (!input) return;
-        input.addEventListener("input", (e) => {
-          currentTheme[key] = e.target.value;
-          currentTheme.presetId = "custom";
-          saveTheme();
-          applyTheme(currentTheme);
-          updateCustomizationUI();
-        });
-      });
-
-      // reset theme
-      const resetThemeBtn = document.getElementById("resetThemeBtn");
-      if (resetThemeBtn) {
-        resetThemeBtn.addEventListener("click", resetThemeToDefaults);
-      }
-
-      // ICON UPLOADS
-      const uploads = document.querySelectorAll("input[data-icon-upload]");
-      uploads.forEach(input => {
-        const key = input.dataset.iconUpload;
-        input.addEventListener("change", (e) => {
-          const file = e.target.files && e.target.files[0];
-          if (!file) return;
-
-          const reader = new FileReader();
-          reader.onload = ev => {
-            currentIcons[key] = ev.target.result;
-            saveIcons();
-            applyIcons();
-            updateIconCustomizationUI();
-          };
-          reader.readAsDataURL(file);
-        });
-      });
-
-      const resetIconsBtn = document.getElementById("resetIconsBtn");
-      if (resetIconsBtn) {
-        resetIconsBtn.addEventListener("click", resetIconsToDefaults);
-      }
-
-      updateCustomizationUI();
-    }
-
-    /* ===========================
-       SETTINGS UI
-       =========================== */
-    function initSettingsControls() {
-      const disableAnimCheckbox = document.getElementById("settingDisableAnimations");
-      const reducedEffectsCheckbox = document.getElementById("settingReducedEffects");
-      const resetSettingsBtn = document.getElementById("resetSettingsBtn");
-
-      if (disableAnimCheckbox) {
-        disableAnimCheckbox.checked = !currentSettings.animationsEnabled;
-        disableAnimCheckbox.addEventListener("change", () => {
-          currentSettings.animationsEnabled = !disableAnimCheckbox.checked;
-          saveSettings();
-          applySettings(currentSettings);
-        });
-      }
-
-      if (reducedEffectsCheckbox) {
-        reducedEffectsCheckbox.checked = !!currentSettings.reducedEffects;
-        reducedEffectsCheckbox.addEventListener("change", () => {
-          currentSettings.reducedEffects = reducedEffectsCheckbox.checked;
-          saveSettings();
-          applySettings(currentSettings);
-        });
-      }
-
-      if (resetSettingsBtn) {
-        resetSettingsBtn.addEventListener("click", resetSettingsToDefaults);
-      }
-    }
-
-    /* ===========================
-       INIT
-       =========================== */
-    document.addEventListener("DOMContentLoaded", () => {
-      // theme & settings first
-      currentTheme = loadTheme();
-      applyTheme(currentTheme);
-
-      currentSettings = loadSettings();
-      applySettings(currentSettings);
-
-      // icons
-      currentIcons = loadIcons();
-      applyIcons();
-
-      // favourites
-      loadFavourites();
-
-      // books
-      fetch("books.json")
-        .then(res => {
-          if (!res.ok) throw new Error("books.json not found");
-          return res.json();
-        })
-        .then(data => {
-          books = data || [];
-          computeGenres();
-          updateFilterButtons();
-          renderRows();
-        })
-        .catch(err => {
-          rowsContainer.innerHTML =
-            `<p style="padding:10px;color:#f88">Error loading books: ${err.message}</p>`;
-        });
-
-      // search
-      if (searchInput) {
-        searchInput.addEventListener("input", function () {
-          state.search = this.value;
-          renderRows();
-        });
-      }
-
-      // sort
-      sortBtn.addEventListener("click", () => {
-        state.sortDir *= -1;
-        updateFilterButtons();
-        renderRows();
-      });
-
-      // genre button (toggle dropdown)
-      genreBtn.addEventListener("click", (ev) => {
-        ev.stopPropagation();
-        if (genreDropdownOpen) {
-          closeGenreDropdown();
-        } else {
-          openGenreDropdown();
-        }
-      });
-
-      // favourites filter
-      favFilterBtn.addEventListener("click", () => {
-        state.onlyFavourites = !state.onlyFavourites;
-        updateFilterButtons();
-        renderRows();
-      });
-
-      // click outside dropdown
-      document.addEventListener("click", (ev) => {
-        if (!genreDropdownOpen) return;
-        if (!genreWrapper.contains(ev.target)) {
-          closeGenreDropdown();
-        }
-      });
-
-      // ESC to close dropdown
-      document.addEventListener("keydown", (ev) => {
-        if (ev.key === "Escape" && genreDropdownOpen) {
-          closeGenreDropdown();
-        }
-      });
-
-      // views, customization, settings
-      initViewNavigation();
-      initCustomizationControls();
-      initSettingsControls();
-    });
-  </script>
 </body>
 </html>
