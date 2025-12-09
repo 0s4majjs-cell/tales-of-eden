@@ -2,62 +2,749 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <title>Tales of Eden</title>
+  <title>Tales of Eden – Archive</title>
 
+  <!-- Global styles + theme loader (already in your project) -->
   <link rel="stylesheet" href="styles.css" />
   <script src="theme-loader.js"></script>
+
+  <style>
+    :root {
+      --toe-radius-lg: 24px;
+      --toe-radius-md: 16px;
+      --toe-radius-pill: 999px;
+      --toe-border-subtle: 1px solid rgba(255,255,255,0.12);
+      --toe-glass-bg: linear-gradient(
+        135deg,
+        rgba(3, 7, 18, 0.92),
+        rgba(15, 23, 42, 0.92)
+      );
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      font-family: var(--font-ui, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif);
+      color: var(--color-text-main, #e9f1ff);
+      background:
+        radial-gradient(circle at top, #1b2640 0, #050814 60%),
+        #050814;
+      background-attachment: fixed;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .toe-shell {
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      padding: 24px clamp(16px, 4vw, 40px);
+      gap: 18px;
+    }
+
+    /* Top bar */
+
+    .toe-topbar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+    }
+
+    .toe-logo-group {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .toe-logo-mark {
+      width: 32px;
+      height: 32px;
+      border-radius: 12px;
+      background: radial-gradient(circle at 30% 20%, #fbbf24 0, #f97316 18%, #4b5563 55%, #020617 100%);
+      box-shadow: 0 0 30px rgba(248, 250, 252, 0.35);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .toe-logo-mark::after {
+      content: "";
+      position: absolute;
+      inset: 12%;
+      border-radius: 10px;
+      border: 1px solid rgba(15, 23, 42, 0.8);
+    }
+
+    .toe-logo-text {
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+    }
+
+    .toe-logo-title {
+      font-size: 16px;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+      color: rgba(226, 232, 255, 0.96);
+    }
+
+    .toe-logo-sub {
+      font-size: 11px;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: rgba(148, 163, 184, 0.9);
+    }
+
+    .toe-top-actions {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .toe-pill {
+      padding: 6px 14px;
+      border-radius: var(--toe-radius-pill);
+      border: 1px solid rgba(148, 163, 184, 0.45);
+      background: rgba(15, 23, 42, 0.9);
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+      color: rgba(226, 232, 255, 0.92);
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .toe-dot-live {
+      width: 7px;
+      height: 7px;
+      border-radius: 999px;
+      background: #22c55e;
+      box-shadow: 0 0 10px rgba(34, 197, 94, 0.9);
+    }
+
+    .toe-link-btn {
+      padding: 7px 14px;
+      border-radius: var(--toe-radius-pill);
+      border: 1px solid rgba(148, 163, 184, 0.5);
+      background: rgba(15, 23, 42, 0.9);
+      color: rgba(226, 232, 255, 0.9);
+      font-size: 12px;
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+      gap: 7px;
+      cursor: pointer;
+      transition:
+        background 0.15s ease,
+        border-color 0.15s ease,
+        transform 0.1s ease,
+        box-shadow 0.15s ease;
+      white-space: nowrap;
+    }
+
+    .toe-link-btn:hover {
+      background: rgba(30, 64, 175, 0.98);
+      border-color: rgba(191, 219, 254, 0.9);
+      box-shadow: 0 0 0 1px rgba(191, 219, 254, 0.4);
+      transform: translateY(-1px);
+    }
+
+    .toe-link-btn span.icon {
+      font-size: 14px;
+      opacity: 0.85;
+    }
+
+    /* Main grid */
+
+    .toe-main {
+      flex: 1;
+      display: grid;
+      grid-template-columns: minmax(0, 2.1fr) minmax(0, 1.5fr);
+      gap: 20px;
+      margin-top: 4px;
+    }
+
+    @media (max-width: 960px) {
+      .toe-main {
+        grid-template-columns: minmax(0, 1fr);
+        grid-template-rows: auto auto;
+      }
+    }
+
+    /* Hero / primary panel */
+
+    .toe-panel {
+      border-radius: var(--toe-radius-lg);
+      border: var(--toe-border-subtle);
+      background: var(--toe-glass-bg);
+      box-shadow:
+        0 24px 80px rgba(15, 23, 42, 0.95),
+        0 0 0 1px rgba(15, 23, 42, 0.85);
+      padding: 18px 18px 18px 20px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .toe-panel-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+      margin-bottom: 8px;
+    }
+
+    .toe-panel-label {
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: 0.18em;
+      color: rgba(148, 163, 184, 0.96);
+    }
+
+    .toe-panel-tagline {
+      font-size: 11px;
+      color: rgba(148, 163, 184, 0.82);
+    }
+
+    .toe-hero-title {
+      font-size: clamp(20px, 3vw, 28px);
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+      color: rgba(226, 232, 255, 0.98);
+      margin-bottom: 6px;
+    }
+
+    .toe-hero-subtitle {
+      font-size: 13px;
+      max-width: 540px;
+      color: rgba(191, 219, 254, 0.9);
+      line-height: 1.6;
+    }
+
+    .toe-hero-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-top: 16px;
+    }
+
+    .toe-hero-btn-primary {
+      padding: 9px 18px;
+      border-radius: var(--toe-radius-pill);
+      border: 1px solid rgba(191, 219, 254, 0.9);
+      background: radial-gradient(circle at top left, #60a5fa 0, #1d4ed8 45%, #020617 110%);
+      color: #f9fafb;
+      font-size: 13px;
+      font-weight: 500;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      cursor: pointer;
+      text-decoration: none;
+      box-shadow:
+        0 18px 50px rgba(37, 99, 235, 0.75),
+        0 0 0 1px rgba(15, 23, 42, 0.9);
+      transition:
+        transform 0.1s ease,
+        box-shadow 0.15s ease,
+        filter 0.15s ease;
+      white-space: nowrap;
+    }
+
+    .toe-hero-btn-primary:hover {
+      transform: translateY(-1px);
+      box-shadow:
+        0 26px 70px rgba(37, 99, 235, 0.9),
+        0 0 0 1px rgba(15, 23, 42, 1);
+      filter: brightness(1.02);
+    }
+
+    .toe-hero-btn-secondary {
+      padding: 8px 16px;
+      border-radius: var(--toe-radius-pill);
+      border: 1px solid rgba(148, 163, 184, 0.6);
+      background: rgba(15, 23, 42, 0.9);
+      color: rgba(226, 232, 255, 0.92);
+      font-size: 12px;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      cursor: pointer;
+      text-decoration: none;
+      transition:
+        background 0.15s ease,
+        border-color 0.15s ease,
+        transform 0.1s ease,
+        box-shadow 0.15s ease;
+      white-space: nowrap;
+    }
+
+    .toe-hero-btn-secondary:hover {
+      background: rgba(30, 64, 175, 0.95);
+      border-color: rgba(191, 219, 254, 0.9);
+      box-shadow: 0 0 0 1px rgba(191, 219, 254, 0.4);
+      transform: translateY(-1px);
+    }
+
+    .toe-hero-badge-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-top: 18px;
+      font-size: 11px;
+    }
+
+    .toe-hero-badge {
+      padding: 4px 10px;
+      border-radius: 999px;
+      border: 1px solid rgba(148, 163, 184, 0.4);
+      background: radial-gradient(circle at top, rgba(15, 23, 42, 0.96), rgba(15, 23, 42, 0.86));
+      color: rgba(148, 163, 184, 0.96);
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .toe-hero-badge strong {
+      color: rgba(226, 232, 255, 0.98);
+      font-weight: 500;
+    }
+
+    .toe-hero-bg-orbit {
+      position: absolute;
+      right: -80px;
+      top: -40px;
+      width: 260px;
+      height: 260px;
+      border-radius: 100%;
+      background: radial-gradient(circle at 30% 20%, rgba(251,191,36,0.45) 0, rgba(248,250,252,0.08) 40%, transparent 70%);
+      opacity: 0.85;
+      filter: blur(0.3px);
+      pointer-events: none;
+    }
+
+    .toe-hero-bg-ring {
+      position: absolute;
+      right: 18px;
+      top: 52px;
+      width: 140px;
+      height: 140px;
+      border-radius: 100%;
+      border: 1px solid rgba(236, 252, 203, 0.5);
+      box-shadow: 0 0 30px rgba(250, 250, 210, 0.5);
+      opacity: 0.7;
+      pointer-events: none;
+    }
+
+    .toe-hero-bg-ring::after {
+      content: "";
+      position: absolute;
+      inset: 18%;
+      border-radius: inherit;
+      border: 1px dashed rgba(148, 163, 184, 0.6);
+    }
+
+    @media (max-width: 960px) {
+      .toe-panel {
+        padding: 16px 14px 16px 16px;
+      }
+      .toe-hero-bg-orbit,
+      .toe-hero-bg-ring {
+        display: none;
+      }
+    }
+
+    /* Right column panels */
+
+    .toe-stack {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .toe-subpanel {
+      border-radius: var(--toe-radius-md);
+      border: var(--toe-border-subtle);
+      background: linear-gradient(
+        145deg,
+        rgba(15, 23, 42, 0.96),
+        rgba(3, 7, 18, 0.96)
+      );
+      padding: 12px 14px 12px 14px;
+      box-shadow:
+        0 18px 40px rgba(15, 23, 42, 0.96),
+        0 0 0 1px rgba(15, 23, 42, 0.9);
+    }
+
+    .toe-subpanel-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+      margin-bottom: 6px;
+    }
+
+    .toe-subpanel-title {
+      font-size: 12px;
+      text-transform: uppercase;
+      letter-spacing: 0.16em;
+      color: rgba(148, 163, 184, 0.96);
+    }
+
+    .toe-subpanel-meta {
+      font-size: 11px;
+      color: rgba(148, 163, 184, 0.75);
+    }
+
+    /* Continue reading list */
+
+    .toe-continue-empty {
+      font-size: 12px;
+      color: rgba(148, 163, 184, 0.85);
+      padding: 6px 0 4px;
+    }
+
+    .toe-continue-list {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      margin-top: 4px;
+    }
+
+    .toe-continue-card {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      padding: 8px 10px;
+      border-radius: 12px;
+      background: radial-gradient(circle at top left, rgba(30, 64, 175, 0.16), rgba(15, 23, 42, 0.98));
+      border: 1px solid rgba(30, 64, 175, 0.4);
+    }
+
+    .toe-continue-main {
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+      min-width: 0;
+    }
+
+    .toe-continue-title {
+      font-size: 12px;
+      font-weight: 500;
+      color: rgba(226, 232, 255, 0.98);
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .toe-continue-meta {
+      font-size: 11px;
+      color: rgba(148, 163, 184, 0.9);
+    }
+
+    .toe-continue-progress {
+      font-size: 11px;
+      color: rgba(191, 219, 254, 0.95);
+    }
+
+    .toe-continue-action {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-end;
+      gap: 6px;
+      flex-shrink: 0;
+    }
+
+    .toe-continue-btn {
+      padding: 4px 10px;
+      border-radius: 999px;
+      border: 1px solid rgba(191, 219, 254, 0.85);
+      background: rgba(15, 23, 42, 0.96);
+      color: rgba(226, 232, 255, 0.98);
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: 0.09em;
+      cursor: pointer;
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      transition:
+        background 0.15s ease,
+        border-color 0.15s ease,
+        transform 0.1s ease,
+        box-shadow 0.15s ease;
+    }
+
+    .toe-continue-btn:hover {
+      background: rgba(37, 99, 235, 0.96);
+      border-color: rgba(191, 219, 254, 1);
+      box-shadow: 0 0 0 1px rgba(191, 219, 254, 0.5);
+      transform: translateY(-1px);
+    }
+
+    .toe-continue-sub {
+      font-size: 10px;
+      color: rgba(148, 163, 184, 0.8);
+    }
+
+    /* Quick access grid */
+
+    .toe-quick-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 8px;
+      margin-top: 6px;
+    }
+
+    @media (max-width: 520px) {
+      .toe-quick-grid {
+        grid-template-columns: minmax(0, 1fr);
+      }
+    }
+
+    .toe-quick-card {
+      border-radius: 14px;
+      border: 1px solid rgba(30, 64, 175, 0.45);
+      background: radial-gradient(circle at top, rgba(15, 23, 42, 0.96), rgba(15, 23, 42, 0.92));
+      padding: 8px 10px;
+      cursor: pointer;
+      text-decoration: none;
+      color: rgba(226, 232, 255, 0.96);
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+      transition:
+        background 0.15s ease,
+        transform 0.1s ease,
+        box-shadow 0.15s ease,
+        border-color 0.15s ease;
+    }
+
+    .toe-quick-card:hover {
+      background: radial-gradient(circle at top, rgba(37, 99, 235, 0.35), rgba(15, 23, 42, 0.98));
+      border-color: rgba(191, 219, 254, 0.9);
+      box-shadow: 0 14px 40px rgba(15, 23, 42, 0.95);
+      transform: translateY(-1px);
+    }
+
+    .toe-quick-title {
+      font-size: 12px;
+      font-weight: 500;
+    }
+
+    .toe-quick-meta {
+      font-size: 11px;
+      color: rgba(148, 163, 184, 0.9);
+    }
+
+    /* Footer */
+
+    .toe-footer {
+      margin-top: 4px;
+      padding: 4px 2px 0;
+      font-size: 11px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      color: rgba(148, 163, 184, 0.8);
+      gap: 8px;
+      border-top: 1px solid rgba(15, 23, 42, 0.9);
+    }
+
+    .toe-footer span {
+      white-space: nowrap;
+    }
+
+    .toe-footer-links {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      justify-content: flex-end;
+    }
+
+    .toe-footer-links a {
+      color: rgba(148, 163, 184, 0.9);
+      text-decoration: none;
+      border-bottom: 1px dotted rgba(55, 65, 81, 0.7);
+    }
+
+    .toe-footer-links a:hover {
+      color: rgba(226, 232, 255, 0.98);
+      border-bottom-color: rgba(156, 163, 175, 0.9);
+    }
+  </style>
 </head>
-<body class="home-body">
-  <div class="home-shell">
-    <!-- TOP BAR -->
-    <header class="home-topbar">
-      <div class="home-top-left">
-        <div class="home-logo-dot"></div>
-        <div class="home-title">Tales of Eden</div>
+<body>
+  <div class="toe-shell">
+    <!-- Top bar -->
+    <header class="toe-topbar">
+      <div class="toe-logo-group">
+        <div class="toe-logo-mark"></div>
+        <div class="toe-logo-text">
+          <div class="toe-logo-title">Tales of Eden</div>
+          <div class="toe-logo-sub">World Archive &amp; Reader</div>
+        </div>
       </div>
-      <nav class="home-nav">
-        <a href="index.html" class="home-nav-link active">Home</a>
-        <a href="library.html" class="home-nav-link">Library</a>
-        <a href="codex.html" class="home-nav-link">Codex</a>
-        <!-- You can later point this to a dedicated customization page -->
-        <a href="library.html#customize" class="home-nav-link">Customize</a>
-      </nav>
+
+      <div class="toe-top-actions">
+        <div class="toe-pill">
+          <span class="toe-dot-live"></span>
+          <span>Local Archive</span>
+        </div>
+        <!-- This just goes to your existing settings/customization in the library for now -->
+        <a href="library.html#settings" class="toe-link-btn">
+          <span class="icon">⚙️</span>
+          <span>Reader Settings</span>
+        </a>
+      </div>
     </header>
 
-    <!-- MAIN / HERO -->
-    <main class="home-main">
-      <div class="home-hero">
-        <h1>World Archive</h1>
-        <p>
-          Read the stories in the Library, and use the Codex to look up characters, locations and anomalies
-          from the Eden setting.
+    <!-- Main content -->
+    <main class="toe-main">
+      <!-- Hero / wiki entry point -->
+      <section class="toe-panel">
+        <div class="toe-hero-bg-orbit"></div>
+        <div class="toe-hero-bg-ring"></div>
+
+        <div class="toe-panel-header">
+          <div class="toe-panel-label">Main Archive Entry</div>
+          <div class="toe-panel-tagline" id="toeBuildHint">
+            World index and in-universe documentation.
+          </div>
+        </div>
+
+        <h1 class="toe-hero-title">Eden Universe Index</h1>
+        <p class="toe-hero-subtitle">
+          Explore the stories, people, factions and anomalies of Eden. Use the
+          <strong>Library</strong> to read narrative works, or dive into the
+          <strong>Codex</strong> to study the world like a classified dossier.
         </p>
 
-        <div class="home-hero-buttons">
-          <a href="library.html" class="btn-pill primary">Open Library</a>
-          <a href="codex.html" class="btn-pill">Open Codex</a>
-          <a href="library.html#customize" class="btn-pill subtle">Customize appearance</a>
+        <div class="toe-hero-actions">
+          <a href="library.html" class="toe-hero-btn-primary">
+            <span>Enter Library</span>
+            <span>⮞</span>
+          </a>
+
+          <a href="codex.html" class="toe-hero-btn-secondary">
+            <span class="icon">📖</span>
+            <span>Open Codex</span>
+          </a>
+
+          <a href="codex.html?category=World" class="toe-hero-btn-secondary">
+            <span class="icon">🌐</span>
+            <span>World Overview</span>
+          </a>
         </div>
 
-        <div class="home-continue" id="appContinue">
-          Loading reading progress…
+        <div class="toe-hero-badge-row">
+          <div class="toe-hero-badge">
+            <span>📚</span>
+            <span><strong id="toeBookCount">–</strong> works indexed</span>
+          </div>
+          <div class="toe-hero-badge">
+            <span>📎</span>
+            <span><strong id="toeCodexCount">–</strong> codex entries</span>
+          </div>
+          <div class="toe-hero-badge">
+            <span>⏱</span>
+            <span>Progress saved locally only</span>
+          </div>
         </div>
-      </div>
+      </section>
+
+      <!-- Right column: continue reading & quick access -->
+      <section class="toe-stack">
+        <div class="toe-subpanel">
+          <div class="toe-subpanel-header">
+            <div class="toe-subpanel-title">Continue Reading</div>
+            <div class="toe-subpanel-meta" id="toeContinueMeta">
+              Looking for your last open page...
+            </div>
+          </div>
+
+          <div id="toeContinueEmpty" class="toe-continue-empty">
+            No active sessions yet. Open a book from the Library and your progress will appear here.
+          </div>
+
+          <div id="toeContinueList" class="toe-continue-list"></div>
+        </div>
+
+        <div class="toe-subpanel">
+          <div class="toe-subpanel-header">
+            <div class="toe-subpanel-title">Quick Access</div>
+            <div class="toe-subpanel-meta">
+              Jump to key parts of the archive.
+            </div>
+          </div>
+
+          <div class="toe-quick-grid">
+            <a href="library.html" class="toe-quick-card">
+              <div class="toe-quick-title">Narrative Library</div>
+              <div class="toe-quick-meta">
+                Read novels and stories in the Eden universe.
+              </div>
+            </a>
+
+            <a href="codex.html" class="toe-quick-card">
+              <div class="toe-quick-title">Codex Index</div>
+              <div class="toe-quick-meta">
+                Browse entities, factions, locations and anomalies.
+              </div>
+            </a>
+
+            <a href="codex.html?category=People" class="toe-quick-card">
+              <div class="toe-quick-title">Characters</div>
+              <div class="toe-quick-meta">
+                Study key figures and their connections.
+              </div>
+            </a>
+
+            <a href="codex.html?category=Factions" class="toe-quick-card">
+              <div class="toe-quick-title">Factions &amp; Structures</div>
+              <div class="toe-quick-meta">
+                Organizations, safe zones, and power blocs.
+              </div>
+            </a>
+          </div>
+        </div>
+      </section>
     </main>
 
-    <!-- FOOTER -->
-    <footer class="home-footer">
-      Progress is stored locally in your browser.
+    <!-- Footer -->
+    <footer class="toe-footer">
+      <span>Tales of Eden – Local archive build</span>
+      <div class="toe-footer-links">
+        <a href="library.html">Library</a>
+        <a href="codex.html">Codex</a>
+      </div>
     </footer>
   </div>
 
   <script>
     (function () {
       const BOOKS_JSON = "books.json";
-      const continueEl = document.getElementById("appContinue");
+      const CODEX_JSON = "Codex/codex.json";
+
+      const bookCountEl = document.getElementById("toeBookCount");
+      const codexCountEl = document.getElementById("toeCodexCount");
+      const continueMetaEl = document.getElementById("toeContinueMeta");
+      const continueEmptyEl = document.getElementById("toeContinueEmpty");
+      const continueListEl = document.getElementById("toeContinueList");
+
       let booksIndex = {};
 
-      function loadBooks() {
+      function fetchBooks() {
         return fetch(BOOKS_JSON)
           .then(r => r.json())
           .then(data => {
@@ -65,59 +752,185 @@
               if (!b || !b.id) return;
               booksIndex[b.id] = b;
             });
+            if (bookCountEl) {
+              bookCountEl.textContent = (data || []).length || "0";
+            }
           })
-          .catch(() => { /* fail silently */ });
+          .catch(err => {
+            console.warn("[hub] Failed to load books.json:", err);
+            if (bookCountEl) bookCountEl.textContent = "–";
+          });
       }
 
-      function readProgress() {
-        const out = [];
+      function fetchCodexCount() {
+        return fetch(CODEX_JSON)
+          .then(r => r.json())
+          .then(entries => {
+            if (codexCountEl) {
+              codexCountEl.textContent = (entries || []).length || "0";
+            }
+          })
+          .catch(err => {
+            console.warn("[hub] Failed to load codex.json:", err);
+            if (codexCountEl) codexCountEl.textContent = "–";
+          });
+      }
+
+      function formatPercent(p) {
+        if (!isFinite(p)) return "0%";
+        if (p >= 99.5) return "100%";
+        return Math.round(p) + "%";
+      }
+
+      function buildReaderUrl(bookEntry, page) {
+        if (!bookEntry || !bookEntry.path) return null;
+        // Assume path like "Books/alexander/index.html" → reader at "Books/alexander/reader.html?p=PAGE"
+        const base = bookEntry.path.replace(/index\.html$/i, "reader.html");
+        return base + "?p=" + page;
+      }
+
+      function readProgressFromStorage() {
+        const results = [];
         const now = Date.now();
+
         for (let i = 0; i < localStorage.length; i++) {
           const key = localStorage.key(i);
           if (!key || !key.startsWith("toe_progress_")) continue;
+
           try {
             const raw = localStorage.getItem(key);
             if (!raw) continue;
             const data = JSON.parse(raw);
             const bookId = key.replace("toe_progress_", "");
             if (!bookId || typeof data.lastPage !== "number") continue;
-            out.push({
+
+            const lastPage = data.lastPage;
+            const total = data.totalPages || 0;
+            const ratio = total > 0 ? (lastPage / total) * 100 : 0;
+            const updatedAt = data.updatedAt || now;
+
+            results.push({
+              key,
               bookId,
-              lastPage: data.lastPage,
-              total: data.totalPages || 0,
-              updatedAt: data.updatedAt || now
+              lastPage,
+              total,
+              ratio,
+              updatedAt
             });
-          } catch { /* ignore broken entries */ }
+          } catch (e) {
+            console.warn("[hub] failed to parse progress for", key, e);
+          }
         }
-        out.sort((a, b) => (b.updatedAt || 0) - (a.updatedAt || 0));
-        return out;
+
+        // Most recently updated first
+        results.sort((a, b) => (b.updatedAt || 0) - (a.updatedAt || 0));
+        return results;
       }
 
-      function buildReaderUrl(book, page) {
-        if (!book || !book.path) return null;
-        const base = book.path.replace(/index\.html$/i, "reader.html");
-        return base + "?p=" + page;
-      }
+      function renderContinueList() {
+        const sessions = readProgressFromStorage();
 
-      function renderContinue() {
-        const sessions = readProgress();
         if (!sessions.length) {
-          continueEl.textContent =
-            "No active reading yet. Open a book from the Library to start.";
+          if (continueMetaEl) {
+            continueMetaEl.textContent = "No active reading sessions.";
+          }
+          if (continueEmptyEl) {
+            continueEmptyEl.style.display = "";
+          }
+          if (continueListEl) {
+            continueListEl.innerHTML = "";
+          }
           return;
         }
 
-        const s = sessions[0];
-        const book = booksIndex[s.bookId] || {};
-        const title = book.title || s.bookId;
-        const url = buildReaderUrl(book, s.lastPage) || "library.html";
+        if (continueMetaEl) {
+          continueMetaEl.textContent = "Last updated reading sessions.";
+        }
 
-        continueEl.innerHTML =
-          `Continue reading <a href="${url}">${title}</a> · page ${s.lastPage}` +
-          (s.total ? ` of ${s.total}.` : ".");
+        if (continueEmptyEl) {
+          continueEmptyEl.style.display = "none";
+        }
+
+        if (!continueListEl) return;
+
+        const top = sessions.slice(0, 3);
+        continueListEl.innerHTML = "";
+
+        top.forEach(sess => {
+          const book = booksIndex[sess.bookId] || null;
+          const title = (book && book.title) || sess.bookId;
+          const author = (book && book.author) || "";
+          const percent = formatPercent(sess.ratio);
+          const pageText = sess.total
+            ? `Page ${sess.lastPage} of ${sess.total}`
+            : `Page ${sess.lastPage}`;
+
+          const readerUrl = buildReaderUrl(book, sess.lastPage);
+          const infoUrl = book && book.path ? book.path : null;
+
+          const card = document.createElement("div");
+          card.className = "toe-continue-card";
+
+          const main = document.createElement("div");
+          main.className = "toe-continue-main";
+
+          const titleEl = document.createElement("div");
+          titleEl.className = "toe-continue-title";
+          titleEl.textContent = title;
+
+          const metaEl = document.createElement("div");
+          metaEl.className = "toe-continue-meta";
+          metaEl.textContent = author ? `by ${author}` : sess.bookId;
+
+          const progEl = document.createElement("div");
+          progEl.className = "toe-continue-progress";
+          progEl.textContent = `${pageText} · ${percent}`;
+
+          main.appendChild(titleEl);
+          main.appendChild(metaEl);
+          main.appendChild(progEl);
+
+          const action = document.createElement("div");
+          action.className = "toe-continue-action";
+
+          if (readerUrl) {
+            const btn = document.createElement("a");
+            btn.className = "toe-continue-btn";
+            btn.href = readerUrl;
+            btn.innerHTML = `<span>Continue</span><span>⮞</span>`;
+            action.appendChild(btn);
+          }
+
+          const sub = document.createElement("div");
+          sub.className = "toe-continue-sub";
+          if (infoUrl) {
+            const infoLink = document.createElement("a");
+            infoLink.href = infoUrl;
+            infoLink.textContent = "Book info";
+            infoLink.style.color = "inherit";
+            infoLink.style.textDecoration = "underline dotted";
+            sub.appendChild(infoLink);
+          } else {
+            sub.textContent = "Progress stored locally";
+          }
+
+          action.appendChild(sub);
+
+          card.appendChild(main);
+          card.appendChild(action);
+
+          continueListEl.appendChild(card);
+        });
       }
 
-      loadBooks().finally(renderContinue);
+      // Boot
+      Promise.all([
+        fetchBooks(),
+        fetchCodexCount()
+      ]).finally(() => {
+        // slight delay so theme-loader etc. have time to apply
+        setTimeout(renderContinueList, 50);
+      });
     })();
   </script>
 </body>

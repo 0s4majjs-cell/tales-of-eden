@@ -4,447 +4,759 @@
   <meta charset="UTF-8" />
   <title>Tales of Eden – Codex</title>
 
+  <!-- Global styles + theme loader -->
   <link rel="stylesheet" href="styles.css" />
   <script src="theme-loader.js"></script>
 
   <style>
-    * { box-sizing: border-box; }
+    :root {
+      --codex-radius-lg: 22px;
+      --codex-radius-md: 14px;
+      --codex-radius-pill: 999px;
+      --codex-border-subtle: 1px solid rgba(148, 163, 184, 0.45);
+      --codex-glass-dark: linear-gradient(
+        145deg,
+        rgba(3, 7, 18, 0.96),
+        rgba(15, 23, 42, 0.96)
+      );
+    }
+
+    * {
+      box-sizing: border-box;
+    }
 
     body {
       margin: 0;
       min-height: 100vh;
       font-family: var(--font-ui, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif);
-      color: var(--color-text-main, #e5e7eb);
+      color: var(--color-text-main, #e9f1ff);
       background:
-        radial-gradient(circle at top, var(--color-bg-main-top, #111827) 0, var(--color-bg-main-bottom, #020617) 60%),
-        #020617;
+        radial-gradient(circle at top, #1b2640 0, #050814 60%),
+        #050814;
       background-attachment: fixed;
       display: flex;
       flex-direction: column;
     }
 
-    .cx-shell {
-      flex: 1;
+    .codex-shell {
+      min-height: 100vh;
       display: flex;
       flex-direction: column;
-      padding: 12px clamp(16px, 4vw, 40px);
+      padding: 20px clamp(14px, 4vw, 40px);
+      gap: 14px;
     }
 
-    /* TOP BAR */
+    /* Top bar */
 
-    .cx-topbar {
+    .codex-topbar {
       display: flex;
       align-items: center;
       justify-content: space-between;
-      font-size: 12px;
-      padding-bottom: 8px;
-      border-bottom: 1px solid rgba(15, 23, 42, 0.9);
+      gap: 12px;
     }
 
-    .cx-top-left {
+    .codex-logo-group {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .codex-logo-mark {
+      width: 30px;
+      height: 30px;
+      border-radius: 10px;
+      background: radial-gradient(circle at 30% 20%, #fbbf24 0, #f97316 18%, #4b5563 55%, #020617 100%);
+      box-shadow: 0 0 24px rgba(248, 250, 252, 0.35);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .codex-logo-mark::after {
+      content: "";
+      position: absolute;
+      inset: 16%;
+      border-radius: inherit;
+      border: 1px solid rgba(15, 23, 42, 0.8);
+    }
+
+    .codex-logo-text {
+      display: flex;
+      flex-direction: column;
+      gap: 1px;
+    }
+
+    .codex-logo-title {
+      font-size: 15px;
+      text-transform: uppercase;
+      letter-spacing: 0.16em;
+      color: rgba(226, 232, 255, 0.98);
+    }
+
+    .codex-logo-sub {
+      font-size: 11px;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: rgba(148, 163, 184, 0.9);
+    }
+
+    .codex-top-actions {
       display: flex;
       align-items: center;
       gap: 8px;
-    }
-
-    .cx-logo-dot {
-      width: 18px;
-      height: 18px;
-      border-radius: 999px;
-      background: radial-gradient(circle at 30% 20%, #fbbf24 0, #f97316 30%, #111827 85%);
-    }
-
-    .cx-title-main {
-      text-transform: uppercase;
-      letter-spacing: 0.16em;
-      font-size: 12px;
-    }
-
-    .cx-nav {
-      display: flex;
-      gap: 8px;
       flex-wrap: wrap;
+      justify-content: flex-end;
     }
 
-    .cx-nav a {
-      text-decoration: none;
-      color: #e5e7eb;
+    .codex-link-btn {
+      padding: 7px 13px;
+      border-radius: var(--codex-radius-pill);
+      border: 1px solid rgba(148, 163, 184, 0.6);
+      background: rgba(15, 23, 42, 0.96);
+      color: rgba(226, 232, 255, 0.95);
       font-size: 11px;
-      padding: 5px 10px;
-      border-radius: 999px;
-      border: 1px solid transparent;
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+      gap: 7px;
+      cursor: pointer;
+      text-transform: uppercase;
+      letter-spacing: 0.09em;
+      transition:
+        background 0.15s ease,
+        border-color 0.15s ease,
+        transform 0.1s ease,
+        box-shadow 0.15s ease;
+      white-space: nowrap;
+    }
+
+    .codex-link-btn:hover {
+      background: rgba(30, 64, 175, 0.95);
+      border-color: rgba(191, 219, 254, 0.95);
+      box-shadow: 0 0 0 1px rgba(191, 219, 254, 0.4);
+      transform: translateY(-1px);
+    }
+
+    .codex-link-btn span.icon {
+      font-size: 14px;
       opacity: 0.9;
     }
 
-    .cx-nav a:hover {
-      border-color: rgba(148, 163, 184, 0.7);
-      background: rgba(15, 23, 42, 0.8);
-    }
+    /* Main layout */
 
-    .cx-nav a.active {
-      border-color: rgba(96, 165, 250, 0.9);
-      background: rgba(15, 23, 42, 0.9);
-    }
-
-    /* LAYOUT */
-
-    .cx-main {
+    .codex-main {
       flex: 1;
       display: grid;
-      grid-template-columns: minmax(220px, 320px) minmax(0, 1fr);
-      gap: 14px;
-      padding-top: 10px;
+      grid-template-columns: minmax(0, 1.1fr) minmax(0, 2fr);
+      gap: 16px;
+      margin-top: 4px;
       min-height: 0;
     }
 
     @media (max-width: 900px) {
-      .cx-main {
+      .codex-main {
         grid-template-columns: minmax(0, 1fr);
-        grid-auto-rows: minmax(0, auto);
+        grid-template-rows: auto auto;
       }
     }
 
-    /* LEFT PANEL */
+    /* Left panel: navigation */
 
-    .cx-left {
+    .codex-nav {
+      border-radius: var(--codex-radius-lg);
+      border: var(--codex-border-subtle);
+      background: var(--codex-glass-dark);
+      padding: 10px 10px 10px 12px;
+      box-shadow:
+        0 20px 60px rgba(15, 23, 42, 0.95),
+        0 0 0 1px rgba(15, 23, 42, 0.9);
       display: flex;
       flex-direction: column;
+      gap: 10px;
+      min-height: 0;
+    }
+
+    .codex-nav-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
       gap: 6px;
     }
 
-    .cx-left-head h1 {
-      margin: 0;
-      font-size: 16px;
-      letter-spacing: 0.14em;
-      text-transform: uppercase;
-    }
-
-    .cx-left-head p {
-      margin: 0;
-      font-size: 12px;
-      color: #9ca3af;
-    }
-
-    .cx-filters {
-      display: flex;
-      flex-direction: column;
-      gap: 6px;
+    .codex-nav-title {
       font-size: 11px;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+      color: rgba(148, 163, 184, 0.96);
     }
 
-    .cx-search-wrap {
-      position: relative;
+    .codex-nav-count {
+      font-size: 11px;
+      color: rgba(148, 163, 184, 0.8);
     }
 
-    .cx-search {
+    .codex-search-wrap {
+      margin-top: 2px;
+    }
+
+    .codex-search-input {
       width: 100%;
-      border-radius: 999px;
-      border: 1px solid rgba(55, 65, 81, 0.9);
-      background: rgba(17, 24, 39, 0.96);
-      color: #e5e7eb;
+      border-radius: var(--codex-radius-pill);
+      border: 1px solid rgba(51, 65, 85, 0.9);
+      background: radial-gradient(circle at top, rgba(15, 23, 42, 0.96), rgba(15, 23, 42, 0.96));
+      color: rgba(226, 232, 255, 0.98);
       font-size: 12px;
       padding: 6px 10px 6px 26px;
       outline: none;
+      transition:
+        border-color 0.15s ease,
+        box-shadow 0.15s ease,
+        background 0.15s ease;
     }
 
-    .cx-search::placeholder {
-      color: #9ca3af;
+    .codex-search-input::placeholder {
+      color: rgba(148, 163, 184, 0.9);
     }
 
-    .cx-search-wrap::before {
+    .codex-search-field {
+      position: relative;
+    }
+
+    .codex-search-field::before {
       content: "🔎";
       position: absolute;
       left: 7px;
       top: 50%;
       transform: translateY(-50%);
       font-size: 11px;
+      opacity: 0.9;
     }
 
-    .cx-cat-row {
+    .codex-search-input:focus {
+      border-color: rgba(96, 165, 250, 0.95);
+      box-shadow: 0 0 0 1px rgba(96, 165, 250, 0.7);
+      background: radial-gradient(circle at top, rgba(15, 23, 42, 0.98), rgba(15, 23, 42, 0.96));
+    }
+
+    /* Category chips */
+
+    .codex-categories {
       display: flex;
-      gap: 6px;
-      align-items: center;
       flex-wrap: wrap;
+      gap: 6px;
+      margin-top: 4px;
+      padding-bottom: 4px;
+      border-bottom: 1px solid rgba(30, 41, 59, 0.9);
     }
 
-    .cx-select {
-      border-radius: 999px;
-      border: 1px solid rgba(55, 65, 81, 0.9);
-      background: rgba(17, 24, 39, 0.96);
-      color: #e5e7eb;
-      font-size: 11px;
-      padding: 6px 10px;
-      outline: none;
-      cursor: pointer;
-    }
-
-    .cx-count {
-      font-size: 11px;
-      color: #9ca3af;
-    }
-
-    .cx-list-wrap {
-      flex: 1;
-      border-radius: 6px;
-      border: 1px solid rgba(31, 41, 55, 0.9);
-      background: rgba(15, 23, 42, 0.9);
-      overflow-y: auto;
-      min-height: 0;
-    }
-
-    .cx-list {
-      list-style: none;
-      margin: 0;
-      padding: 4px 0;
-      font-size: 12px;
-    }
-
-    .cx-list-empty {
-      padding: 6px 10px;
-      font-size: 12px;
-      color: #9ca3af;
-    }
-
-    .cx-item-btn {
-      width: 100%;
+    .codex-cat-pill {
       padding: 4px 10px;
-      border: none;
-      background: transparent;
-      color: #e5e7eb;
-      text-align: left;
-      display: block;
+      border-radius: var(--codex-radius-pill);
+      border: 1px solid rgba(51, 65, 85, 0.9);
+      background: rgba(15, 23, 42, 0.96);
+      color: rgba(148, 163, 184, 0.96);
+      font-size: 11px;
       cursor: pointer;
+      white-space: nowrap;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      transition:
+        background 0.15s ease,
+        border-color 0.15s ease,
+        color 0.15s ease,
+        box-shadow 0.15s ease,
+        transform 0.1s ease;
     }
 
-    .cx-item-btn:hover {
-      background: rgba(30, 64, 175, 0.25);
+    .codex-cat-pill span.dot {
+      width: 6px;
+      height: 6px;
+      border-radius: 999px;
+      background: rgba(148, 163, 184, 0.9);
     }
 
-    .cx-item-btn.active {
-      background: rgba(15, 23, 42, 1);
+    .codex-cat-pill.active {
+      border-color: rgba(96, 165, 250, 0.95);
+      color: rgba(226, 232, 255, 0.98);
+      background: radial-gradient(circle at top, rgba(37, 99, 235, 0.35), rgba(15, 23, 42, 0.98));
+      box-shadow: 0 0 0 1px rgba(96, 165, 250, 0.7);
     }
 
-    .cx-item-title {
+    .codex-cat-pill.active span.dot {
+      background: #60a5fa;
+    }
+
+    .codex-cat-pill:hover {
+      transform: translateY(-1px);
+      border-color: rgba(148, 163, 184, 0.9);
+    }
+
+    /* Entries list */
+
+    .codex-entry-list-wrap {
+      flex: 1;
+      min-height: 0;
+      margin-top: 4px;
+    }
+
+    .codex-entry-list {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+      max-height: 100%;
+      overflow-y: auto;
+      scrollbar-width: thin;
+      scrollbar-color: rgba(51, 65, 85, 0.85) transparent;
+    }
+
+    .codex-entry-list::-webkit-scrollbar {
+      width: 6px;
+    }
+
+    .codex-entry-list::-webkit-scrollbar-thumb {
+      background: rgba(51, 65, 85, 0.9);
+      border-radius: 999px;
+    }
+
+    .codex-entry-item {
+      margin-bottom: 4px;
+    }
+
+    .codex-entry-btn {
+      width: 100%;
+      border: none;
+      text-align: left;
+      padding: 7px 8px;
+      border-radius: 10px;
+      background: rgba(15, 23, 42, 0.9);
+      color: rgba(226, 232, 255, 0.9);
+      font-size: 12px;
+      cursor: pointer;
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+      transition:
+        background 0.15s ease,
+        box-shadow 0.15s ease,
+        transform 0.1s ease;
+    }
+
+    .codex-entry-btn:hover {
+      background: rgba(30, 64, 175, 0.96);
+      box-shadow: 0 10px 30px rgba(15, 23, 42, 0.9);
+      transform: translateY(-1px);
+    }
+
+    .codex-entry-btn.active {
+      background: radial-gradient(circle at top left, rgba(37, 99, 235, 0.5), rgba(15, 23, 42, 0.98));
+      box-shadow: 0 16px 40px rgba(15, 23, 42, 0.95);
+    }
+
+    .codex-entry-title {
+      font-size: 12px;
+      font-weight: 500;
       white-space: nowrap;
       overflow: hidden;
       text-overflow: ellipsis;
     }
 
-    .cx-item-meta {
+    .codex-entry-meta {
       font-size: 11px;
-      color: #9ca3af;
+      color: rgba(148, 163, 184, 0.9);
+      display: flex;
+      justify-content: space-between;
+      gap: 6px;
     }
 
-    /* RIGHT PANEL */
+    .codex-entry-meta span {
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
 
-    .cx-right {
+    .codex-entry-empty {
+      font-size: 12px;
+      color: rgba(148, 163, 184, 0.9);
+      padding: 6px 2px;
+    }
+
+    /* Right panel: entry view */
+
+    .codex-entry-panel {
+      border-radius: var(--codex-radius-lg);
+      border: var(--codex-border-subtle);
+      background: var(--codex-glass-dark);
+      padding: 14px 18px 16px 18px;
+      box-shadow:
+        0 22px 70px rgba(15, 23, 42, 0.95),
+        0 0 0 1px rgba(15, 23, 42, 0.9);
+      min-height: 0;
       display: flex;
       flex-direction: column;
-      min-height: 0;
-      border-radius: 6px;
-      border: 1px solid rgba(31, 41, 55, 0.9);
-      background: rgba(15, 23, 42, 0.9);
-      padding: 10px 12px;
-      font-size: 13px;
+      gap: 8px;
     }
 
-    .cx-entry-id {
+    .codex-entry-header {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 8px;
+      border-bottom: 1px solid rgba(30, 41, 59, 0.9);
+      padding-bottom: 8px;
+      margin-bottom: 4px;
+    }
+
+    .codex-entry-main-title {
+      font-size: 18px;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: rgba(226, 232, 255, 0.98);
+      margin-bottom: 4px;
+    }
+
+    .codex-entry-id {
       font-size: 11px;
+      color: rgba(148, 163, 184, 0.9);
       letter-spacing: 0.14em;
       text-transform: uppercase;
-      color: #9ca3af;
     }
 
-    .cx-entry-title {
-      font-size: 18px;
-      letter-spacing: 0.08em;
-      text-transform: uppercase;
-      margin: 2px 0 0;
-    }
-
-    .cx-entry-tags {
-      font-size: 11px;
-      color: #cbd5f5;
-      margin-top: 4px;
-    }
-
-    .cx-entry-summary {
-      font-size: 12px;
-      color: #cbd5f5;
-      margin-top: 4px;
-    }
-
-    .cx-entry-meta {
-      font-size: 11px;
-      color: #9ca3af;
-      margin-top: 2px;
-    }
-
-    .cx-open-book {
-      margin-top: 6px;
-      display: inline-flex;
-      align-items: center;
-      gap: 6px;
-      font-size: 11px;
-      padding: 4px 9px;
-      border-radius: 999px;
-      border: 1px solid rgba(59, 130, 246, 0.9);
-      background: rgba(15, 23, 42, 1);
-      color: #e5e7eb;
-      text-decoration: none;
-    }
-
-    .cx-body-wrap {
-      flex: 1;
-      margin-top: 8px;
-      overflow-y: auto;
-    }
-
-    .cx-body-wrap::-webkit-scrollbar {
-      width: 6px;
-    }
-
-    .cx-body-wrap::-webkit-scrollbar-thumb {
-      background: rgba(55, 65, 81, 0.9);
-      border-radius: 999px;
-    }
-
-    .cx-body {
-      line-height: 1.6;
-    }
-
-    .cx-body h3 {
-      margin: 12px 0 4px;
-      font-size: 12px;
-      text-transform: uppercase;
-      letter-spacing: 0.12em;
-      color: #bfdbfe;
-    }
-
-    .cx-body p {
-      margin: 0 0 8px;
-    }
-
-    .cx-body ul {
-      margin: 4px 0 8px 18px;
-      padding: 0;
-    }
-
-    .cx-body-empty {
-      font-size: 12px;
-      color: #9ca3af;
-    }
-
-    .cx-appears {
-      margin-top: 8px;
-      font-size: 11px;
-      color: #bfdbfe;
-    }
-
-    .cx-appears-list {
+    .codex-entry-chips {
       display: flex;
       flex-wrap: wrap;
       gap: 6px;
-      margin-top: 4px;
+      margin-top: 2px;
     }
 
-    .cx-appears-link {
+    .codex-chip {
+      padding: 3px 9px;
+      border-radius: var(--codex-radius-pill);
+      border: 1px solid rgba(51, 65, 85, 0.95);
+      background: rgba(15, 23, 42, 0.96);
+      font-size: 11px;
+      color: rgba(148, 163, 184, 0.96);
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .codex-chip strong {
+      font-weight: 500;
+      color: rgba(226, 232, 255, 0.98);
+    }
+
+    .codex-entry-top-actions {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      align-items: flex-end;
+      flex-shrink: 0;
+    }
+
+    .codex-entry-open-book {
+      padding: 5px 10px;
+      border-radius: var(--codex-radius-pill);
+      border: 1px solid rgba(96, 165, 250, 0.9);
+      background: rgba(15, 23, 42, 0.98);
+      color: rgba(226, 232, 255, 0.98);
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: 0.09em;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      cursor: pointer;
+      text-decoration: none;
+      transition:
+        background 0.15s ease,
+        border-color 0.15s ease,
+        transform 0.1s ease,
+        box-shadow 0.15s ease;
+      white-space: nowrap;
+    }
+
+    .codex-entry-open-book:hover {
+      background: rgba(37, 99, 235, 0.96);
+      border-color: rgba(191, 219, 254, 1);
+      box-shadow: 0 0 0 1px rgba(191, 219, 254, 0.6);
+      transform: translateY(-1px);
+    }
+
+    .codex-entry-open-book span.icon {
+      font-size: 13px;
+      opacity: 0.9;
+    }
+
+    .codex-entry-meta-line {
+      font-size: 11px;
+      color: rgba(148, 163, 184, 0.9);
+      text-align: right;
+    }
+
+    /* Appears in section */
+
+    .codex-appears {
+      border-radius: var(--codex-radius-md);
+      border: 1px solid rgba(30, 64, 175, 0.8);
+      background: radial-gradient(circle at top left, rgba(30, 64, 175, 0.35), rgba(15, 23, 42, 0.98));
+      padding: 8px 10px;
+      margin-bottom: 4px;
+    }
+
+    .codex-appears-title {
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: 0.16em;
+      color: rgba(191, 219, 254, 0.96);
+      margin-bottom: 4px;
+    }
+
+    .codex-appears-books {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+    }
+
+    .codex-appears-chip {
+      padding: 3px 9px;
+      border-radius: var(--codex-radius-pill);
+      border: 1px solid rgba(191, 219, 254, 0.8);
+      background: rgba(15, 23, 42, 0.98);
+      color: rgba(226, 232, 255, 0.98);
+      font-size: 11px;
+      cursor: pointer;
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      transition:
+        background 0.15s ease,
+        border-color 0.15s ease,
+        transform 0.1s ease,
+        box-shadow 0.15s ease;
+      white-space: nowrap;
+    }
+
+    .codex-appears-chip:hover {
+      background: rgba(37, 99, 235, 0.96);
+      border-color: rgba(191, 219, 254, 1);
+      box-shadow: 0 0 0 1px rgba(191, 219, 254, 0.6);
+      transform: translateY(-1px);
+    }
+
+    .codex-appears-chip span.tagline {
+      font-size: 10px;
+      color: rgba(191, 219, 254, 0.9);
+    }
+
+    /* Body */
+
+    .codex-entry-body-wrap {
+      flex: 1;
+      min-height: 0;
+      overflow-y: auto;
+      padding-right: 4px;
+      scrollbar-width: thin;
+      scrollbar-color: rgba(51, 65, 85, 0.85) transparent;
+    }
+
+    .codex-entry-body-wrap::-webkit-scrollbar {
+      width: 6px;
+    }
+
+    .codex-entry-body-wrap::-webkit-scrollbar-thumb {
+      background: rgba(51, 65, 85, 0.9);
       border-radius: 999px;
-      border: 1px solid rgba(59, 130, 246, 0.9);
-      padding: 3px 7px;
-      color: #e5e7eb;
-      text-decoration: none;
-      font-size: 11px;
     }
 
-    /* FOOTER */
+    .codex-entry-summary {
+      font-size: 13px;
+      color: rgba(191, 219, 254, 0.95);
+      margin-bottom: 8px;
+    }
 
-    .cx-footer {
+    .codex-entry-body {
+      font-size: 13px;
+      line-height: 1.6;
+      color: rgba(226, 232, 255, 0.96);
+    }
+
+    .codex-entry-body p {
+      margin: 0 0 8px;
+    }
+
+    .codex-entry-body h3 {
+      margin: 12px 0 4px;
+      font-size: 13px;
+      text-transform: uppercase;
+      letter-spacing: 0.14em;
+      color: rgba(191, 219, 254, 0.96);
+    }
+
+    .codex-entry-body ul {
+      margin: 4px 0 8px 18px;
+      padding: 0;
+      font-size: 13px;
+    }
+
+    .codex-entry-body li {
+      margin-bottom: 3px;
+    }
+
+    .codex-entry-empty-state {
+      font-size: 13px;
+      color: rgba(148, 163, 184, 0.9);
+      margin-top: 6px;
+    }
+
+    /* Footer */
+
+    .codex-footer {
+      margin-top: 4px;
+      padding: 4px 2px 0;
       font-size: 11px;
-      color: #6b7280;
-      padding-top: 6px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      color: rgba(148, 163, 184, 0.8);
+      gap: 8px;
       border-top: 1px solid rgba(15, 23, 42, 0.9);
-      text-align: left;
     }
 
-    .cx-footer a {
-      color: inherit;
+    .codex-footer-links {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      justify-content: flex-end;
+    }
+
+    .codex-footer-links a {
+      color: rgba(148, 163, 184, 0.9);
       text-decoration: none;
-      border-bottom: 1px dotted rgba(75, 85, 99, 0.9);
+      border-bottom: 1px dotted rgba(55, 65, 81, 0.7);
+    }
+
+    .codex-footer-links a:hover {
+      color: rgba(226, 232, 255, 0.98);
+      border-bottom-color: rgba(156, 163, 175, 0.9);
+    }
+
+    @media (max-width: 700px) {
+      .codex-entry-header {
+        flex-direction: column;
+        align-items: flex-start;
+      }
+      .codex-entry-top-actions {
+        align-items: flex-start;
+      }
+      .codex-shell {
+        padding-inline: 12px;
+      }
     }
   </style>
 </head>
 <body>
-  <div class="cx-shell">
-    <header class="cx-topbar">
-      <div class="cx-top-left">
-        <div class="cx-logo-dot"></div>
-        <div class="cx-title-main">Tales of Eden – Codex</div>
+  <div class="codex-shell">
+    <!-- TOP BAR -->
+    <header class="codex-topbar">
+      <div class="codex-logo-group">
+        <div class="codex-logo-mark"></div>
+        <div class="codex-logo-text">
+          <div class="codex-logo-title">Tales of Eden</div>
+          <div class="codex-logo-sub">Codex / World Archive</div>
+        </div>
       </div>
-      <nav class="cx-nav">
-        <a href="index.html">Home</a>
-        <a href="library.html">Library</a>
-        <a href="codex.html" class="active">Codex</a>
-      </nav>
+
+      <div class="codex-top-actions">
+        <a href="index.html" class="codex-link-btn">
+          <span class="icon">◀</span>
+          <span>Archive Hub</span>
+        </a>
+        <a href="library.html" class="codex-link-btn">
+          <span class="icon">📚</span>
+          <span>Library</span>
+        </a>
+      </div>
     </header>
 
-    <main class="cx-main">
-      <!-- LEFT: list -->
-      <aside class="cx-left">
-        <div class="cx-left-head">
-          <h1>Codex</h1>
-          <p>Reference entries for locations, anomalies, people and organisations.</p>
+    <!-- MAIN -->
+    <main class="codex-main">
+      <!-- LEFT: NAVIGATION -->
+      <aside class="codex-nav">
+        <div class="codex-nav-header">
+          <div class="codex-nav-title">Codex Index</div>
+          <div class="codex-nav-count" id="codexCount">– entries</div>
         </div>
 
-        <div class="cx-filters">
-          <div class="cx-search-wrap">
-            <input id="cxSearch" class="cx-search" type="search"
-                   placeholder="Search by title, id, summary…" />
-          </div>
-          <div class="cx-cat-row">
-            <select id="cxCategory" class="cx-select">
-              <option value="All">All categories</option>
-            </select>
-            <span class="cx-count" id="cxCount">Loading…</span>
+        <div class="codex-search-wrap">
+          <div class="codex-search-field">
+            <input
+              id="codexSearchInput"
+              class="codex-search-input"
+              type="search"
+              placeholder="Search by name, id, or summary…"
+              autocomplete="off"
+            />
           </div>
         </div>
 
-        <div class="cx-list-wrap">
-          <ul id="cxList" class="cx-list"></ul>
-          <div id="cxListEmpty" class="cx-list-empty" style="display:none;">
+        <div class="codex-categories" id="codexCategories"></div>
+
+        <div class="codex-entry-list-wrap">
+          <ul class="codex-entry-list" id="codexEntryList">
+            <!-- populated by JS -->
+          </ul>
+          <div class="codex-entry-empty" id="codexEntryEmpty" style="display: none;">
             No entries match this view.
           </div>
         </div>
       </aside>
 
-      <!-- RIGHT: entry -->
-      <section class="cx-right">
-        <div class="cx-entry-id" id="cxEntryId">–</div>
-        <div class="cx-entry-title" id="cxEntryTitle">Select a codex entry</div>
-        <div class="cx-entry-tags" id="cxEntryTags"></div>
-        <div class="cx-entry-summary" id="cxEntrySummary">
-          Use the list on the left to choose an entry.
+      <!-- RIGHT: ENTRY VIEW -->
+      <section class="codex-entry-panel">
+        <header class="codex-entry-header">
+          <div>
+            <div class="codex-entry-id" id="codexEntryId">–</div>
+            <h1 class="codex-entry-main-title" id="codexEntryTitle">Select a codex entry</h1>
+            <div class="codex-entry-chips" id="codexEntryChips"></div>
+          </div>
+
+          <div class="codex-entry-top-actions">
+            <a id="codexOpenBookBtn" href="library.html" class="codex-entry-open-book" style="display:none;">
+              <span class="icon">📖</span>
+              <span>Open related book</span>
+            </a>
+            <div class="codex-entry-meta-line" id="codexEntryMetaLine">
+              –
+            </div>
+          </div>
+        </header>
+
+        <div id="codexAppearsSection" class="codex-appears" style="display:none;">
+          <div class="codex-appears-title">Appears In</div>
+          <div class="codex-appears-books" id="codexAppearsBooks"></div>
         </div>
-        <div class="cx-entry-meta" id="cxEntryMeta">–</div>
 
-        <a id="cxOpenBook" href="#" class="cx-open-book" style="display:none;">Open related book</a>
+        <div class="codex-entry-body-wrap">
+          <p class="codex-entry-summary" id="codexEntrySummary">
+            Use the index on the left to select an entry.
+          </p>
+          <div class="codex-entry-body" id="codexEntryBody"></div>
 
-        <div class="cx-appears" id="cxAppears" style="display:none;">
-          Appears in:
-          <div class="cx-appears-list" id="cxAppearsList"></div>
-        </div>
-
-        <div class="cx-body-wrap">
-          <div class="cx-body" id="cxBody"></div>
-          <div class="cx-body-empty" id="cxBodyEmpty" style="display:none;">
-            No additional body content for this entry.
+          <div class="codex-entry-empty-state" id="codexEntryEmptyState" style="display:none;">
+            No additional body content available for this entry.
           </div>
         </div>
       </section>
     </main>
 
-    <footer class="cx-footer">
-      <span>Codex entries are in <code>Codex/codex.json</code>. Linked books come from <code>books.json</code>.</span>
+    <!-- FOOTER -->
+    <footer class="codex-footer">
+      <span>Tales of Eden – Codex</span>
+      <div class="codex-footer-links">
+        <a href="index.html">Hub</a>
+        <a href="library.html">Library</a>
+      </div>
     </footer>
   </div>
 
@@ -453,171 +765,217 @@
       const CODEX_JSON = "Codex/codex.json";
       const BOOKS_JSON = "books.json";
 
-      const searchInput   = document.getElementById("cxSearch");
-      const categorySel   = document.getElementById("cxCategory");
-      const countEl       = document.getElementById("cxCount");
-      const listEl        = document.getElementById("cxList");
-      const listEmptyEl   = document.getElementById("cxListEmpty");
+      const countEl = document.getElementById("codexCount");
+      const catContainer = document.getElementById("codexCategories");
+      const searchInput = document.getElementById("codexSearchInput");
+      const listEl = document.getElementById("codexEntryList");
+      const listEmptyEl = document.getElementById("codexEntryEmpty");
 
-      const entryIdEl     = document.getElementById("cxEntryId");
-      const entryTitleEl  = document.getElementById("cxEntryTitle");
-      const entryTagsEl   = document.getElementById("cxEntryTags");
-      const entrySummaryEl= document.getElementById("cxEntrySummary");
-      const entryMetaEl   = document.getElementById("cxEntryMeta");
-      const bodyEl        = document.getElementById("cxBody");
-      const bodyEmptyEl   = document.getElementById("cxBodyEmpty");
-      const openBookEl    = document.getElementById("cxOpenBook");
-      const appearsWrapEl = document.getElementById("cxAppears");
-      const appearsListEl = document.getElementById("cxAppearsList");
+      const entryIdEl = document.getElementById("codexEntryId");
+      const entryTitleEl = document.getElementById("codexEntryTitle");
+      const entryChipsEl = document.getElementById("codexEntryChips");
+      const entrySummaryEl = document.getElementById("codexEntrySummary");
+      const entryBodyEl = document.getElementById("codexEntryBody");
+      const entryEmptyStateEl = document.getElementById("codexEntryEmptyState");
+      const entryMetaLineEl = document.getElementById("codexEntryMetaLine");
+      const openBookBtn = document.getElementById("codexOpenBookBtn");
 
-      let entries    = [];
+      const appearsSectionEl = document.getElementById("codexAppearsSection");
+      const appearsBooksEl = document.getElementById("codexAppearsBooks");
+
+      let entries = [];
       let booksIndex = {};
-      let activeId   = null;
+      let categorySet = new Set();
+      let activeCategory = "All";
+      let activeEntryId = null;
 
-      function qp() {
-        const p = new URLSearchParams(window.location.search);
+      function getQueryParams() {
+        const params = new URLSearchParams(window.location.search);
         return {
-          id: p.get("id") || null,
-          q: p.get("q") || "",
-          category: p.get("category") || "All"
+          id: params.get("id") || null,
+          q: params.get("q") || "",
+          category: params.get("category") || null
         };
       }
 
-      function updateURL(id, category, q) {
+      function updateUrl(id, category, q) {
         const params = new URLSearchParams();
         if (id) params.set("id", id);
         if (category && category !== "All") params.set("category", category);
         if (q && q.trim()) params.set("q", q.trim());
-        const s = params.toString();
-        history.replaceState(null, "", window.location.pathname + (s ? "?" + s : ""));
+        const newUrl = window.location.pathname + "?" + params.toString();
+        window.history.replaceState(null, "", newUrl);
       }
 
-      function simpleScore(entry, query) {
+      function simpleSearchScore(entry, query) {
         if (!query) return 0;
         const q = query.toLowerCase();
         let score = 0;
         if (entry.title && entry.title.toLowerCase().includes(q)) score += 3;
         if (entry.id && entry.id.toLowerCase().includes(q)) score += 2;
+        if (entry.category && entry.category.toLowerCase().includes(q)) score += 1;
         if (entry.summary && entry.summary.toLowerCase().includes(q)) score += 1;
         return score;
       }
 
-      function normBody(entry) {
+      function normalizeBody(entry) {
         if (!entry) return [];
         if (Array.isArray(entry.body)) return entry.body;
-        if (typeof entry.body === "string" && entry.body.trim()) return [entry.body];
+        if (typeof entry.body === "string") return [entry.body];
         return [];
       }
 
-      function parseBodyBlocks(arr) {
+      function parseBulletSections(bodyArray) {
         const blocks = [];
-        let curTitle = null;
-        let curLines = [];
+        let currentLines = [];
+        let currentTitle = null;
 
-        function flush() {
-          if (!curTitle && !curLines.length) return;
-          blocks.push({ title: curTitle, text: curLines.join("\n") });
-          curTitle = null;
-          curLines = [];
+        function flushBlock() {
+          if (!currentLines.length && !currentTitle) return;
+          const text = currentLines.join("\n").trim();
+          if (!text) return;
+          blocks.push({
+            title: currentTitle,
+            text
+          });
+          currentLines = [];
+          currentTitle = null;
         }
 
-        (arr || []).forEach(line => {
+        (bodyArray || []).forEach(line => {
           if (typeof line !== "string") return;
-          const trim = line.trim();
-          if (!trim) {
-            curLines.push("");
+          const trimmed = line.trim();
+          if (!trimmed) {
+            currentLines.push("");
             return;
           }
-          if (/^#{2,}\s+/.test(trim)) {
-            flush();
-            curTitle = trim.replace(/^#{2,}\s+/, "").trim();
+          // Simple section header detection: "## Something"
+          if (/^#{2,}\s+/.test(trimmed)) {
+            flushBlock();
+            currentTitle = trimmed.replace(/^#{2,}\s+/, "").trim();
           } else {
-            curLines.push(line);
+            currentLines.push(line);
           }
         });
 
-        flush();
+        flushBlock();
         return blocks;
       }
 
-      function formatInline(t) {
-        if (!t) return "";
-        return t
+      function formatInline(text) {
+        if (!text) return "";
+        // brave but simple: **bold** and _italic_
+        return text
           .replace(/\*\*(.+?)\*\*/g, "<strong>$1</strong>")
           .replace(/_(.+?)_/g, "<em>$1</em>");
       }
 
-      function bodyHTML(entry) {
-        const blocks = parseBodyBlocks(normBody(entry));
+      function buildBodyHtml(entry) {
+        const rawBody = normalizeBody(entry);
+        const blocks = parseBulletSections(rawBody);
         if (!blocks.length) return "";
-        const out = [];
-        blocks.forEach(b => {
-          if (b.title) {
-            out.push("<h3>" + formatInline(b.title) + "</h3>");
+
+        const htmlParts = [];
+
+        blocks.forEach(block => {
+          const text = block.text || "";
+          if (block.title) {
+            htmlParts.push("<h3>" + formatInline(block.title) + "</h3>");
           }
-          const lines = (b.text || "").split("\n");
-          let bullets = [];
+          // bullet detection: lines starting with "- " or "* "
+          const lines = text.split("\n");
+          let bulletMode = false;
+          let bulletBuf = [];
+
           function flushBullets() {
-            if (!bullets.length) return;
-            out.push("<ul>");
-            bullets.forEach(l => out.push("<li>" + formatInline(l.replace(/^[-*]\s*/, "")) + "</li>"));
-            out.push("</ul>");
-            bullets = [];
+            if (!bulletBuf.length) return;
+            htmlParts.push("<ul>");
+            bulletBuf.forEach(line => {
+              htmlParts.push("<li>" + formatInline(line.replace(/^[-*]\s*/, "")) + "</li>");
+            });
+            htmlParts.push("</ul>");
+            bulletBuf = [];
           }
+
           lines.forEach(line => {
-            const t = line.trim();
-            if (!t) {
+            const trimmed = line.trim();
+            if (!trimmed) {
               flushBullets();
-              out.push("<p>&nbsp;</p>");
-            } else if (/^[-*]\s+/.test(t)) {
-              bullets.push(t);
+              htmlParts.push("<p>&nbsp;</p>");
+            } else if (/^[-*]\s+/.test(trimmed)) {
+              bulletMode = true;
+              bulletBuf.push(trimmed);
             } else {
               flushBullets();
-              out.push("<p>" + formatInline(t) + "</p>");
+              bulletMode = false;
+              htmlParts.push("<p>" + formatInline(trimmed) + "</p>");
             }
           });
+
           flushBullets();
         });
-        return out.join("");
+
+        return htmlParts.join("");
       }
 
-      function buildCategories() {
-        const set = new Set(["All"]);
-        entries.forEach(e => { if (e.category) set.add(e.category); });
-        categorySel.innerHTML = "";
-        Array.from(set).sort((a, b) => {
+      function buildCategorySet() {
+        categorySet = new Set(["All"]);
+        entries.forEach(e => {
+          if (e.category) categorySet.add(e.category);
+        });
+      }
+
+      function renderCategories() {
+        if (!catContainer) return;
+        catContainer.innerHTML = "";
+
+        const categories = Array.from(categorySet);
+        categories.sort((a, b) => {
           if (a === "All") return -1;
           if (b === "All") return 1;
           return a.localeCompare(b);
-        }).forEach(cat => {
-          const opt = document.createElement("option");
-          opt.value = cat;
-          opt.textContent = cat === "All" ? "All categories" : cat;
-          categorySel.appendChild(opt);
+        });
+
+        categories.forEach(cat => {
+          const pill = document.createElement("button");
+          pill.type = "button";
+          pill.className = "codex-cat-pill" + (cat === activeCategory ? " active" : "");
+          pill.innerHTML = `<span class="dot"></span><span>${cat}</span>`;
+          pill.addEventListener("click", () => {
+            activeCategory = cat;
+            updateUrl(activeEntryId, activeCategory, searchInput.value || "");
+            renderCategories();
+            renderEntryList();
+          });
+          catContainer.appendChild(pill);
         });
       }
 
       function filteredEntries() {
-        const q   = (searchInput.value || "").trim();
-        const cat = categorySel.value || "All";
-        const arr = entries.map(e => {
+        const query = (searchInput.value || "").trim();
+        const q = query.toLowerCase();
+        const cat = activeCategory;
+
+        const scored = entries.map(e => {
           let include = true;
-          if (cat !== "All" && e.category !== cat) include = false;
+          if (cat && cat !== "All" && e.category !== cat) include = false;
           let score = 0;
           if (q) {
-            score = simpleScore(e, q);
-            if (score <= 0) include = false;
+            const s = simpleSearchScore(e, q);
+            if (s <= 0) include = false;
+            score = s;
           }
           return { entry: e, include, score };
         }).filter(x => x.include);
 
+        // sort: if query, by score desc then title; else by category+title
         if (q) {
-          arr.sort((a, b) => {
+          scored.sort((a, b) => {
             if (b.score !== a.score) return b.score - a.score;
             return (a.entry.title || "").localeCompare(b.entry.title || "");
           });
         } else {
-          arr.sort((a, b) => {
+          scored.sort((a, b) => {
             const ac = a.entry.category || "";
             const bc = b.entry.category || "";
             if (ac !== bc) return ac.localeCompare(bc);
@@ -625,12 +983,70 @@
           });
         }
 
-        return arr.map(x => x.entry);
+        return scored.map(s => s.entry);
       }
 
-      function dedupeAppears(raw) {
+      function renderEntryList() {
+        if (!listEl || !listEmptyEl) return;
+        const subset = filteredEntries();
+
+        listEl.innerHTML = "";
+        if (!subset.length) {
+          listEmptyEl.style.display = "";
+          return;
+        } else {
+          listEmptyEl.style.display = "none";
+        }
+
+        subset.forEach(e => {
+          const li = document.createElement("li");
+          li.className = "codex-entry-item";
+
+          const btn = document.createElement("button");
+          btn.type = "button";
+          btn.className = "codex-entry-btn" + (e.id === activeEntryId ? " active" : "");
+          btn.dataset.entryId = e.id;
+
+          const t = document.createElement("div");
+          t.className = "codex-entry-title";
+          t.textContent = e.title || e.id || "Untitled";
+
+          const meta = document.createElement("div");
+          meta.className = "codex-entry-meta";
+
+          const catSpan = document.createElement("span");
+          catSpan.textContent = e.category || "Uncategorized";
+
+          const short = document.createElement("span");
+          const s = e.summary || "";
+          short.textContent = s.length > 42 ? s.slice(0, 40) + "…" : s;
+
+          meta.appendChild(catSpan);
+          meta.appendChild(short);
+
+          btn.appendChild(t);
+          btn.appendChild(meta);
+
+          btn.addEventListener("click", () => {
+            activeEntryId = e.id;
+            updateUrl(activeEntryId, activeCategory, searchInput.value || "");
+            renderEntryList();
+            renderEntryDetail();
+          });
+
+          li.appendChild(btn);
+          listEl.appendChild(li);
+        });
+      }
+
+      function dedupeAppearsIn(raw) {
         if (!raw) return [];
+        // Accept forms:
+        // - "Alexander"
+        // - { bookId: "Alexander", pages: [10, 20] }
+        // - { book: "Alexander Colt", pages: "10–20" }
         const map = new Map();
+
         raw.forEach(it => {
           if (!it) return;
           let bookId = "";
@@ -645,150 +1061,190 @@
 
           if (!bookId) return;
           const key = String(bookId);
+
           if (!map.has(key)) {
             map.set(key, { bookId: key, pages: [] });
           }
-          const e = map.get(key);
+          const entry = map.get(key);
+
           if (pages != null) {
             if (Array.isArray(pages)) {
-              pages.forEach(p => e.pages.push(String(p)));
+              pages.forEach(p => {
+                if (typeof p === "number" || typeof p === "string") {
+                  entry.pages.push(p);
+                }
+              });
             } else {
-              e.pages.push(String(pages));
+              entry.pages.push(pages);
             }
           }
         });
 
         const out = Array.from(map.values());
         out.forEach(o => {
-          o.pages = Array.from(new Set(o.pages));
+          // dedupe pages & stringify
+          o.pages = Array.from(new Set(o.pages.map(x => String(x))));
         });
         return out;
       }
 
-      function readerUrl(bookId, firstPage) {
-        const book = booksIndex[bookId];
-        if (!book || !book.path) return null;
-        const base = book.path.replace(/index\.html$/i, "reader.html");
-        return firstPage ? base + "?p=" + encodeURIComponent(firstPage) : base;
+      function buildReaderUrlForBookId(bookId, firstPage) {
+        const book = booksIndex[bookId] || null;
+        if (!book) return null;
+        const path = book.path || "";
+        if (!path) return null;
+        const base = path.replace(/index\.html$/i, "reader.html");
+        if (!firstPage) return base;
+        return base + "?p=" + encodeURIComponent(firstPage);
       }
 
-      function renderList() {
-        const list = filteredEntries();
-        listEl.innerHTML = "";
-        countEl.textContent = `${entries.length} entries`;
+      function pickPrimaryBookForEntry(entry) {
+        if (!entry || !entry.appearsIn || !entry.appearsIn.length) return null;
+        const deduped = dedupeAppearsIn(entry.appearsIn);
+        return deduped[0] || null;
+      }
 
-        if (!list.length) {
-          listEmptyEl.style.display = "";
+      function renderAppearsIn(entry) {
+        if (!appearsSectionEl || !appearsBooksEl) return;
+        appearsBooksEl.innerHTML = "";
+
+        if (!entry || !entry.appearsIn || !entry.appearsIn.length) {
+          appearsSectionEl.style.display = "none";
           return;
         }
-        listEmptyEl.style.display = "none";
 
-        list.forEach(e => {
-          const li = document.createElement("li");
-          const btn = document.createElement("button");
-          btn.type = "button";
-          btn.className = "cx-item-btn" + (e.id === activeId ? " active" : "");
-          btn.dataset.id = e.id;
+        const deduped = dedupeAppearsIn(entry.appearsIn);
+        if (!deduped.length) {
+          appearsSectionEl.style.display = "none";
+          return;
+        }
 
-          const title = document.createElement("div");
-          title.className = "cx-item-title";
-          title.textContent = e.title || e.id || "Untitled";
+        deduped.forEach(item => {
+          const bookId = item.bookId;
+          const book = booksIndex[bookId] || null;
+          const label = (book && book.title) || bookId;
+          const firstPage = item.pages && item.pages.length ? item.pages[0] : null;
 
-          const meta = document.createElement("div");
-          meta.className = "cx-item-meta";
-          meta.textContent = e.category || "Uncategorized";
+          const a = document.createElement("a");
+          a.className = "codex-appears-chip";
+          const url = buildReaderUrlForBookId(bookId, firstPage);
+          a.href = url || "library.html";
+          a.target = "_blank";
 
-          btn.appendChild(title);
-          btn.appendChild(meta);
-          btn.addEventListener("click", () => {
-            activeId = e.id;
-            updateURL(activeId, categorySel.value, searchInput.value || "");
-            renderList();
-            renderEntry();
-          });
+          const mainSpan = document.createElement("span");
+          mainSpan.textContent = label;
 
-          li.appendChild(btn);
-          listEl.appendChild(li);
+          a.appendChild(mainSpan);
+
+          if (item.pages && item.pages.length) {
+            const tagSpan = document.createElement("span");
+            tagSpan.className = "tagline";
+            if (item.pages.length === 1) {
+              tagSpan.textContent = "page " + item.pages[0];
+            } else {
+              tagSpan.textContent = "pages " + item.pages[0] + "…";
+            }
+            a.appendChild(tagSpan);
+          }
+
+          appearsBooksEl.appendChild(a);
         });
+
+        appearsSectionEl.style.display = "";
       }
 
-      function renderEntry() {
-        const entry = entries.find(e => e.id === activeId) || null;
+      function renderEntryDetail() {
+        const entry = entries.find(e => e.id === activeEntryId) || null;
 
         if (!entry) {
           entryIdEl.textContent = "–";
-          entryTitleEl.textContent = "Select a codex entry";
-          entryTagsEl.textContent = "";
-          entrySummaryEl.textContent = "Use the list on the left to choose an entry.";
-          entryMetaEl.textContent = "–";
-          bodyEl.innerHTML = "";
-          bodyEmptyEl.style.display = "none";
-          openBookEl.style.display = "none";
-          appearsWrapEl.style.display = "none";
+          entryTitleEl.textContent = "No entry selected";
+          entryChipsEl.innerHTML = "";
+          entrySummaryEl.textContent = "Use the index on the left to choose an entry.";
+          entryBodyEl.innerHTML = "";
+          entryEmptyStateEl.style.display = "none";
+          entryMetaLineEl.textContent = "0 entries loaded";
+          openBookBtn.style.display = "none";
+          appearsSectionEl.style.display = "none";
           return;
         }
 
         entryIdEl.textContent = entry.id || "–";
         entryTitleEl.textContent = entry.title || entry.id || "Untitled";
 
-        const tagParts = [];
-        if (entry.category) tagParts.push(entry.category);
-        if (entry.type) tagParts.push(entry.type);
-        if (entry.status) tagParts.push(entry.status);
-        entryTagsEl.textContent = tagParts.join(" · ");
+        // Chips: category, type, etc.
+        entryChipsEl.innerHTML = "";
+        if (entry.category) {
+          const catChip = document.createElement("div");
+          catChip.className = "codex-chip";
+          catChip.innerHTML = `<strong>Category</strong><span>${entry.category}</span>`;
+          entryChipsEl.appendChild(catChip);
+        }
+        if (entry.type) {
+          const typeChip = document.createElement("div");
+          typeChip.className = "codex-chip";
+          typeChip.innerHTML = `<strong>Type</strong><span>${entry.type}</span>`;
+          entryChipsEl.appendChild(typeChip);
+        }
+        if (entry.status) {
+          const statusChip = document.createElement("div");
+          statusChip.className = "codex-chip";
+          statusChip.innerHTML = `<strong>Status</strong><span>${entry.status}</span>`;
+          entryChipsEl.appendChild(statusChip);
+        }
 
-        entrySummaryEl.textContent = entry.summary || "";
-        const appears = Array.isArray(entry.appearsIn) ? dedupeAppears(entry.appearsIn) : [];
-        entryMetaEl.textContent = appears.length
-          ? `Linked to ${appears.length} work${appears.length > 1 ? "s" : ""}.`
-          : "No linked works.";
-
-        const html = bodyHTML(entry);
-        bodyEl.innerHTML = html;
-        bodyEmptyEl.style.display = html ? "none" : "block";
-
-        appearsListEl.innerHTML = "";
-        if (!appears.length) {
-          appearsWrapEl.style.display = "none";
-          openBookEl.style.display = "none";
+        // Summary
+        if (entry.summary) {
+          entrySummaryEl.textContent = entry.summary;
         } else {
-          appearsWrapEl.style.display = "";
-          appears.forEach(a => {
-            const book = booksIndex[a.bookId];
-            const label = (book && book.title) || a.bookId;
-            const first = a.pages && a.pages.length ? a.pages[0] : null;
-            const url = readerUrl(a.bookId, first) || "library.html";
+          entrySummaryEl.textContent = "";
+        }
 
-            const link = document.createElement("a");
-            link.className = "cx-appears-link";
-            link.href = url;
-            link.target = "_blank";
-            link.textContent = label + (first ? ` (page ${first})` : "");
-            appearsListEl.appendChild(link);
-          });
+        // Body
+        const bodyHtml = buildBodyHtml(entry);
+        entryBodyEl.innerHTML = bodyHtml;
 
-          const a0 = appears[0];
-          const url0 = readerUrl(a0.bookId, a0.pages && a0.pages[0]);
-          if (url0) {
-            openBookEl.href = url0;
-            openBookEl.style.display = "inline-flex";
+        if (!bodyHtml && !entry.summary) {
+          entryEmptyStateEl.style.display = "";
+        } else {
+          entryEmptyStateEl.style.display = "none";
+        }
+
+        // Meta line
+        const catText = entry.category || "Uncategorized";
+        const appearsCount = Array.isArray(entry.appearsIn) ? dedupeAppearsIn(entry.appearsIn).length : 0;
+        const appearsText = appearsCount ? `Appears in ${appearsCount} work${appearsCount > 1 ? "s" : ""}` : "No linked works";
+        entryMetaLineEl.textContent = `${catText} · ${appearsText}`;
+
+        // Appears in section
+        renderAppearsIn(entry);
+
+        // Open primary related book button
+        const mainAppear = pickPrimaryBookForEntry(entry);
+        if (mainAppear) {
+          const url = buildReaderUrlForBookId(mainAppear.bookId, mainAppear.pages && mainAppear.pages[0]);
+          if (url) {
+            openBookBtn.href = url;
+            openBookBtn.style.display = "";
           } else {
-            openBookEl.style.display = "none";
+            openBookBtn.style.display = "none";
           }
+        } else {
+          openBookBtn.style.display = "none";
         }
       }
 
       function attachEvents() {
-        let t = null;
-        function trigger() {
-          if (t) clearTimeout(t);
-          t = setTimeout(() => {
-            updateURL(activeId, categorySel.value, searchInput.value || "");
-            renderList();
-          }, 120);
-        }
-        searchInput.addEventListener("input", trigger);
-        categorySel.addEventListener("change", trigger);
+        if (!searchInput) return;
+        let searchDebounce = null;
+
+        searchInput.addEventListener("input", () => {
+          if (searchDebounce) clearTimeout(searchDebounce);
+          searchDebounce = setTimeout(() => {
+            updateUrl(activeEntryId, activeCategory, searchInput.value || "");
+            renderEntryList();
+          }, 130);
+        });
       }
 
       function fetchBooks() {
@@ -801,7 +1257,9 @@
               booksIndex[b.id] = b;
             });
           })
-          .catch(err => console.warn("[codex] books.json load failed:", err));
+          .catch(err => {
+            console.warn("[codex] Failed to load books.json:", err);
+          });
       }
 
       function fetchCodex() {
@@ -809,39 +1267,41 @@
           .then(r => r.json())
           .then(data => {
             entries = Array.isArray(data) ? data : [];
+            if (countEl) {
+              countEl.textContent = entries.length + " entries";
+            }
           })
           .catch(err => {
-            console.error("[codex] codex.json load failed:", err);
+            console.error("[codex] Failed to load Codex:", err);
             entries = [];
+            if (countEl) countEl.textContent = "0 entries";
           });
       }
 
       function boot() {
-        const params = qp();
+        const qp = getQueryParams();
+        activeCategory = qp.category || "All";
+
         fetchBooks()
           .then(fetchCodex)
           .then(() => {
-            countEl.textContent = `${entries.length} entries`;
-            buildCategories();
+            buildCategorySet();
+            renderCategories();
 
-            if (params.category && params.category !== "All") {
-              categorySel.value = params.category;
-            }
-            if (params.q && params.q.trim()) {
-              searchInput.value = params.q;
+            if (searchInput && qp.q) {
+              searchInput.value = qp.q;
             }
 
-            const list = filteredEntries();
-            if (params.id && entries.some(e => e.id === params.id)) {
-              activeId = params.id;
-            } else if (list.length) {
-              activeId = list[0].id;
-            } else if (entries[0]) {
-              activeId = entries[0].id;
+            // Set initial active entry
+            if (qp.id && entries.some(e => e.id === qp.id)) {
+              activeEntryId = qp.id;
+            } else {
+              const subset = filteredEntries();
+              activeEntryId = subset.length ? subset[0].id : (entries[0] && entries[0].id) || null;
             }
 
-            renderList();
-            renderEntry();
+            renderEntryList();
+            renderEntryDetail();
             attachEvents();
           });
       }
