@@ -1,0 +1,144 @@
+[
+  {
+    "id": "test 1",
+    "label": "Year 0",
+    "title": "Collapse of the Old World",
+    "era": "Pre-EDEN",
+    "date": "2084-03-12",
+    "branch": "Main",
+    "order": 0,
+    "summary": "Global infrastructure fails in a cascading series of events, marking the end of the Old World.",
+    "body": [
+      "Satellite networks go dark, major cities experience simultaneous blackouts, and supply chains shatter in a matter of days.",
+      "This event becomes the reference point for all later timelines, often simply called 'the Collapse'."
+    ],
+    "codexId": "event-collapse"
+  },
+  {
+    "id": "test 2",
+    "label": "Year 5",
+    "title": "Founding of the Berlin Safe Zone",
+    "era": "Early Settlements",
+    "branch": "Berlin",
+    "order": 5,
+    "summary": "Survivors fortify Berlin into one of the first major Safe Zones.",
+    "body": [
+      "Remnants of local military forces and civilians collaborate to establish the Berlin Safe Zone.",
+      "Walls are raised, districts are assigned, and the first ration system is introduced."
+    ],
+    "codexId": "loc-berlinsfz"
+  },
+    {
+    "id": "test 3",
+    "label": "Year 5",
+    "title": "Founding of the Berlin Safe Zone",
+    "era": "Early Settlements",
+    "branch": "Berlin",
+    "order": 5,
+    "summary": "Survivors fortify Berlin into one of the first major Safe Zones.",
+    "body": [
+      "Remnants of local military forces and civilians collaborate to establish the Berlin Safe Zone.",
+      "Walls are raised, districts are assigned, and the first ration system is introduced."
+    ],
+    "codexId": "loc-berlinsfz"
+  },
+    {
+    "id": "test 4",
+    "label": "Year 5",
+    "title": "Founding of the Berlin Safe Zone",
+    "era": "Early Settlements",
+    "branch": "Berlin",
+    "order": 5,
+    "summary": "Survivors fortify Berlin into one of the first major Safe Zones.",
+    "body": [
+      "Remnants of local military forces and civilians collaborate to establish the Berlin Safe Zone.",
+      "Walls are raised, districts are assigned, and the first ration system is introduced."
+    ],
+    "codexId": "loc-berlinsfz"
+  },
+    {
+    "id": "test 5",
+    "label": "Year 5",
+    "title": "Founding of the Berlin Safe Zone",
+    "era": "Early Settlements",
+    "branch": "Berlin",
+    "order": 5,
+    "summary": "Survivors fortify Berlin into one of the first major Safe Zones.",
+    "body": [
+      "Remnants of local military forces and civilians collaborate to establish the Berlin Safe Zone.",
+      "Walls are raised, districts are assigned, and the first ration system is introduced."
+    ],
+    "codexId": "loc-berlinsfz"
+  },
+    {
+    "id": "test 1",
+    "label": "Year 0",
+    "title": "Collapse of the Old World",
+    "era": "Pre-EDEN",
+    "date": "2084-03-12",
+    "branch": "Main",
+    "order": 0,
+    "summary": "Global infrastructure fails in a cascading series of events, marking the end of the Old World.",
+    "body": [
+      "Satellite networks go dark, major cities experience simultaneous blackouts, and supply chains shatter in a matter of days.",
+      "This event becomes the reference point for all later timelines, often simply called 'the Collapse'."
+    ],
+    "codexId": "event-collapse"
+  },
+  {
+    "id": "test 2",
+    "label": "Year 5",
+    "title": "Founding of the Berlin Safe Zone",
+    "era": "Early Settlements",
+    "branch": "Berlin",
+    "order": 5,
+    "summary": "Survivors fortify Berlin into one of the first major Safe Zones.",
+    "body": [
+      "Remnants of local military forces and civilians collaborate to establish the Berlin Safe Zone.",
+      "Walls are raised, districts are assigned, and the first ration system is introduced."
+    ],
+    "codexId": "loc-berlinsfz"
+  },
+    {
+    "id": "test 3",
+    "label": "Year 5",
+    "title": "Founding of the Berlin Safe Zone",
+    "era": "Early Settlements",
+    "branch": "Berlin",
+    "order": 5,
+    "summary": "Survivors fortify Berlin into one of the first major Safe Zones.",
+    "body": [
+      "Remnants of local military forces and civilians collaborate to establish the Berlin Safe Zone.",
+      "Walls are raised, districts are assigned, and the first ration system is introduced."
+    ],
+    "codexId": "loc-berlinsfz"
+  },
+    {
+    "id": "test 4",
+    "label": "Year 5",
+    "title": "Founding of the Berlin Safe Zone",
+    "era": "Early Settlements",
+    "branch": "Berlin",
+    "order": 5,
+    "summary": "Survivors fortify Berlin into one of the first major Safe Zones.",
+    "body": [
+      "Remnants of local military forces and civilians collaborate to establish the Berlin Safe Zone.",
+      "Walls are raised, districts are assigned, and the first ration system is introduced."
+    ],
+    "codexId": "loc-berlinsfz"
+  },
+    {
+    "id": "test 5",
+    "label": "Year 5",
+    "title": "Founding of the Berlin Safe Zone",
+    "era": "Early Settlements",
+    "branch": "Berlin",
+    "order": 5,
+    "summary": "Survivors fortify Berlin into one of the first major Safe Zones.",
+    "body": [
+      "Remnants of local military forces and civilians collaborate to establish the Berlin Safe Zone.",
+      "Walls are raised, districts are assigned, and the first ration system is introduced."
+    ],
+    "codexId": "loc-berlinsfz"
+  }
+]

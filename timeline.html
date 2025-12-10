@@ -1,0 +1,742 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Tales of Eden – Timeline</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <link rel="stylesheet" href="styles.css" />
+  <script src="theme-loader.js"></script>
+
+  <style>
+    :root {
+      --tl-radius-lg: 22px;
+      --tl-radius-md: 16px;
+      --tl-border-subtle: 1px solid rgba(148, 163, 184, 0.45);
+    }
+
+    * { box-sizing: border-box; }
+
+    html, body {
+      margin: 0;
+      height: 100%;
+    }
+
+    body {
+      font-family: var(--font-ui, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif);
+      color: var(--color-text-main, #e9f1ff);
+      background:
+        radial-gradient(circle at 10% 0%, rgba(56, 189, 248, 0.18), transparent 55%),
+        radial-gradient(circle at 90% 100%, rgba(129, 140, 248, 0.25), transparent 60%),
+        linear-gradient(to bottom, #020617, #020617 55%, #020617);
+      background-attachment: fixed;
+      display: flex;
+      flex-direction: column;
+      overflow: hidden; /* page itself never scrolls */
+    }
+
+    .tl-shell {
+      flex: 1;
+      min-height: 0;
+      max-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      padding: 16px clamp(14px, 4vw, 40px);
+      gap: 12px;
+    }
+
+    /* TOP BAR */
+
+    .tl-topbar {
+      flex: 0 0 auto;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+    }
+
+    .tl-logo-group {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .tl-logo-mark {
+      width: 30px;
+      height: 30px;
+      border-radius: 10px;
+      background: radial-gradient(circle at 30% 20%, #38bdf8 0, #6366f1 28%, #020617 75%);
+      box-shadow: 0 0 16px rgba(129, 140, 248, 0.6); /* lighter shadow */
+      position: relative;
+      overflow: hidden;
+    }
+
+    .tl-logo-mark::after {
+      content: "";
+      position: absolute;
+      inset: 16%;
+      border-radius: inherit;
+      border: 1px solid rgba(15, 23, 42, 0.8);
+    }
+
+    .tl-logo-text {
+      display: flex;
+      flex-direction: column;
+      gap: 1px;
+    }
+
+    .tl-logo-title {
+      font-size: 15px;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+      color: rgba(226, 232, 255, 0.96);
+    }
+
+    .tl-logo-sub {
+      font-size: 11px;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: rgba(148, 163, 184, 0.9);
+    }
+
+    .tl-top-actions {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+
+    .tl-link-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 6px 12px;
+      border-radius: 999px;
+      border: 1px solid rgba(148, 163, 184, 0.55);
+      background: rgba(15, 23, 42, 0.9);
+      color: rgba(226, 232, 255, 0.96);
+      font-size: 12px;
+      text-decoration: none;
+      cursor: pointer;
+      transition:
+        background 0.15s ease,
+        border-color 0.15s ease,
+        transform 0.1s ease,
+        box-shadow 0.15s ease;
+    }
+
+    .tl-link-btn .icon { font-size: 13px; }
+
+    .tl-link-btn:hover {
+      background: rgba(30, 64, 175, 0.96);
+      border-color: rgba(96, 165, 250, 0.95);
+      box-shadow: 0 6px 18px rgba(15, 23, 42, 0.9);
+      transform: translateY(-1px);
+    }
+
+    /* MAIN LAYOUT */
+
+    .tl-main {
+      flex: 1;
+      min-height: 0;
+      border-radius: var(--tl-radius-lg);
+      border: var(--tl-border-subtle);
+      background: linear-gradient(145deg, rgba(3, 7, 18, 0.96), rgba(15, 23, 42, 0.98));
+      box-shadow: 0 16px 40px rgba(15, 23, 42, 0.9);
+      padding: 12px 16px 14px;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .tl-header-row {
+      flex: 0 0 auto;
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      gap: 12px;
+    }
+
+    .tl-title {
+      font-size: 14px;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+      color: rgba(209, 213, 219, 0.98);
+    }
+
+    .tl-subtitle {
+      font-size: 12px;
+      color: rgba(148, 163, 184, 0.9);
+    }
+
+    /* VERTICAL TIMELINE – scroll only here */
+
+    .tl-track-wrap {
+      flex: 1;
+      min-height: 0;
+      overflow-y: auto;
+      padding: 8px 4px 4px;
+      scrollbar-width: thin;
+      scrollbar-color: rgba(51, 65, 85, 0.85) transparent;
+    }
+
+    .tl-track-wrap::-webkit-scrollbar { width: 6px; }
+    .tl-track-wrap::-webkit-scrollbar-thumb {
+      background: rgba(51, 65, 85, 0.9);
+      border-radius: 999px;
+    }
+
+    .tl-track {
+      position: relative;
+      max-width: 960px;
+      margin: 0 auto;
+      padding: 6px 0 20px;
+    }
+
+    .tl-track::before {
+      content: "";
+      position: absolute;
+      top: 0;
+      bottom: 0;
+      left: 50%;
+      width: 2px;
+      transform: translateX(-50%);
+      background: linear-gradient(
+        to bottom,
+        rgba(55, 65, 81, 0.3),
+        rgba(30, 64, 175, 0.9),
+        rgba(55, 65, 81, 0.3)
+      );
+      pointer-events: none;
+    }
+
+    .tl-item {
+      position: relative;
+      display: flex;
+      justify-content: flex-start;
+      margin: 24px 0;
+    }
+
+    .tl-item:nth-child(even) {
+      justify-content: flex-end;
+    }
+
+    .tl-node {
+      position: relative;
+      width: 50%;
+      padding: 0 24px;
+      display: flex;
+      justify-content: flex-start;
+    }
+
+    .tl-item:nth-child(even) .tl-node {
+      justify-content: flex-end;
+    }
+
+    .tl-dot {
+      position: absolute;
+      top: 18px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 14px;
+      height: 14px;
+      border-radius: 999px;
+      border: 2px solid rgba(15, 23, 42, 0.95);
+      background: radial-gradient(circle at 30% 30%, #bfdbfe 0, #3b82f6 45%, #1d4ed8 100%);
+      box-shadow:
+        0 0 0 2px rgba(15, 23, 42, 0.95),
+        0 0 12px rgba(59, 130, 246, 0.8);
+      cursor: pointer;
+    }
+
+    .tl-card {
+      position: relative;
+      max-width: 360px;
+      border-radius: var(--tl-radius-md);
+      border: 1px solid rgba(30, 64, 175, 0.8);
+      background: radial-gradient(circle at top, rgba(30, 64, 175, 0.25), rgba(15, 23, 42, 0.98));
+      padding: 10px 12px;
+      box-shadow: 0 10px 26px rgba(15, 23, 42, 0.85);
+      cursor: pointer;
+      transition:
+        transform 0.12s ease,
+        box-shadow 0.15s ease,
+        border-color 0.15s ease;
+    }
+
+    .tl-card:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 14px 34px rgba(15, 23, 42, 0.9);
+      border-color: rgba(96, 165, 250, 0.95);
+    }
+
+    .tl-date {
+      font-size: 11px;
+      color: rgba(191, 219, 254, 0.9);
+      margin-bottom: 2px;
+    }
+
+    .tl-label {
+      font-size: 11px;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+      color: rgba(148, 163, 184, 0.95);
+      margin-bottom: 2px;
+    }
+
+    .tl-title {
+      font-size: 14px;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      color: rgba(226, 232, 255, 0.98);
+      margin-bottom: 4px;
+    }
+
+    .tl-short {
+      font-size: 12px;
+      color: rgba(191, 219, 254, 0.95);
+    }
+
+    .tl-empty {
+      text-align: center;
+      font-size: 13px;
+      color: rgba(148, 163, 184, 0.9);
+      padding: 16px 0;
+    }
+
+    /* FOOTER */
+
+    .tl-footer {
+      flex: 0 0 auto;
+      margin-top: 4px;
+      padding: 4px 2px 0;
+      font-size: 11px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      color: rgba(148, 163, 184, 0.8);
+      gap: 8px;
+      border-top: 1px solid rgba(15, 23, 42, 0.9);
+    }
+
+    .tl-footer-links {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      justify-content: flex-end;
+    }
+
+    .tl-footer-links a {
+      color: rgba(148, 163, 184, 0.9);
+      text-decoration: none;
+      border-bottom: 1px dotted rgba(55, 65, 81, 0.7);
+    }
+
+    .tl-footer-links a:hover {
+      color: rgba(226, 232, 255, 0.98);
+      border-bottom-color: rgba(156, 163, 175, 0.9);
+    }
+
+    /* OVERLAY – lightweight (no blur) */
+
+    .tl-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(3, 7, 18, 0.95);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      z-index: 9999;
+    }
+
+    .tl-overlay.visible { display: flex; }
+
+    .tl-overlay-inner {
+      width: min(860px, 100% - 32px);
+      max-height: min(640px, 100% - 40px);
+      border-radius: var(--tl-radius-lg);
+      border: 1px solid rgba(59, 130, 246, 0.9);
+      background: linear-gradient(145deg, rgba(15, 23, 42, 0.98), rgba(3, 7, 18, 1));
+      box-shadow: 0 24px 60px rgba(0, 0, 0, 0.85);
+      padding: 14px 16px 16px;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .tl-overlay-header {
+      display: flex;
+      justify-content: space-between;
+      gap: 10px;
+      align-items: flex-start;
+    }
+
+    .tl-overlay-label {
+      font-size: 11px;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+      color: rgba(148, 163, 184, 0.95);
+      margin-bottom: 2px;
+    }
+
+    .tl-overlay-title {
+      font-size: 18px;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: rgba(226, 232, 255, 0.98);
+      margin-bottom: 4px;
+    }
+
+    .tl-overlay-meta {
+      font-size: 11px;
+      color: rgba(191, 219, 254, 0.9);
+    }
+
+    .tl-overlay-close {
+      border-radius: 999px;
+      border: 1px solid rgba(148, 163, 184, 0.7);
+      background: rgba(15, 23, 42, 0.96);
+      color: rgba(226, 232, 255, 0.96);
+      font-size: 12px;
+      padding: 4px 10px;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      transition:
+        background 0.15s ease,
+        border-color 0.15s ease,
+        transform 0.1s ease,
+        box-shadow 0.15s ease;
+    }
+
+    .tl-overlay-close:hover {
+      background: rgba(30, 64, 175, 0.96);
+      border-color: rgba(96, 165, 250, 0.95);
+      box-shadow: 0 10px 26px rgba(15, 23, 42, 0.95);
+      transform: translateY(-1px);
+    }
+
+    .tl-overlay-body {
+      flex: 1;
+      min-height: 0;
+      margin-top: 4px;
+      font-size: 13px;
+      line-height: 1.65;
+      color: rgba(226, 232, 255, 0.96);
+      overflow-y: auto;
+      padding-right: 4px;
+      scrollbar-width: thin;
+      scrollbar-color: rgba(51, 65, 85, 0.85) transparent;
+    }
+
+    .tl-overlay-body::-webkit-scrollbar { width: 6px; }
+    .tl-overlay-body::-webkit-scrollbar-thumb {
+      background: rgba(51, 65, 85, 0.9);
+      border-radius: 999px;
+    }
+
+    .tl-overlay-body p { margin: 0 0 8px; }
+
+    .tl-overlay-footer {
+      margin-top: 6px;
+      font-size: 12px;
+      display: flex;
+      justify-content: space-between;
+      gap: 8px;
+      align-items: center;
+      color: rgba(148, 163, 184, 0.9);
+    }
+
+    .tl-overlay-footer a {
+      color: rgba(191, 219, 254, 0.98);
+      text-decoration: underline;
+    }
+
+    @media (max-width: 800px) {
+      .tl-track::before { left: 12px; }
+
+      .tl-item,
+      .tl-item:nth-child(even) {
+        justify-content: flex-start;
+      }
+
+      .tl-node,
+      .tl-item:nth-child(even) .tl-node {
+        width: 100%;
+        padding-left: 32px;
+        justify-content: flex-start;
+      }
+
+      .tl-overlay-inner {
+        max-height: calc(100% - 24px);
+      }
+    }
+
+    @media (max-width: 700px) {
+      .tl-shell { padding-inline: 12px; }
+    }
+  </style>
+</head>
+<body>
+  <div class="tl-shell">
+    <!-- TOP BAR -->
+    <header class="tl-topbar">
+      <div class="tl-logo-group">
+        <div class="tl-logo-mark"></div>
+        <div class="tl-logo-text">
+          <div class="tl-logo-title">Tales of Eden</div>
+          <div class="tl-logo-sub">World Timeline</div>
+        </div>
+      </div>
+
+      <div class="tl-top-actions">
+        <a href="codex.html" class="tl-link-btn">
+          <span class="icon">📘</span>
+          <span>Codex</span>
+        </a>
+        <a href="library.html" class="tl-link-btn">
+          <span class="icon">📚</span>
+          <span>Library</span>
+        </a>
+      </div>
+    </header>
+
+    <!-- MAIN -->
+    <main class="tl-main">
+      <div class="tl-header-row">
+        <div class="tl-title">Timeline Branch</div>
+        <div class="tl-subtitle">Scroll to explore · click any point for full details</div>
+      </div>
+
+      <div class="tl-track-wrap">
+        <div id="tlTrack" class="tl-track"></div>
+      </div>
+    </main>
+
+    <!-- FOOTER -->
+    <footer class="tl-footer">
+      <span>Tales of Eden – Timeline</span>
+      <div class="tl-footer-links">
+        <a href="codex.html">Codex</a>
+        <a href="library.html">Library</a>
+      </div>
+    </footer>
+  </div>
+
+  <!-- OVERLAY -->
+  <div id="tlOverlay" class="tl-overlay">
+    <div class="tl-overlay-inner">
+      <div class="tl-overlay-header">
+        <div>
+          <div id="tlOverlayLabel" class="tl-overlay-label"></div>
+          <div id="tlOverlayTitle" class="tl-overlay-title"></div>
+          <div id="tlOverlayMeta" class="tl-overlay-meta"></div>
+        </div>
+        <button type="button" id="tlOverlayClose" class="tl-overlay-close">
+          <span>Close</span>
+          <span>✕</span>
+        </button>
+      </div>
+
+      <div id="tlOverlayBody" class="tl-overlay-body"></div>
+
+      <div class="tl-overlay-footer">
+        <span id="tlOverlayBranch"></span>
+        <span id="tlOverlayCodexLinkWrap"></span>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    (function () {
+      const TIMELINE_JSON = "Codex/timeline.json";
+
+      const trackEl   = document.getElementById("tlTrack");
+      const overlayEl = document.getElementById("tlOverlay");
+      const oLabelEl  = document.getElementById("tlOverlayLabel");
+      const oTitleEl  = document.getElementById("tlOverlayTitle");
+      const oMetaEl   = document.getElementById("tlOverlayMeta");
+      const oBodyEl   = document.getElementById("tlOverlayBody");
+      const oBranchEl = document.getElementById("tlOverlayBranch");
+      const oCodexWrap= document.getElementById("tlOverlayCodexLinkWrap");
+      const oCloseBtn = document.getElementById("tlOverlayClose");
+
+      let points = [];
+      let activeId = null;
+
+      function fetchTimeline() {
+        return fetch(TIMELINE_JSON)
+          .then(r => {
+            if (!r.ok) throw new Error("missing timeline.json");
+            return r.json();
+          })
+          .then(data => {
+            points = Array.isArray(data) ? data.slice() : [];
+
+            points.sort((a, b) => {
+              const ao = typeof a.order === "number" ? a.order : 0;
+              const bo = typeof b.order === "number" ? b.order : 0;
+              if (ao !== bo) return ao - bo;
+              const ad = a.date || "";
+              const bd = b.date || "";
+              return ad.localeCompare(bd);
+            });
+
+            renderTrack();
+          })
+          .catch(err => {
+            console.warn("[timeline] failed to load timeline.json:", err);
+            if (trackEl) {
+              trackEl.innerHTML =
+                '<div class="tl-empty">No timeline points defined yet. Add <code>Codex/timeline.json</code> to populate this view.</div>';
+            }
+          });
+      }
+
+      function shortText(pt) {
+        const s = pt.short || pt.summary || "";
+        if (!s) return "";
+        return s.length > 120 ? s.slice(0, 117) + "…" : s;
+      }
+
+      function renderTrack() {
+        if (!trackEl) return;
+        trackEl.innerHTML = "";
+
+        if (!points.length) {
+          trackEl.innerHTML = '<div class="tl-empty">No timeline points defined yet.</div>';
+          return;
+        }
+
+        points.forEach(pt => {
+          const item = document.createElement("div");
+          item.className = "tl-item";
+
+          const node = document.createElement("div");
+          node.className = "tl-node";
+
+          const dot = document.createElement("div");
+          dot.className = "tl-dot";
+
+          const card = document.createElement("article");
+          card.className = "tl-card";
+
+          const label = document.createElement("div");
+          label.className = "tl-label";
+          label.textContent = pt.label || pt.id || "";
+
+          const title = document.createElement("div");
+          title.className = "tl-title";
+          title.textContent = pt.title || pt.label || pt.id || "Event";
+
+          const date = document.createElement("div");
+          date.className = "tl-date";
+          date.textContent = pt.date || pt.era || "";
+
+          const short = document.createElement("div");
+          short.className = "tl-short";
+          short.textContent = shortText(pt);
+
+          if (label.textContent) card.appendChild(label);
+          card.appendChild(title);
+          if (date.textContent) card.appendChild(date);
+          if (short.textContent) card.appendChild(short);
+
+          function openOverlay() {
+            activeId = pt.id;
+            showOverlay(pt);
+          }
+
+          dot.addEventListener("click", openOverlay);
+          card.addEventListener("click", openOverlay);
+
+          node.appendChild(dot);
+          node.appendChild(card);
+          item.appendChild(node);
+          trackEl.appendChild(item);
+        });
+      }
+
+      function showOverlay(pt) {
+        if (!pt || !overlayEl) return;
+
+        oLabelEl.textContent = pt.label || pt.id || "";
+        oTitleEl.textContent = pt.title || pt.label || pt.id || "Timeline Event";
+
+        const metaParts = [];
+        if (pt.date) metaParts.push(pt.date);
+        if (pt.era) metaParts.push(pt.era);
+        if (pt.branch) metaParts.push("Branch: " + pt.branch);
+        oMetaEl.textContent = metaParts.join(" · ") || "";
+
+        oBodyEl.innerHTML = "";
+        let hasBody = false;
+
+        if (Array.isArray(pt.body) && pt.body.length) {
+          pt.body.forEach(par => {
+            const p = document.createElement("p");
+            p.textContent = par;
+            oBodyEl.appendChild(p);
+          });
+          hasBody = true;
+        } else if (pt.summary) {
+          const p = document.createElement("p");
+          p.textContent = pt.summary;
+          oBodyEl.appendChild(p);
+          hasBody = true;
+        }
+
+        if (!hasBody) {
+          const p = document.createElement("p");
+          p.textContent = "No additional description has been written for this event yet.";
+          oBodyEl.appendChild(p);
+        }
+
+        if (pt.branch) {
+          oBranchEl.textContent = "Branch: " + pt.branch;
+        } else {
+          oBranchEl.textContent = "";
+        }
+
+        oCodexWrap.innerHTML = "";
+        if (pt.codexId) {
+          const a = document.createElement("a");
+          a.href = "codex.html?id=" + encodeURIComponent(pt.codexId);
+          a.target = "_blank";
+          a.textContent = "Open related codex entry";
+          oCodexWrap.appendChild(a);
+        }
+
+        overlayEl.classList.add("visible");
+      }
+
+      function hideOverlay() {
+        if (!overlayEl) return;
+        overlayEl.classList.remove("visible");
+        activeId = null;
+      }
+
+      function attachOverlayEvents() {
+        if (!overlayEl) return;
+        overlayEl.addEventListener("click", e => {
+          if (e.target === overlayEl) hideOverlay();
+        });
+        if (oCloseBtn) {
+          oCloseBtn.addEventListener("click", hideOverlay);
+        }
+        document.addEventListener("keydown", e => {
+          if (e.key === "Escape") hideOverlay();
+        });
+      }
+
+      function boot() {
+        attachOverlayEvents();
+        fetchTimeline();
+      }
+
+      boot();
+    })();
+  </script>
+</body>
+</html>
